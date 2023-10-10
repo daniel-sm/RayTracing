@@ -68,9 +68,54 @@ class Esfera {
 	Esfera(Ponto c, double r) : centro{c}, raio{r} {}
 };
 
-int main(int argc, char **argv) {
-    int nLin = 500;
-    int nCol = 1000;
+int main(int argc, char* argv[]) {
+
+	Ponto olho { 0, 0, 0 };
+
+	double wJanela = 10; // Largura da janela
+	double hJanela = 10; // Altura da janela
+	double dJanela = 1; // Distancia da janela
+	// Ponto cJanela { 0, 0, -dJanela }; // Coordenada do centro da janela
+
+	double rEsfera = 5; // Raio da esfera
+	Ponto cEsfera { 0, 0, -(dJanela + rEsfera) }; // Coord. do centro da esfera
+
+	Cor esfColor { 255, 0, 0 }; // Cor da esfera
+	Cor bgColor { 100, 100, 100 }; // Cor de fundo
+
+	int nCol = 700; // Numero de colunas da grade
+	int nLin = 700; // Numero de linhas da grade
+
+	Cor** matrizCores = new Cor*[nLin]; // Matriz de cores
+
+	for (int i = 0; i < nLin; i++) { // Inicializando linhas da matriz
+		matrizCores[i] = new Cor[nCol];
+	}
+
+	// Delta X e Y dos quadriculos da grade
+	double Dx = wJanela/nCol;
+	double Dy = hJanela/nLin;
+
+	for (int l = 0; l < nLin; l++) {
+		double y = hJanela/2 - Dy/2 - l*Dy;
+
+		for (int c = 0; c < nCol; c++) {
+			double x = -(wJanela/2) + (Dx/2) + (c*Dx);
+
+			Raio R = Raio (olho, { x, y, -dJanela });
+			
+			Vetor W = R.inicial - cEsfera;
+
+			double B = ProdutoEscalar(W, R.direcao);
+			double C = ProdutoEscalar(W, W) - rEsfera*rEsfera;
+
+			double delta = (B * B) - C;
+
+			if (delta < 0) matrizCores[l][c] = bgColor;
+			else           matrizCores[l][c] = esfColor;
+		}
+	}
+
     // ##############################################################
     // ########################### SDL ##############################
     // ##############################################################
@@ -130,9 +175,9 @@ int main(int argc, char **argv) {
 				// Designando a cor que vai pintar
 				SDL_SetRenderDrawColor(
 					renderer, 
-					100, 
-					100, 
-					100, 
+					matrizCores[x][y].r, 
+					matrizCores[x][y].g, 
+					matrizCores[x][y].b, 
 					SDL_ALPHA_OPAQUE
 				);
 				// Pintando o pixel
@@ -146,4 +191,6 @@ int main(int argc, char **argv) {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+
+	return 0;
 }
