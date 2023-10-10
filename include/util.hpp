@@ -51,4 +51,53 @@ Vetor unitario (Vetor v) { return (v / norma(v)); }
 // Retorna o maior de dois numeros
 double maior (double a, double b) { return (a >= b ? a : b); }
 
+// Estrutura de Dados
+//
+// Modelo de classe Lista para guardar os objetos da cena
+template <typename T>
+class Lista
+{
+private:
+    struct Node {
+        T* info;
+        Node* prox;
+        Node (T* i, Node* p) : info{i}, prox{p} {}
+    };
+	Node* primeiro;
+
+public:
+
+    class Iterador
+    {
+    public:
+        Node* node;
+        Iterador (Node* n) : node{n} {}
+
+        bool operator!= (Iterador j) { return (node != j.node); }
+        Iterador& operator++ () { node = node->prox; return *this; }
+        T* operator* () { return node->info; }
+
+    }; // fim class Iterador()
+
+	Iterador begin () { return { primeiro }; }
+    Iterador end () { return { nullptr }; }
+
+	Lista () : primeiro{nullptr} {}
+	~Lista () {
+        while (primeiro != nullptr)
+        {
+            Node *aux = primeiro->prox;
+            delete primeiro;
+            primeiro = aux;
+        }
+    }
+
+	Iterador add(T* info) 
+	{
+        Node *n = new Node(info, primeiro);
+		primeiro = n;
+        return { n };
+	}
+}; // fim class Lista
+
 #endif
