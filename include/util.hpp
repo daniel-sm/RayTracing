@@ -21,4 +21,34 @@ struct Material
 	double brilho; // Fator especular
 };
 
+// ********* Operacoes ************
+// 
+// Operacoes entre vetores
+Vetor operator+(Vetor v, Vetor u) { return { (v.a + u.a), (v.b + u.b), (v.c + u.c) }; }
+Vetor operator-(Vetor v, Vetor u) { return { (v.a - u.a), (v.b - u.b), (v.c - u.c) }; }
+Vetor operator*(Vetor v, Vetor u) { return { (v.a * u.a), (v.b * u.b), (v.c * u.c) }; }
+//
+// Operacoes entre vetor e numero
+Vetor operator*(Vetor v, double k) { return { (k * v.a), (k * v.b), (k * v.c) }; }
+Vetor operator*(double k, Vetor v) { return { (k * v.a), (k * v.b), (k * v.c) }; }
+Vetor operator/(Vetor v, double k) { return { (v.a / k), (v.b / k), (v.c / k) }; }
+//
+// Operacoes entre ponto e vetor
+Ponto operator+ (Ponto p, Vetor v) { return { (p.x + v.a), (p.y + v.b), (p.z + v.c) }; }
+Vetor operator- (Ponto p1, Ponto p2) { return { (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z) }; }
+
+// ********** Funcoes Auxiliares ***********
+//
+// Produto escalar (interno) entre vetores
+double escalar (Vetor v, Vetor u) { return (v.a * u.a) + (v.b * u.b) + (v.c * u.c); }
+
+// Modulo (tamanho) de um vetor
+double norma(Vetor v) { return sqrt(escalar(v, v)); }
+
+// Calcula o vetor unitario (norma = 1) de m vetor
+Vetor unitario (Vetor v) { return (v / norma(v)); }
+
+// Retorna o maior de dois numeros
+double maior (double a, double b) { return (a >= b ? a : b); }
+
 #endif
