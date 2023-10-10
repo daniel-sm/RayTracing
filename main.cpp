@@ -176,20 +176,20 @@ int main(int argc, char** argv)
 					
 					if (t_sombra < 0)
 					{
-					Vetor normal = atingido->obterNormal(p_int);
+						Vetor normal = atingido->obterNormal(p_int);
 
-					// Armazena a intensidade no ponto para a fonte atual
-					Vetor aux = fonte->calcIntensidade(
-						normal,
-						p_int,
-						raio.direcao(),
-						atingido->material
-					);
+						// Armazena a intensidade no ponto para a fonte atual
+						Vetor aux = fonte->calcIntensidade(
+							normal,
+							p_int,
+							raio.direcao(),
+							atingido->material
+						);
 
-					// Soma a intensidade de cada fonte
-					I = I + aux;
+						// Soma a intensidade de cada fonte
+						I = I + aux;
+					}
 				}
-			}
 
 				// Computando a maior intensidade de cor
 				if (I.a > maiorCor) maiorCor = I.a;
