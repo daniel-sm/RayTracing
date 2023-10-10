@@ -12,6 +12,34 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 #include <SDL.h>
 #include "include/objetos.hpp"
 
+double rayCasting (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
+{
+	// Vai guardar o menor valor de t 
+	double t_int = -1;
+
+	// Percorrendo os objetos da cena
+	for (auto obj : cena)
+	{
+        // Guardando o retorno da intersecao para comparar com 't_int'
+        double t = obj->intersecao(raio);
+
+        // Computando o menor valor de t_int
+        if (t > 0) 
+        {
+            if (t_int > 0) 
+            { 
+                if (t < t_int) 
+                { 
+                    t_int = t; 
+                    atingido = obj; 
+                }
+            } 
+            else { t_int = t; atingido = obj; }
+        }
+    }
+    return t_int;
+}
+
 int main(int argc, char** argv) 
 {
 	// Ponto de visao da cena, origem dos raios
@@ -121,32 +149,12 @@ int main(int argc, char** argv)
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
-			double t_int = -1;
-
-			//Percorrendo os objetos da cena
-			for (auto obj : cena)
-			{
-				// Guardando o retorno da intersecao para comparar com 't_int'
-				double t = obj->intersecao(raio);
-
-				// Computando o menor valor de t_int
-				if (t > 0) 
-				{
-					if (t_int > 0) 
-					{ 
-						if (t < t_int) 
-						{ 
-							t_int = t; 
-							atingido = obj; 
-						}
-					} 
-					else { t_int = t; atingido = obj; }
-				}
-			}
+			double t_int = rayCasting(cena, raio, atingido);
 
 			// Verificando de atingiu algum objeto
 			if (t_int > 0) 
 			{
+				// Obtendo o ponto de intersecao a partir do t encontrado
                 Ponto p_int = raio.pontoIntersecao(t_int);
 
 				// Vetor de intensidade da luz no ponto intersectado
@@ -157,6 +165,17 @@ int main(int argc, char** argv)
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : fontes)
 				{
+					double t_sombra = -1;
+
+					if (atingido != &esfera)
+					{
+						Raio rSombra (fonte->getPosicao(), p_int);
+						Vetor L = p_int - fonte->getPosicao();
+						t_sombra = esfera.intersecao(rSombra);
+					}
+					
+					if (t_sombra < 0)
+					{
 					Vetor normal = atingido->obterNormal(p_int);
 
 					// Armazena a intensidade no ponto para a fonte atual
@@ -170,6 +189,7 @@ int main(int argc, char** argv)
 					// Soma a intensidade de cada fonte
 					I = I + aux;
 				}
+			}
 
 				// Computando a maior intensidade de cor
 				if (I.a > maiorCor) maiorCor = I.a;
