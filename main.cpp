@@ -10,6 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
+#include <cmath>
 
 struct Cor { int r, g, b; };
 
@@ -17,15 +18,23 @@ struct Vetor {
 	double a, b, c;
 
 	Vetor operator*(double k) {
-		return { a * k, b * k, c * k };
+		return { (a * k), (b * k), (c * k) };
+	}
+	
+	Vetor operator*(Vetor u) {
+		return { (a * u.a), (b * u.b), (c * u.c) };
 	}
 	
 	Vetor operator/(double k) {
-		return { a / k, b / k, c / k };
+		return { (a / k), (b / k), (c / k) };
 	}
 
 	Vetor operator+(Vetor V) {
 		return { (a + V.a), (b + V.b), (c + V.c) };
+	}
+
+	Vetor operator-(Vetor V) {
+		return { (a - V.a), (b - V.b), (c - V.c) };
 	}
 };
 
@@ -41,23 +50,34 @@ struct Ponto {
 	}
 };
 
-double ProdutoEscalar (Vetor v, Vetor u) {
+double escalar (Vetor v, Vetor u) {
 	return (v.a * u.a) + (v.b * u.b) + (v.c * u.c);
 }
 
+double norma (Vetor v) {
+	return sqrt(escalar(v, v));
+}
+
+Vetor unitario (Vetor v) {
+	return (v / norma(v));
+}
+
 class Raio {
+	Ponto ini; // origem
+	Vetor dir; // unitario
+
 	public:
  
-	Ponto inicial;
-	Vetor direcao;
-
-	Raio(Ponto pin, Ponto pr) : inicial{pin}, direcao{pr - pin} {
-		inicial = pin;
-		Vetor v = pr - pin;
-		direcao = v / SDL_sqrt(ProdutoEscalar(v, v));
+	Raio(Ponto pin, Ponto pr) {
+		ini = pin;
+		dir = unitario(pr - pin);
 	}
-	
-	Ponto P (double t) { return { inicial + (direcao * t) }; }
+
+	Vetor direcao() { return dir; }
+	Ponto origem() { return ini; }
+
+	// P: "Pint", ponto de intersecao com parametro "t" 
+	Ponto P (double t) { return { ini + (dir * t) }; }
 };
 
 class Esfera {
@@ -66,53 +86,119 @@ class Esfera {
 
 	public:
 	Esfera(Ponto c, double r) : centro{c}, raio{r} {}
+
+	double intersecao(Raio r) {
+		Vetor w = r.origem() - centro;
+
+		double b = escalar(w, r.direcao());
+		double c = escalar(w, w) - (raio*raio);
+
+		double delta = (b * b) - c;
+
+		if (delta > 0) {
+			if (c < 0) {
+				return -b + sqrt(delta);
+			} else {
+				return -b - sqrt(delta);
+			}
+		}
+		return -1; // se nada ocorrer = nao intersecta
+	}
 };
 
 int main(int argc, char* argv[]) {
-
+// Ponto de visao da cena, origem dos raios
 	Ponto olho { 0, 0, 0 };
 
-	double wJanela = 10; // Largura da janela
-	double hJanela = 10; // Altura da janela
-	double dJanela = 1; // Distancia da janela
-	// Ponto cJanela { 0, 0, -dJanela }; // Coordenada do centro da janela
+	// Informacoes da luz 
+	Ponto pFonte { 0, 5, 0 };
+	Vetor iFonte { 0.7, 0.7, 0.7 };
 
-	double rEsfera = 5; // Raio da esfera
-	Ponto cEsfera { 0, 0, -(dJanela + rEsfera) }; // Coord. do centro da esfera
+	// Fator do material da esfera sobre uma luz
+	Vetor kEsfera { 1.0, 0.0, 0.0 }; 
+	double mEsfera = 10; // fator espescular
+
+	double wJanela = 2; // Largura da janela
+	double hJanela = 2; // Altura da janela
+	double dJanela = 1; // Distancia da janela
+	
+	// Tamanho do raio da esfera 
+	double rEsfera = 1;
+
+	// Coordenadas do centro da esfera
+	Ponto cEsfera { 0, 0, -(dJanela + rEsfera) };
 
 	Cor esfColor { 255, 0, 0 }; // Cor da esfera
 	Cor bgColor { 100, 100, 100 }; // Cor de fundo
 
-	int nCol = 700; // Numero de colunas da grade
-	int nLin = 700; // Numero de linhas da grade
+	int nCol = 600; // Numero de colunas da grade
+	int nLin = 600; // Numero de linhas da grade
 
-	Cor** matrizCores = new Cor*[nLin]; // Matriz de cores
+	// Matriz de cores
+	Cor** mCores = new Cor*[nLin];
 
-	for (int i = 0; i < nLin; i++) { // Inicializando linhas da matriz
-		matrizCores[i] = new Cor[nCol];
+	// Inicializando linhas da matriz
+	for (int i = 0; i < nLin; i++) {
+		mCores[i] = new Cor[nCol];
 	}
 
 	// Delta X e Y dos quadriculos da grade
 	double Dx = wJanela/nCol;
 	double Dy = hJanela/nLin;
 
-	for (int l = 0; l < nLin; l++) {
-		double y = hJanela/2 - Dy/2 - l*Dy;
+	for (int lin = 0; lin < nLin; lin++) {
+		// Coordenada Y do centro do quadriculo no frame
+		double y = hJanela/2 - Dy/2 - lin*Dy;
 
-		for (int c = 0; c < nCol; c++) {
-			double x = -(wJanela/2) + (Dx/2) + (c*Dx);
+		for (int col = 0; col < nCol; col++) {
+			// Coordenada X do centro do quadriculo no frame
+			double x = -(wJanela/2) + (Dx/2) + (col*Dx);
 
 			Raio R = Raio (olho, { x, y, -dJanela });
-			
-			Vetor W = R.inicial - cEsfera;
+			Esfera E = Esfera (cEsfera, rEsfera);
 
-			double B = ProdutoEscalar(W, R.direcao);
-			double C = ProdutoEscalar(W, W) - rEsfera*rEsfera;
+			double t = E.intersecao(R);
 
-			double delta = (B * B) - C;
+			if (t > 0) {
+				Ponto pInt = R.P(t);
 
-			if (delta < 0) matrizCores[l][c] = bgColor;
-			else           matrizCores[l][c] = esfColor;
+				Vetor l = unitario(pFonte - pInt);
+				Vetor n = (pInt - cEsfera) / rEsfera;
+				Vetor v = R.direcao() * -1;
+				Vetor r = (n * 2 * escalar(l, n)) - l;
+
+				Vetor luz = (kEsfera * iFonte);
+
+				double fatorDif = escalar(l, n);
+
+				Vetor Id { 0.0, 0.0, 0.0 };
+				if (fatorDif >= 0) Id = luz * fatorDif;
+
+				double fatorEsp = escalar(v, r);
+
+				Vetor Ie { 0.0, 0.0, 0.0 };
+				if (fatorEsp >= 0) {
+					fatorEsp = pow(fatorEsp, mEsfera);
+					Ie = luz * fatorEsp;
+				}
+
+				Vetor I = Id + Ie;
+
+				Cor cor { 255, 255, 255 };
+
+				cor.r = round(cor.r * I.a);
+				cor.g = round(cor.g * I.b);
+				cor.b = round(cor.b * I.c);
+
+				if (cor.r > 255) cor.r = 255;
+				if (cor.g > 255) cor.g = 255;
+				if (cor.b > 255) cor.b = 255;
+
+				mCores[lin][col] = cor;
+			}
+			else { 
+				mCores[lin][col] = bgColor;
+}
 		}
 	}
 
@@ -170,18 +256,18 @@ int main(int argc, char* argv[]) {
 		// Limpando o renderer
 		SDL_RenderClear(renderer);
 		
-		for (int y = 0; y < nLin; ++y) {
-			for (int x = 0; x < nCol; ++x) {
+		for (int i = 0; i < nLin; i++) {
+			for (int j = 0; j < nCol; j++) {
 				// Designando a cor que vai pintar
 				SDL_SetRenderDrawColor(
 					renderer, 
-					matrizCores[x][y].r, 
-					matrizCores[x][y].g, 
-					matrizCores[x][y].b, 
+					mCores[i][j].r, 
+					mCores[i][j].g, 
+					mCores[i][j].b, 
 					SDL_ALPHA_OPAQUE
 				);
 				// Pintando o pixel
-				SDL_RenderDrawPoint(renderer, x, y);
+				SDL_RenderDrawPoint(renderer, j, i);
 			}
 		}
 		// Atualizando a janela com o renderer
@@ -191,6 +277,12 @@ int main(int argc, char* argv[]) {
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+
+	// Desalocando a matriz de cores
+	for (int i = 0; i < nLin; i++) {
+		delete mCores[i];
+	}
+	delete[] mCores;
 
 	return 0;
 }
