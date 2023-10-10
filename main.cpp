@@ -11,6 +11,40 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 
 #include <SDL.h>
 
+struct Cor { int r, g, b; };
+
+struct Vetor {
+	double a, b, c;
+
+	Vetor operator*(double k) {
+		return { a * k, b * k, c * k };
+	}
+	
+	Vetor operator/(double k) {
+		return { a / k, b / k, c / k };
+	}
+
+	Vetor operator+(Vetor V) {
+		return { (a + V.a), (b + V.b), (c + V.c) };
+	}
+};
+
+struct Ponto {
+	double x, y, z;
+
+	Ponto operator+ (Vetor V) {
+		return { (x + V.a), (y + V.b), (z + V.c) };
+	}
+
+	Vetor operator- (Ponto P) {
+		return { (x - P.x), (y - P.y), (z - P.z) };
+	}
+};
+
+double ProdutoEscalar (Vetor v, Vetor u) {
+	return (v.a * u.a) + (v.b * u.b) + (v.c * u.c);
+}
+
 int main(int argc, char **argv) {
     int nLin = 500;
     int nCol = 1000;
