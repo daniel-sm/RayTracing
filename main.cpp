@@ -165,20 +165,22 @@ int main(int argc, char** argv)
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : fontes)
 				{
-					// Obtem a posicao da fonte pontual
-					Ponto posFonte = fonte->getPosicao();
-					// Gerando um raio da fonte para o ponto intersectado
-					Raio raioSombra (posFonte, p_int);
-					// Ponteiro para o objeto que foi acertado pelo raio 
-					Objeto* acertado = nullptr;
+					// // Obtem a posicao da fonte pontual
+					// Ponto posFonte = fonte->getPosicao();
+					// // Gerando um raio da fonte para o ponto intersectado
+					// Raio raioSombra (posFonte, p_int);
 
-					// Calculando a distancia da fonte ao objeto acertado
-					double t_sombra = raycast(cena, raioSombra, acertado);
-					// Calculando a distancia da fonte ao ponto intersectado
-					double distanciaFonte = norma(p_int - posFonte);
+					// // Ponteiro temporario que vai guardar o objeto atingido
+					// Objeto* temp; // Necessario na funcao mas nao sera usado 
+
+					// // Calculando a distancia da fonte ao objeto acertado
+					// double t_sombra = raycast(cena, raioSombra, temp);
+					// // Calculando a distancia da fonte ao ponto intersectado
+					// double distanciaFonte = norma(p_int - posFonte);
 					
-					// Compara as distancias
-					if (t_sombra + 0.01 >= distanciaFonte) 
+					// // Compara as distancias
+					// if (t_sombra + 0.01 >= distanciaFonte) 
+					if (fonte->isSombra(p_int, cena, raycast)) 
 					{
 						Vetor normal = atingido->obterNormal(p_int);
 

@@ -30,47 +30,6 @@ public:
 	Ponto pontoIntersecao (double t) { return { ini + (t * dir) }; }
 }; // fim class Raio
 
-// Hierarquia de classes: Fonte
-class Fonte 
-{
-public:
-	Vetor intensidade; // intensidade da luz
-
-    virtual Vetor calcIntensidade(Vetor, Ponto, Vetor, Material) const = 0;
-};
-
-class Pontual : public Fonte
-{
-    Ponto posicao; // local da luz
-public:
-    Pontual (Vetor i, Ponto p) : posicao{p} { intensidade = i; }
-
-    Ponto getPosicao () { return posicao; }
-
-    Vetor calcIntensidade (Vetor n, Ponto p_int, Vetor dr, Material m) 
-    const override
-	{
-        // Vetor em direcao a fonte de luz  (unitario)
-        Vetor l = unitario(posicao - p_int);
-        // Vetor em direcao a origem do raio (unitario)
-        Vetor v = -1 * dr;
-        // Vetor em direcao ao raio refletido (unitario)
-        Vetor r = (2 * escalar(l, n) * n) - l;
-
-        // Fator de Difusao
-        double fatorDif = maior(0.0, escalar(l, n));
-        // Luz Difusa
-        Vetor Id = (m.kd * intensidade) * fatorDif; 
-
-        // Fator Especular
-        double fatorEsp = pow(maior(0.0, escalar(r, v)), m.brilho);
-        // Luz Especular 
-        Vetor Ie = (m.ke * intensidade) * fatorEsp; 
-
-        return (Id + Ie);
-	}
-};
-
 class Objeto
 {
 public:
@@ -130,5 +89,66 @@ public:
 
     Vetor obterNormal (Ponto p) const override { return normal; }
 }; // fim class Plano
+
+// Hierarquia de classes: Fonte
+class Fonte 
+{
+public:
+	Vetor intensidade; // intensidade da luz
+
+    virtual Vetor calcIntensidade(Vetor, Ponto, Vetor, Material) const = 0;
+};
+
+class Pontual : public Fonte
+{
+    Ponto posicao; // local da luz
+public:
+    Pontual (Vetor i, Ponto p) : posicao{p} { intensidade = i; }
+
+    Ponto getPosicao () { return posicao; }
+
+    bool isSombra (
+        Ponto p_int, 
+        Lista<Objeto> cena,
+        double (*raycast)(Lista, Raio, Objeto*) 
+    ) {
+        // Raio que parte da posicao da fonte ao ponto de intersecao
+        Raio raioSombra (posicao, p_int);
+
+        // Ponteiro temporario que vai guardar o objeto atingido
+        Objeto* temp; // Necessario na funcao mas nao sera usado 
+
+        // Lancando raio na cena para ver se tem sombra
+        double t_sombra = raycast(cena, raioSombra, temp);
+
+        // Obtendo distancia da fonte ao ponto de intersecao
+        double distanciaFonte = norma(p_int - posicao);
+
+        return (t_sombra + 0.01 >= distanciaFonte);
+    }
+
+    Vetor calcIntensidade (Vetor n, Ponto p_int, Vetor dr, Material m) 
+    const override
+	{
+        // Vetor em direcao a fonte de luz  (unitario)
+        Vetor l = unitario(posicao - p_int);
+        // Vetor em direcao a origem do raio (unitario)
+        Vetor v = -1 * dr;
+        // Vetor em direcao ao raio refletido (unitario)
+        Vetor r = (2 * escalar(l, n) * n) - l;
+
+        // Fator de Difusao
+        double fatorDif = maior(0.0, escalar(l, n));
+        // Luz Difusa
+        Vetor Id = (m.kd * intensidade) * fatorDif; 
+
+        // Fator Especular
+        double fatorEsp = pow(maior(0.0, escalar(r, v)), m.brilho);
+        // Luz Especular 
+        Vetor Ie = (m.ke * intensidade) * fatorEsp; 
+
+        return (Id + Ie);
+	}
+};
 
 #endif
