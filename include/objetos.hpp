@@ -71,4 +71,64 @@ public:
 	}
 };
 
+class Objeto
+{
+public:
+    Material material;
+
+	virtual double intersecao (Raio) const = 0;
+    virtual Vetor obterNormal (Ponto) const = 0;
+};
+
+class Esfera : public Objeto
+{
+    Ponto centro;
+    double raio;
+public:
+    Esfera(Ponto c, double r, Material m) : centro{c}, raio{r} { material = m; }
+
+    double intersecao (Raio r) const override
+    {
+        Vetor w = r.origem() - centro;
+
+        double b = escalar( w, r.direcao() );
+        double c = escalar( w, w ) - (raio * raio);
+
+        double delta = (b * b) - c;
+
+        if (delta > 0)
+        {
+            // c diz a distancia da origem do raio ao centro da esfera
+            // se c > 0 entao a origem do raio esta fora da esfera
+            if (c < 0) { return -b + sqrt(delta); }
+            else       { return -b - sqrt(delta); }
+        }
+        return -1; // se delta <= 0
+    }
+
+    Vetor obterNormal (Ponto p) const override { return (p - centro) / raio; }
+}; // fim class Esfera
+
+class Plano : public Objeto
+{
+    Ponto ponto; // ponto pertcente ao plano
+    Vetor normal; // vetor normal ao plano
+public:
+    Plano(Ponto p, Vetor n, Material m) : ponto{p}, normal{unitario(n)} { material = m; }
+
+    double intersecao (Raio raio) const override
+	{
+		double denominador = escalar(normal, raio.direcao());
+		if (denominador != 0)
+		{
+			Vetor w = raio.origem() - ponto;
+			double tInt = - escalar(normal, w) / denominador;
+			return tInt;
+		}
+		else { return -1; }
+	}
+
+    Vetor obterNormal (Ponto p) const override { return normal; }
+}; // fim class Plano
+
 #endif
