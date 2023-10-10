@@ -12,7 +12,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 #include <SDL.h>
 #include "include/objetos.hpp"
 
-double rayCasting (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
+double raycast (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
 {
 	// Vai guardar o menor valor de t 
 	double t_int = -1;
@@ -122,7 +122,7 @@ int main(int argc, char** argv)
 
 	// Maior intensidade de cor ************************************************
 	// Usada para reprocessar as cores com base na maior
-	double maiorCor = 0.0; 
+	double maiorCor = 1.0; 
 
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = janela.getWidth()/nCol;
@@ -149,7 +149,7 @@ int main(int argc, char** argv)
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
-			double t_int = rayCasting(cena, raio, atingido);
+			double t_int = raycast(cena, raio, atingido);
 
 			// Verificando de atingiu algum objeto
 			if (t_int > 0) 
@@ -165,16 +165,20 @@ int main(int argc, char** argv)
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : fontes)
 				{
-					double t_sombra = -1;
+					// Obtem a posicao da fonte pontual
+					Ponto posFonte = fonte->getPosicao();
+					// Gerando um raio da fonte para o ponto intersectado
+					Raio raioSombra (posFonte, p_int);
+					// Ponteiro para o objeto que foi acertado pelo raio 
+					Objeto* acertado = nullptr;
 
-					if (atingido != &esfera)
-					{
-						Raio rSombra (fonte->getPosicao(), p_int);
-						Vetor L = p_int - fonte->getPosicao();
-						t_sombra = esfera.intersecao(rSombra);
-					}
+					// Calculando a distancia da fonte ao objeto acertado
+					double t_sombra = raycast(cena, raioSombra, acertado);
+					// Calculando a distancia da fonte ao ponto intersectado
+					double distanciaFonte = norma(p_int - posFonte);
 					
-					if (t_sombra < 0)
+					// Compara as distancias
+					if (t_sombra + 0.01 >= distanciaFonte) 
 					{
 						Vetor normal = atingido->obterNormal(p_int);
 
