@@ -11,6 +11,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 
 #include <SDL.h>
 #include "include/objetos.hpp"
+// #include <iostream>
 
 double raycast (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
 {
@@ -140,6 +141,7 @@ int main(int argc, char** argv)
 		// Percorre as colunas da grade do canvas
 		for (int col = 0; col < nCol; ++col) 
 		{
+			// std::cout << "l: " << lin << " c: " << col << "\n";
 			// Coordenada X do centro do quadriculo no frame
 			double x = -(janela.getWidth()/2) + (Dx/2) + (col*Dx);
 
@@ -161,7 +163,7 @@ int main(int argc, char** argv)
 				Vetor I { 0.0, 0.0, 0.0 };
 				// Adicionando a luz ambiente
 				I = I + (luzAmbiente * atingido->material.ka);
-
+				
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : fontes)
 				{
@@ -180,6 +182,10 @@ int main(int argc, char** argv)
 					
 					// // Compara as distancias
 					// if (t_sombra + 0.01 >= distanciaFonte) 
+					// std::cout << fonte << "\n";
+					// std::cout << fonte->isSombra(p_int, cena, raycast) << "\n";
+					// std::cout << atingido << "\n";
+
 					if (fonte->isSombra(p_int, cena, raycast)) 
 					{
 						Vetor normal = atingido->obterNormal(p_int);

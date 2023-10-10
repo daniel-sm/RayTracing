@@ -110,7 +110,7 @@ public:
     bool isSombra (
         Ponto p_int, 
         Lista<Objeto> cena,
-        double (*raycast)(Lista, Raio, Objeto*) 
+        double (*raycast)(Lista<Objeto>&, Raio, Objeto*&) 
     ) {
         // Raio que parte da posicao da fonte ao ponto de intersecao
         Raio raioSombra (posicao, p_int);
