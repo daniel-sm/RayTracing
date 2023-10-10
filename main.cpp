@@ -45,6 +45,29 @@ double ProdutoEscalar (Vetor v, Vetor u) {
 	return (v.a * u.a) + (v.b * u.b) + (v.c * u.c);
 }
 
+class Raio {
+	public:
+ 
+	Ponto inicial;
+	Vetor direcao;
+
+	Raio(Ponto pin, Ponto pr) : inicial{pin}, direcao{pr - pin} {
+		inicial = pin;
+		Vetor v = pr - pin;
+		direcao = v / SDL_sqrt(ProdutoEscalar(v, v));
+	}
+	
+	Ponto P (double t) { return { inicial + (direcao * t) }; }
+};
+
+class Esfera {
+	Ponto centro; 
+	double raio;
+
+	public:
+	Esfera(Ponto c, double r) : centro{c}, raio{r} {}
+};
+
 int main(int argc, char **argv) {
     int nLin = 500;
     int nCol = 1000;
