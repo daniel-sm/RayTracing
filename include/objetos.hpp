@@ -2,6 +2,7 @@
 #define OBJETOS_HPP
 
 #include "util.hpp"
+#include <iostream>
 
 class Janela
 {
