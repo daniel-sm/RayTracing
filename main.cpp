@@ -97,8 +97,22 @@ int main(int argc, char** argv)
 	// Informacoes da Fonte Pontual ********************************************
 	Vetor intensePontual { 0.7, 0.7, 0.7 };
 	Ponto posicaoPontual { 0, 60, -30 };
-	// Objeto da Fonte Pontual de luz
+	// Objeto da fonte de luz Pontual
 	Pontual pontual (intensePontual, posicaoPontual);
+
+	// Informacoes da Fonte Spot ***********************************************
+	Vetor intenseSpot { 1.0, 1.0, 1.0 };
+	Ponto posicaoSpot { 30, 50, 0 };
+	Vetor direcaoSpot { centroEsfera - posicaoSpot };
+	double anguloSpot = 3.1415926 / 6;
+	// Objeto da fonte de luz Spot
+	Spot spot (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+
+	// Informacoes da Fonte Direcional *****************************************
+	Vetor intenseDirecional { 0.5, 0.5, 0.5 };
+	Vetor direcaoDirecional { 0, -1, 0 };
+	// Objeto da fonte de luz Direcional
+	Direcional direcional (intenseDirecional, direcaoDirecional);
 
     // Informacoes da luz Ambiente *********************************************
     Vetor luzAmbiente { 0.3, 0.3, 0.3 };
@@ -113,7 +127,9 @@ int main(int argc, char** argv)
 	// Lista de Fontes de luz **************************************************
 	Lista<Fonte> fontes;
 	// Adicionando as fontes na lista
-	fontes.add(&pontual);
+	// fontes.add(&pontual);
+	// fontes.add(&spot);
+	fontes.add(&direcional);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];

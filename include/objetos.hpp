@@ -141,7 +141,7 @@ public:
         // Vetor em direcao a fonte de luz  (unitario)
         Vetor luz = unitario(posicao - p_int);
         // Vetor em direcao a origem do raio (unitario)
-        Vetor visao = -1 * dirRaio;
+        Vetor visao = (-1) * dirRaio;
         // Vetor em direcao ao raio refletido (unitario)
         Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
 
@@ -168,7 +168,11 @@ private:
     Vetor direcao; // direcao da fonte de luz
     double angulo; // angulo de abertura da fonte de luz
 public:
-    Spot(Ponto p, Vetor d, double a) : posicao{p}, direcao{unitario(d)}, angulo{a} {}
+    Spot(Vetor i, Ponto p, Vetor d, double a) : 
+        posicao{p}, 
+        direcao{unitario(d)}, 
+        angulo{a} 
+        { intensidade = i; }
 
     bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override
     {
@@ -202,7 +206,7 @@ public:
         // Vetor em direcao a fonte de luz  (unitario)
         Vetor luz = unitario(posicao - p_int);
         // Vetor em direcao a origem do raio (unitario)
-        Vetor visao = -1 * dirRaio;
+        Vetor visao = (-1) * dirRaio;
         // Vetor em direcao ao raio refletido (unitario)
         Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
 
@@ -234,25 +238,54 @@ public:
     }
 }; // fim class Spot
 
-
 class Direcional : public Fonte
 {
 private:
     Vetor direcao;
 public:
-    Direcional(Vetor d) : direcao{d} {}
+    Direcional(Vetor i, Vetor d) : direcao{unitario(d)} { intensidade = i; }
 
     bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override
     {
-        // Finalizar implementacao
-        return true;
+        // Raio que parte do ponto de intersecao em direcao a fonte
+        // Como nao tem posicao da fonte entao gera-se um ponto qualquer 
+        // na direcao contraria da direcao da fonte de luz direcional
+        Raio raioSombra (p_int, p_int + (-1 * direcao));
+
+        // Ponteiro temporario que vai guardar o objeto atingido
+        Objeto* temp; // Necessario na funcao mas nao sera usado 
+
+        // Lancando raio na cena para ver se tem sombra
+        double t_sombra = raycast(cena, raioSombra, temp);
+
+        // Retorna TRUE se houve qualquer intersecao no caminho
+        // Como nao tem posicao, qualquer intersecao torna-se valida
+        return (t_sombra > 0);
     }
 
     Vetor iluminacao (Vetor normal, Ponto p_int, Vetor dirRaio, Material material)
     const override
     {
-        // Finalizar implementacao
-        return {};
+        // Vetor em direcao a fonte de luz  (unitario)
+        Vetor luz = (-1) * direcao;
+        // Vetor em direcao a origem do raio (unitario)
+        Vetor visao = (-1) * dirRaio;
+        // Vetor em direcao ao raio refletido (unitario)
+        Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
+
+        // Fator de Difusao
+        double fatorDif = maior(0.0, escalar(luz, normal));
+        // Calculo da intensidade da Luz Difusa
+        Vetor Id = (material.kd * intensidade) * fatorDif; 
+
+        // Fator Especular
+        double fatorEsp = maior(0.0, escalar(reflexo, visao));
+        fatorEsp = pow(fatorEsp, material.brilho);
+        // Calculo da intensidade da Luz Especular 
+        Vetor Ie = (material.ke * intensidade) * fatorEsp; 
+
+        // Retorna a soma das duas intensidades
+        return (Id + Ie);
     }
 }; // fim class Direcional
 //
