@@ -30,6 +30,8 @@ public:
 	Ponto pontoIntersecao (double t) { return { ini + (t * dir) }; }
 }; // fim class Raio
 
+// Hierarquia de classes: Objeto
+//
 class Objeto
 {
 public:
@@ -91,12 +93,15 @@ public:
 
     Vetor obterNormal (Ponto p) const override { return normal; }
 }; // fim class Plano
+//
+// Fim da hierarquia de classes Objeto 
 
 // Gerando um tipo chamado RC que correponde ao tipo da funcao raycast
 // Esse tipo sera usado para um ponteiro da função raycast
 using RC = double(Lista<Objeto>&, Raio, Objeto*&);
 
 // Hierarquia de classes: Fonte
+//
 class Fonte 
 {
 public:
@@ -108,7 +113,7 @@ public:
 
 class Pontual : public Fonte
 {
-    Ponto posicao; // local da luz
+    Ponto posicao; // local da fonte de luz
 public:
     Pontual (Vetor i, Ponto p) : posicao{p} { intensidade = i; }
 
@@ -159,11 +164,83 @@ public:
 class Spot : public Fonte
 {
 private:
-    Ponto posicao;
-    Vetor direcao;
-    double angulo;
+    Ponto posicao; // local da fonte de luz
+    Vetor direcao; // direcao da fonte de luz
+    double angulo; // angulo de abertura da fonte de luz
 public:
-    Spot(Ponto p, Vetor d, double a) : posicao{p}, direcao{d}, angulo{a} {}
+    Spot(Ponto p, Vetor d, double a) : posicao{p}, direcao{unitario(d)}, angulo{a} {}
+
+    bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override
+    {
+        // Vetor em direcao a fonte de luz  (unitario)
+        Vetor luz = unitario(posicao - p_int);
+        // Cosseno entre o vetor luz e a direcao da luz spot
+        double cosLuzDirecao = escalar((-1 * luz), direcao);
+
+        // Verificando se o ponto intersectado nao esta no foco da luz 
+        if (cos(angulo) > cosLuzDirecao) return false;
+
+        // Raio que parte da posicao da fonte ao ponto de intersecao
+        Raio raioSombra (posicao, p_int);
+
+        // Ponteiro temporario que vai guardar o objeto atingido
+        Objeto* temp; // Necessario na funcao mas nao sera usado 
+
+        // Lancando raio na cena para ver se tem sombra
+        double t_sombra = raycast(cena, raioSombra, temp);
+
+        // Obtendo distancia da fonte ao ponto de intersecao
+        double distanciaFonte = norma(p_int - posicao);
+
+        // Retorna TRUE se distancia da intersecao for igual ou maior
+        return (t_sombra + 0.01 >= distanciaFonte);
+    }
+
+    Vetor iluminacao (Vetor normal, Ponto p_int, Vetor dirRaio, Material material)
+    const override
+    {
+        // Vetor em direcao a fonte de luz  (unitario)
+        Vetor luz = unitario(posicao - p_int);
+        // Vetor em direcao a origem do raio (unitario)
+        Vetor visao = -1 * dirRaio;
+        // Vetor em direcao ao raio refletido (unitario)
+        Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
+
+        // Fator de Difusao e Especular
+        double fatorDif, fatorEsp;
+
+        // Cosseno entre o vetor luz e a direcao da luz spot
+        double cosLuzDirecao = escalar((-1 * luz), direcao);
+
+        if (cos(angulo) <= cosLuzDirecao)
+        {
+            // Fator de Difusao
+            fatorDif = maior(0.0, escalar(luz, normal));
+            // Fator Especular
+            fatorEsp = maior(0.0, escalar(reflexo, visao));
+            fatorEsp = pow(fatorEsp, material.brilho);
+        } else
+        {
+            fatorDif = 0; // Fator de Difusao
+            fatorEsp = 0; // Fator Especular
+        }
+        
+        // Calculo da intensidade da Luz Difusa
+        Vetor Id = (material.kd * intensidade) * fatorDif; 
+        // Calculo da intensidade da Luz Especular 
+        Vetor Ie = (material.ke * intensidade) * fatorEsp; 
+        
+        return (Id + Ie);// * cosLuzDirecao;
+    }
+}; // fim class Spot
+
+
+class Direcional : public Fonte
+{
+private:
+    Vetor direcao;
+public:
+    Direcional(Vetor d) : direcao{d} {}
 
     bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override
     {
@@ -177,6 +254,7 @@ public:
         // Finalizar implementacao
         return {};
     }
-}; // fim class Spot
-
+}; // fim class Direcional
+//
+// Fim da hierarquia de classes Fonte
 #endif

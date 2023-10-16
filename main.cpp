@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 	cena.add(&fundo);
 
 	// Lista de Fontes de luz **************************************************
-	Lista<Pontual> fontes;
+	Lista<Fonte> fontes;
 	// Adicionando as fontes na lista
 	fontes.add(&pontual);
 
@@ -181,7 +181,6 @@ int main(int argc, char** argv)
 						I = I + aux;
 					}
 				}
-
 				// Computando a maior intensidade de cor
 				if (I.a > maiorCor) maiorCor = I.a;
 				if (I.b > maiorCor) maiorCor = I.b;
