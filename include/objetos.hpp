@@ -250,7 +250,9 @@ public:
         // Raio que parte do ponto de intersecao em direcao a fonte
         // Como nao tem posicao da fonte entao gera-se um ponto qualquer 
         // na direcao contraria da direcao da fonte de luz direcional
-        Raio raioSombra (p_int, p_int + (-1 * direcao));
+        Ponto inicio = p_int + (-0.1 * direcao);
+        Ponto fim = p_int + (-1 * direcao);
+        Raio raioSombra (inicio, fim);
 
         // Ponteiro temporario que vai guardar o objeto atingido
         Objeto* temp; // Necessario na funcao mas nao sera usado 
@@ -260,7 +262,7 @@ public:
 
         // Retorna TRUE se houve qualquer intersecao no caminho
         // Como nao tem posicao, qualquer intersecao torna-se valida
-        return (t_sombra - 0.1 <= 0);
+        return (t_sombra <= 0);
     }
 
     Vetor iluminacao (Vetor normal, Ponto p_int, Vetor dirRaio, Material material)

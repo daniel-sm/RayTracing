@@ -23,7 +23,7 @@ struct Material
 
 // ********* Operacoes ************
 // 
-// Operacoes entre vetores
+// Operacoes com vetor
 Vetor operator+(Vetor v, Vetor u) { return { (v.a + u.a), (v.b + u.b), (v.c + u.c) }; }
 Vetor operator-(Vetor v, Vetor u) { return { (v.a - u.a), (v.b - u.b), (v.c - u.c) }; }
 Vetor operator*(Vetor v, Vetor u) { return { (v.a * u.a), (v.b * u.b), (v.c * u.c) }; }
@@ -33,7 +33,7 @@ Vetor operator*(Vetor v, double k) { return { (k * v.a), (k * v.b), (k * v.c) };
 Vetor operator*(double k, Vetor v) { return { (k * v.a), (k * v.b), (k * v.c) }; }
 Vetor operator/(Vetor v, double k) { return { (v.a / k), (v.b / k), (v.c / k) }; }
 //
-// Operacoes entre ponto e vetor
+// Operacoes com ponto 
 Ponto operator+ (Ponto p, Vetor v) { return { (p.x + v.a), (p.y + v.b), (p.z + v.c) }; }
 Vetor operator- (Ponto p1, Ponto p2) { return { (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z) }; }
 
