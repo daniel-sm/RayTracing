@@ -43,7 +43,7 @@ double raycast (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
 int main(int argc, char** argv) 
 {
 	// Ponto de visao da cena, origem dos raios
-	Ponto eye { 0, 0, 0 };
+	Ponto olho = { 0, 0, 0 };
 
 	// Informacoes da janela ***************************************************
 	double wJanela = 60; // Largura da janela em CM
@@ -54,6 +54,10 @@ int main(int argc, char** argv)
 	// Informacoes do Canvas ***************************************************
 	int nCol = 500; // Numero de colunas da grade do canvas
 	int nLin = 500; // Numero de linhas da grade do canvas
+
+	// Delta X e Y dos quadrados da grade do canvas ****************************
+	double Dx = janela.getWidth()/nCol;
+	double Dy = janela.getHeight()/nLin;
 
 	// Informacoes da Esfera ***************************************************
 	double raioEsfera = 40; // Raio da esfera em CM
@@ -140,10 +144,6 @@ int main(int argc, char** argv)
 	// Usada para reprocessar as cores com base na maior
 	double maiorCor = 1.0; 
 
-	// Delta X e Y dos quadrados da grade do canvas ****************************
-	double Dx = janela.getWidth()/nCol;
-	double Dy = janela.getHeight()/nLin;
-
 	// Loop de Ray Casting *****************************************************
 	// Lancando raios para cada quadrado na grade do canvas
 	//
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
 			double x = -(janela.getWidth()/2) + (Dx/2) + (col*Dx);
 
 			// Gerando raio lancado pela janela
-			Raio raio = Raio (eye, { x, y, -janela.getDistance() });
+			Raio raio = Raio (olho, { x, y, -janela.getDistance() });
 
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
@@ -204,10 +204,10 @@ int main(int argc, char** argv)
 
 				Cor cor { 255, 255, 255 };
 
-				// Arredondar para valor inteiro
-				cor.r = round(cor.r * I.a);
-				cor.g = round(cor.g * I.b);
-				cor.b = round(cor.b * I.c);
+				// Calcular a cor em RGB
+				cor.r = (cor.r * I.a);
+				cor.g = (cor.g * I.b);
+				cor.b = (cor.b * I.c);
 
 				cores[lin][col] = cor;
 			} else { 
@@ -219,6 +219,7 @@ int main(int argc, char** argv)
 	// Reprocessar as cores com base na maior intensidade de cor
 	for (int l = 0; l < nLin; ++l) {
 		for (int c = 0; c < nCol; ++c) {
+			// Arredondando para valor inteiro 
 			cores[l][c].r = round(cores[l][c].r / maiorCor);
 			cores[l][c].g = round(cores[l][c].g / maiorCor);
 			cores[l][c].b = round(cores[l][c].b / maiorCor);

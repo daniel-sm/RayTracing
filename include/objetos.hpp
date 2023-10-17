@@ -260,7 +260,7 @@ public:
 
         // Retorna TRUE se houve qualquer intersecao no caminho
         // Como nao tem posicao, qualquer intersecao torna-se valida
-        return (t_sombra < 0);
+        return (t_sombra - 0.1 <= 0);
     }
 
     Vetor iluminacao (Vetor normal, Ponto p_int, Vetor dirRaio, Material material)
