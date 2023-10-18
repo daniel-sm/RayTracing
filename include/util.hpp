@@ -14,6 +14,14 @@ struct Ponto { double x, y, z; };
 // Valores de um vetor tridimensional
 struct Vetor { double a, b, c; };
 //
+// Matriz para operações matematicas 
+struct Matriz 
+{
+    double *matriz;
+
+    Matriz (int m, int n) { matriz = new double[m * n]; }
+};
+//
 // Propriedades de cada material 
 struct Material 
 {

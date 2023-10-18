@@ -93,6 +93,43 @@ public:
 
     Vetor obterNormal (Ponto p) const override { return normal; }
 }; // fim class Plano
+
+class Cone : public Objeto 
+{
+    Ponto centro; // centro da case do cone
+    Ponto vertice; // vertice do cone 
+    Vetor direcao; // direcao do do eixo do cone
+    double raio; // raio da base do cone
+    double altura; // altura do cone 
+
+public:
+    Cone (Ponto c, Vetor d, double r, double h) : centro{c}, direcao{d}, raio{r}, altura{h} 
+    {
+        vertice = centro + (altura * direcao);
+    }
+    Cone (Ponto c, Ponto v, double r) : centro{c}, vertice{v}, raio{r}
+    {
+        altura = norma(v - c);
+        direcao = (v - c) / altura; 
+    }
+
+    double intersecao (Raio r) const override 
+    {
+        double h2 = altura*altura;
+        double r2 = raio*raio;
+
+        double beta = h2 / r2;
+
+        Vetor w = r.origem() - centro;
+        
+        double a; // B.drT.P.dr - (dr@dc)^2
+        double b; // 2.B.w.P.dr + 2.H.(dr@dc) - 2.(w@dc).(dr@dc)
+        double c; // B.wT.P.w - H^2 + 2.H.(w@dc) - (w@dc)^2
+    }
+
+    Vetor obterNormal (Ponto p) const override 
+    {}
+};
 //
 // Fim da hierarquia de classes Objeto 
 
