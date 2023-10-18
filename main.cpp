@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 						Vetor aux = fonte->iluminacao(
 							normal,
 							p_int,
-							raio.direcao(),
+							raio.getDirecao(),
 							atingido->material
 						);
 						// Soma a intensidade de cada fonte

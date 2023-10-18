@@ -24,8 +24,8 @@ public:
 	Raio(Ponto i, Ponto f) : ini{i}, dir{unitario(f - i)} {}
 	Raio(Vetor d, Ponto i) : ini{i}, dir{unitario(d)} {}
 
-	Vetor direcao() { return dir; }
-	Ponto origem() { return ini; }
+	Vetor getDirecao() { return dir; }
+	Ponto getOrigem() { return ini; }
 
 	// Ponto de intersecao com parametro "t" 
 	Ponto pontoIntersecao (double t) { return { ini + (t * dir) }; }
@@ -50,9 +50,9 @@ public:
 
     double intersecao (Raio r) const override
     {
-        Vetor w = r.origem() - centro;
+        Vetor w = r.getOrigem() - centro;
 
-        double b = escalar( w, r.direcao() );
+        double b = escalar( w, r.getDirecao() );
         double c = escalar( w, w ) - (raio * raio);
 
         double delta = (b * b) - c;
@@ -82,10 +82,10 @@ public:
 
     double intersecao (Raio raio) const override
 	{
-		double denominador = escalar(normal, raio.direcao());
+		double denominador = escalar(normal, raio.getDirecao());
 		if (denominador != 0)
 		{
-			Vetor w = raio.origem() - ponto;
+			Vetor w = raio.getOrigem() - ponto;
 			double tInt = - escalar(normal, w) / denominador;
 			return tInt;
 		}
@@ -116,14 +116,37 @@ public:
 
     double intersecao (Raio r) const override 
     {
-        double h2 = altura*altura;
-        double r2 = raio*raio;
+        // variavel B das formulas 
+        double beta = (altura*altura) / (raio*raio);
 
-        double beta = h2 / r2;
+        // variavel w das formulas
+        Vetor w = r.getOrigem() - centro;
 
-        Vetor w = r.origem() - centro;
+        // Produto escalar entre direcao do raio e direcao do eixo do cone
+        double escalarRC = escalar(r.getDirecao(), direcao);
+        // Produto escalar entre vetor w e direcao do eixo do cone
+        double escalarWC = escalar(w, direcao);
+
+        // // variavel P das formulas
+        // double P[3][3];
+        // // variveis auxiliares para facilitar escrita do calculo
+        // // Construcao da matriz P da formula abaixo
+        // P[0][0] = 1-(x*x); P[0][1] = -(x*y); P[0][2] = -(x*z);
+        // P[1][0] = -(y*x); P[1][1] = 1-(y*y); P[1][2] = -(y*z);
+        // P[2][0] = -(z*x); P[2][1] = -(z*y); P[2][2] = 1-(z*z);
+        double x = direcao.a;
+        double y = direcao.b;
+        double z = direcao.c;
         
-        double a; // B.drT.P.dr - (dr@dc)^2
+        // (B.drT.P.dr) - (dr@dc)^2
+        double a; 
+        // primeiro termo: (B.drT.P.dr)
+        a = (x*x) + (y*y) + (z*z) - (x*x*x*x) - (y*y*y*y) - (z*z*z*z);
+        a = a - 2*(x*x*y*y) - 2*(x*x*z*z) - 2*(y*y*z*z);
+        a = a * beta;
+        // segundo termo: (dr@dc)^2
+        a = a - escalarRC * escalarRC;
+
         double b; // 2.B.w.P.dr + 2.H.(dr@dc) - 2.(w@dc).(dr@dc)
         double c; // B.wT.P.w - H^2 + 2.H.(w@dc) - (w@dc)^2
     }
