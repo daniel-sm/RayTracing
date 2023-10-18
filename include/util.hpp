@@ -17,9 +17,15 @@ struct Vetor { double a, b, c; };
 // Matriz para operações matematicas 
 struct Matriz 
 {
+private:
     double *matriz;
+    int lin, col;
+public:
+    Matriz (int l, int c) : lin{l}, col{c} { matriz = new double[l * c]; }
+    ~Matriz () { delete[] matriz; }
 
-    Matriz (int m, int n) { matriz = new double[m * n]; }
+    int getLin () { return lin; }
+    int getCol () { return col; }
 };
 //
 // Propriedades de cada material 
@@ -44,6 +50,25 @@ Vetor operator/(Vetor v, double k) { return { (v.a / k), (v.b / k), (v.c / k) };
 // Operacoes com ponto 
 Ponto operator+ (Ponto p, Vetor v) { return { (p.x + v.a), (p.y + v.b), (p.z + v.c) }; }
 Vetor operator- (Ponto p1, Ponto p2) { return { (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z) }; }
+//
+// Operacoes com matriz
+Matriz operator+ (Matriz m1, Matriz m2) 
+{
+    if (m1.getLin() != m2.getLin() or m1.getCol() != m2.getCol()) { return; }
+    int nLin = m1.getLin();
+    int nCol = m2.getCol();
+    Matriz result (nLin, nCol);
+    
+    for (int i = 0; i < nLin; ++i) {
+        for (int j = 0; i < nCol; ++j)
+        {
+
+        }
+    }
+}
+Matriz operator- (Matriz m1, Matriz m2) {}
+Matriz operator* (Matriz m1, Matriz m2) {}
+
 
 // ********** Funcoes Auxiliares ***********
 //

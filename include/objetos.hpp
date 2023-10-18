@@ -22,6 +22,7 @@ private:
 	Vetor dir; // unitario
 public:
 	Raio(Ponto i, Ponto f) : ini{i}, dir{unitario(f - i)} {}
+	Raio(Vetor d, Ponto i) : ini{i}, dir{unitario(d)} {}
 
 	Vetor direcao() { return dir; }
 	Ponto origem() { return ini; }
@@ -288,8 +289,7 @@ public:
         // Como nao tem posicao da fonte entao gera-se um ponto qualquer 
         // na direcao contraria da direcao da fonte de luz direcional
         Ponto inicio = p_int + (-0.1 * direcao);
-        Ponto fim = p_int + (-1 * direcao);
-        Raio raioSombra (inicio, fim);
+        Raio raioSombra ((-1) * direcao, inicio);
 
         // Ponteiro temporario que vai guardar o objeto atingido
         Objeto* temp; // Necessario na funcao mas nao sera usado 

@@ -131,8 +131,8 @@ int main(int argc, char** argv)
 	// Lista de Fontes de luz **************************************************
 	Lista<Fonte> fontes;
 	// Adicionando as fontes na lista
-	// fontes.add(&pontual);
-	// fontes.add(&spot);
+	fontes.add(&pontual);
+	fontes.add(&spot);
 	fontes.add(&direcional);
 
 	// Matriz de cores *********************************************************
@@ -151,13 +151,13 @@ int main(int argc, char** argv)
 	for (int lin = 0; lin < nLin; ++lin) 
 	{
 		// Coordenada Y do centro do quadriculo no frame
-		double y = (janela.getHeight()/2) - Dy/2 - lin*Dy;
+		double y = (janela.getHeight() / 2) - (Dy / 2) - (lin * Dy);
 
 		// Percorre as colunas da grade do canvas
 		for (int col = 0; col < nCol; ++col) 
 		{
 			// Coordenada X do centro do quadriculo no frame
-			double x = -(janela.getWidth()/2) + (Dx/2) + (col*Dx);
+			double x = -(janela.getWidth() / 2) + (Dx / 2) + (col * Dx);
 
 			// Gerando raio lancado pela janela
 			Raio raio = Raio (olho, { x, y, -janela.getDistance() });
