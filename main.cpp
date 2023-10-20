@@ -72,6 +72,20 @@ int main(int argc, char** argv)
 	// Objeto da Esfera
 	Esfera esfera (centroEsfera, raioEsfera, materialEsfera);
 
+	// Informacoes do Cone *****************************************************
+	double raioCone = 5; // Raio da base do cone em CM
+	Ponto baseCone { 0, -raioEsfera, -50 }; // Centro da base do cone 
+	Ponto verticeCone { 0, 0, -50 }; // Posicao do Vertice do cone
+	// Propriedades de reflectividade do cone
+	Vetor kaCone { 0.7, 0.7, 0.2 }; // Propr. ambiente do material do cone 
+	Vetor kdCone = kaCone; // Propr. difusa do material do cone 
+	Vetor keCone = kaCone; // Propr. especular do material do cone 
+	double brilhoCone = 10; // Fator de brilho especular
+	// Material do cone
+	Material materialCone { kaCone, kdCone, keCone, brilhoCone };
+	// Objeto do Cone
+	Cone cone (baseCone, verticeCone, raioCone, materialCone);
+
 	// Informacoes do Plano do Chao ********************************************
 	Ponto pontoChao { 0, -raioEsfera, 0 }; // Ponto presente no plano do chao
 	Vetor normalChao { 0, 1, 0 }; // Vetor normal ao plano do chao
@@ -99,8 +113,8 @@ int main(int argc, char** argv)
 	Plano fundo (pontoFundo, normalFundo, materialFundo);
 	
 	// Informacoes da Fonte Pontual ********************************************
-	Vetor intensePontual { 0.7, 0.7, 0.7 };
-	Ponto posicaoPontual { 0, 60, -30 };
+	Vetor intensePontual { 0.7, 0.7, 0.7 }; // Intensidade da fonte pontual
+	Ponto posicaoPontual { 0, 60, -30 }; // Posicao da fonte pontual
 	// Objeto da fonte de luz Pontual
 	Pontual pontual (intensePontual, posicaoPontual);
 
@@ -124,7 +138,8 @@ int main(int argc, char** argv)
 	// Lista de Objetos da Cena ************************************************
 	Lista<Objeto> cena;
 	// Adicionando os objetos na cena
-	cena.add(&esfera);
+	// cena.add(&esfera);
+	cena.add(&cone);
 	cena.add(&chao);
 	cena.add(&fundo);
 

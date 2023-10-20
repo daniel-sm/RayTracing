@@ -104,14 +104,19 @@ class Cone : public Objeto
     double altura; // altura do cone 
 
 public:
-    Cone (Ponto c, Vetor d, double r, double h) : centro{c}, direcao{d}, raio{r}, altura{h} 
+    Cone (Ponto c, Vetor d, double r, double h, Material m) 
+    : centro{c}, direcao{d}, raio{r}, altura{h} 
     {
-        vertice = centro + (altura * direcao);
+        vertice = centro + (altura * direcao); 
+        material = m;
     }
-    Cone (Ponto c, Ponto v, double r) : centro{c}, vertice{v}, raio{r}
+
+    Cone (Ponto c, Ponto v, double r, Material m) 
+    : centro{c}, vertice{v}, raio{r}
     {
         altura = norma(v - c);
         direcao = (v - c) / altura; 
+        material = m;
     }
 
     double intersecao (Raio r) const override 
@@ -126,33 +131,71 @@ public:
         double escalarRC = escalar(r.getDirecao(), direcao);
         // Produto escalar entre vetor w e direcao do eixo do cone
         double escalarWC = escalar(w, direcao);
-
-        // // variavel P das formulas
-        // double P[3][3];
-        // // variveis auxiliares para facilitar escrita do calculo
-        // // Construcao da matriz P da formula abaixo
-        // P[0][0] = 1-(x*x); P[0][1] = -(x*y); P[0][2] = -(x*z);
-        // P[1][0] = -(y*x); P[1][1] = 1-(y*y); P[1][2] = -(y*z);
-        // P[2][0] = -(z*x); P[2][1] = -(z*y); P[2][2] = 1-(z*z);
-        double x = direcao.a;
-        double y = direcao.b;
-        double z = direcao.c;
         
-        // (B.drT.P.dr) - (dr@dc)^2
+        // coordenadas do vetor direcao
+        double xd = r.getDirecao().a;
+        double yd = r.getDirecao().b;
+        double zd = r.getDirecao().c;
+        
+        // coordenadas do vetor w
+        double xw = w.a;
+        double yw = w.b;
+        double zw = w.c;
+
+        // a = (B.drT.P.dr) - (dr.dc)^2
         double a; 
-        // primeiro termo: (B.drT.P.dr)
-        a = (x*x) + (y*y) + (z*z) - (x*x*x*x) - (y*y*y*y) - (z*z*z*z);
-        a = a - 2*(x*x*y*y) - 2*(x*x*z*z) - 2*(y*y*z*z);
+        // primeiro termo: (B*drT*P*dr)
+        a = (xd*xd) + (yd*yd) + (zd*zd) - (xd*xd*xd*xd) - (yd*yd*yd*yd) - (zd*zd*zd*zd);
+        a = a - 2*(xd*xd*yd*yd) - 2*(xd*xd*zd*zd) - 2*(yd*yd*zd*zd);
         a = a * beta;
-        // segundo termo: (dr@dc)^2
+        // segundo termo: (-(dr.dc)^2)
         a = a - escalarRC * escalarRC;
 
-        double b; // 2.B.w.P.dr + 2.H.(dr@dc) - 2.(w@dc).(dr@dc)
-        double c; // B.wT.P.w - H^2 + 2.H.(w@dc) - (w@dc)^2
+        // b = 2*B*wT*P*dr + 2*H*(dr.dc) - 2*(w.dc)*(dr.dc)
+        double b; 
+        // primeiro termo: (2*B*wT*P*dr) 
+        b = (xw*xd) + (yw*yd) + (zw*zd) - (xw*xd*xd*xd) - (yw*yd*yd*yd) - (zw*zd*zd*zd);
+        b = b - xw*xd*(yd*yd + zd*zd) - yw*yd*(xd*xd + zd*zd) - zw*zd*(xd*xd + yd*yd);
+        b = b * 2 * beta;
+        // segundo termo: (2*H*(dr.dc))
+        b = b + 2 * altura * escalarRC;
+        // terceiro termo: (-2*(w.dc)*(dr.dc))
+        b = b - 2 * escalarWC * escalarRC;
+
+        // c = B*wT*P*w - H^2 + 2*H*(w.dc) - (w.dc)^2
+        double c; 
+        // primeiro termo: (B*wT*P*w)
+        c = (xw*xw) + (yw*yw) + (zw*zw) - (xw*xw*xw*xw) - (yw*yw*yw*yw) - (zw*zw*zw*zw);
+        c = c - 2*(xw*xw*yw*yw) - 2*(xw*xw*zw*zw) - 2*(yw*yw*zw*zw);
+        c = c * beta;
+        // segundo termo: (-H^2 + 2*H*(w.dc))
+        c = c - altura*altura + 2 * altura * escalarWC;
+        // terceiro termo: (-(w.dc)^2)
+        c = c - escalarWC * escalarWC;
+
+        double delta = (b * b) - (4 * a * c);
+
+        if (delta > 0)
+        {
+            return (-b - sqrt(delta)) / 2*a;
+        }
+        return -1;
     }
 
     Vetor obterNormal (Ponto p) const override 
-    {}
+    {
+        if (escalar(direcao, (p - centro)) == 0)
+        {
+            return (-1) * direcao;
+        } else
+        {
+            Vetor w = vetorial(direcao, (p - centro));
+            Vetor normal = vetorial(w, (vertice - p));
+            return unitario(normal);
+        }
+        
+        
+    }
 };
 //
 // Fim da hierarquia de classes Objeto 

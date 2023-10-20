@@ -78,8 +78,20 @@ Matriz operator* (Matriz m1, Matriz m2) {}
 
 // ********** Funcoes Auxiliares ***********
 //
-// Produto escalar (interno) entre vetores
+// Produto escalar entre vetores
 double escalar (Vetor v, Vetor u) { return (v.a * u.a) + (v.b * u.b) + (v.c * u.c); }
+
+// Produto vetorial entre dois vetores
+Vetor vetorial (Vetor v, Vetor u) 
+{
+    Vetor w 
+    {
+        (v.b * u.c) - (v.c * u.b),
+        (v.c * u.a) - (v.a * u.c),
+        (v.a * u.b) - (v.b * u.a)
+    };
+    return w;
+} 
 
 // Modulo (tamanho) de um vetor
 double norma(Vetor v) { return sqrt(escalar(v, v)); }
