@@ -15,22 +15,30 @@ struct Ponto { double x, y, z; };
 struct Vetor { double a, b, c; };
 //
 // Matriz para operações matematicas 
-/*
+//
+template <typename T>
 struct Matriz 
 {
 private:
-    double *matriz;
-    int lin, col;
+    T *matriz;
+    int linhas, colunas;
 public:
-    Matriz (int l, int c) : lin{l}, col{c} { matriz = new double[l * c]; }
+    Matriz (int l, int c) : linhas{l}, colunas{c} { matriz = new T[l * c]; }
     ~Matriz () { delete[] matriz; }
 
-    int getLin () { return lin; }
-    int getCol () { return col; }
+    int qtdLinhas () { return linhas; }
+    int qtdColunas () { return colunas; }
 
-    double posicao (int i, int j) { return matriz[(i * col) + j]; }
+    T operator() (int l, int c) { return matriz[(l * colunas) + c]; }
+
+    // Assume que atende exigencias para multiplicacao de matriz
+    // Qtd de colunas em M == Qtd de linhas em N
+    Matriz<T> operator* (Matriz<T> m, Matriz<T> n) 
+    {
+        Matriz p (mLinhas, nColunas);
+    }
 };
-*/
+
 //
 // Propriedades de cada material 
 struct Material 
