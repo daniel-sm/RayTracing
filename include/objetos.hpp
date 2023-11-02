@@ -98,6 +98,134 @@ public:
     Vetor obterNormal (Ponto p) const override { return normal; }
 }; // fim class Plano
 
+class Cilindro : public Objeto 
+{
+private:
+    Ponto base; // centro da base do Cilindro
+    Ponto topo; // centro do topo do Cilindro
+    Vetor direcao; // direcao do eixo do Cilindro
+    double raio; // raio do Cilindro
+    double altura; // altura do Cilindro 
+
+public:
+    Cilindro (Ponto b, Ponto t, double r, Material m) : base{b}, topo{t}, raio{r}
+    {
+        direcao = (t - b);
+        altura = norma(direcao);
+        direcao = direcao / altura;
+        material = m;
+    }
+
+    Cilindro (Ponto b, Vetor d, double r, double h, Material m) 
+    : base{b}, direcao{d}, raio{r}, altura{h}
+    {
+        topo = b + (h * d);
+        material = m;
+    }
+
+    double intersecao (Raio r) 
+    {
+        // guarda o valor do menor t que intersecta cilindro
+        double menor_t = -1;
+        // guarda o valor do t para cada intersecao
+        double t_int = -1;
+
+        Vetor u = (r.getOrigem() - base);
+        Vetor v = u - (escalar(u, direcao) * direcao);
+        Vetor w = r.getDirecao() - (escalar(r.getDirecao(), direcao) * direcao);
+
+        double a = escalar(w, w);
+        double b = escalar(v, w);
+        double c = escalar(v, v) - (raio * raio);
+
+        // a == 0 significa que o raio é paralelo a superficie cilindrica
+        if (a != 0)
+        {
+            double delta = (b * b) - (a * c);
+
+            if (delta >= 0) // significa que tem intersecao
+            {
+                // duas raizes da equacao (podem ser a mesma raiz)
+                double t1 = (-b - sqrt(delta)) / a;
+                double t2 = (-b + sqrt(delta)) / a;
+
+                double escalar1 = escalar(r.pontoIntersecao(t1) - base, direcao);
+                double escalar2 = escalar(r.pontoIntersecao(t2) - base, direcao);
+
+                // se ponto de t1 for valido, atualiza o valor de t pois é a menor raiz
+                if (escalar1 >= 0 && escalar1 <= altura) { t_int = t1; } 
+                // se ponto de t2 for valido, atualiza o valor de t pois é a segunda raiz
+                else if (escalar2 >= 0 && escalar2 <= altura) { t_int = t2; }
+                // se nao houver ponto valido, deixa t com valor invalido
+                else { t_int = -1; }
+            }
+            else { t_int = -1; } // se delta negativo, deixa t com valor invalido
+        } else { t_int = -1; } // como a == 0, deixa t com valor invalido
+
+        // atualiza menor_t com o valor de t encontrado
+        if(t_int > 0) menor_t = t_int;
+
+        // denominador no calculo da intersecao com plano
+		double denominador = escalar(direcao, r.getDirecao());
+
+        // se denominador == 0 nao tem intersecao com plano
+		if (denominador != 0)
+		{
+            // verificando intersecao com base do cilindro
+			double t_base = - escalar(direcao, (r.getOrigem() - base)) / denominador;
+            // verificando intersecao com topo do cilindro
+            double t_topo = - escalar(direcao, (r.getOrigem() - topo)) / denominador;
+
+            Vetor vetorBase = r.pontoIntersecao(t_base) - base;
+            Vetor vetorTopo = r.pontoIntersecao(t_topo) - topo;
+
+            double escalarBase = escalar(vetorBase, vetorBase);
+            double escalarTopo = escalar(vetorTopo, vetorTopo);
+
+            double quadradoRaio = (raio * raio);
+            
+            // verficando se sao pontos validos
+            if (escalarBase > quadradoRaio) t_base = -1;
+            if (escalarTopo > quadradoRaio) t_topo = -1;
+
+            // guarda o menor valor positivo ou -1 
+            if (t_base > 0 && t_topo > 0)
+            {
+                if (t_base < t_topo) t_int = t_base;
+                else t_int = t_topo;
+            } 
+            else if (t_base > 0) t_int = t_base;
+            else if (t_topo > 0) t_int = t_topo;
+            else t_int = -1;
+		}
+		else { t_int = -1; }
+
+        // atualiza menor_t com o valor de t encontrado
+        if (t_int > 0) 
+        {
+            if (menor_t > 0) 
+                if (t_int < menor_t) 
+                    menor_t = t_int; 
+            else 
+                menor_t = t_int;
+        }
+    }
+
+    Vetor obterNormal (Ponto p) 
+    {
+        Vetor vetorPonto = (p - base);
+        double escalarPonto = escalar(vetorPonto, direcao);
+
+        if (escalarPonto == 0) return (-1) * direcao;
+        else if (escalarPonto == altura) return direcao;
+        else
+        {
+            Vetor N = vetorPonto - (escalarPonto * direcao);
+            return (N / raio);
+        }
+    }
+};
+
 class Cone : public Objeto 
 {
     Ponto base; // centro da base do cone
