@@ -39,9 +39,6 @@ Vetor operator- (Ponto p1, Ponto p2) { return { (p1.x - p2.x), (p1.y - p2.y), (p
 
 // ********** Funcoes Auxiliares ***********
 //
-// Produto escalar entre vetores
-double escalar (Vetor v, Vetor u) { return (v.a * u.a) + (v.b * u.b) + (v.c * u.c); }
-
 // Produto vetorial entre dois vetores
 Vetor vetorial (Vetor v, Vetor u) 
 {
@@ -50,7 +47,10 @@ Vetor vetorial (Vetor v, Vetor u)
         (v.c * u.a) - (v.a * u.c),
         (v.a * u.b) - (v.b * u.a)
     };
-} 
+}
+
+// Produto escalar entre vetores
+double escalar (Vetor v, Vetor u) { return (v.a * u.a) + (v.b * u.b) + (v.c * u.c); }
 
 // Modulo (tamanho) de um vetor
 double norma(Vetor v) { return sqrt(escalar(v, v)); }
@@ -109,106 +109,5 @@ public:
         return { n };
 	}
 }; // fim class Lista
-
-// Classe de Matriz para operacoes matematicas 
-//
-class Matriz 
-{
-private:
-    double *matriz;
-    int linhas, colunas;
-public:
-    Matriz (int l, int c) : linhas{l}, colunas{c} { matriz = new double[l * c]; }
-    ~Matriz () { delete[] matriz; }
-
-    int qtdLinhas () { return linhas; }
-    int qtdColunas () { return colunas; }
-
-    double &operator() (int l, int c) { return matriz[(l * colunas) + c]; }
-
-}; // fim class Matriz
-
-// Operacoes com matrizes
-// Para as operacoes assume-se que atende os requisitos de cada operacao
-//
-// Para SOMA, assume que qtd de linhas e qtd de colunas sao iguais 
-Matriz operator+ (Matriz& primeira, Matriz& segunda) 
-{
-    int l = primeira.qtdLinhas();
-    int c = primeira.qtdColunas();
-
-    Matriz R(l, c);
-    
-    for (int i = 0; i < l; ++i) 
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            R(i, j) = primeira(i, j) + segunda(i, j);
-        }
-    }
-    return R;
-}
-//
-// Para SUBTRACAO, assume que qtd de linhas e qtd de colunas sao iguais 
-Matriz operator- (Matriz& primeira, Matriz& segunda) 
-{
-    int l = primeira.qtdLinhas();
-    int c = primeira.qtdColunas();
-
-    Matriz R(l, c);
-    
-    for (int i = 0; i < l; ++i) 
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            R(i, j) = primeira(i, j) - segunda(i, j);
-        }
-    }
-    return R;
-}
-//
-// Para MULTIPLICAO POR ESCALAR, nao tem requisitos 
-Matriz operator* (Matriz& matriz, double d) 
-{
-    int l = matriz.qtdLinhas();
-    int c = matriz.qtdColunas();
-
-    Matriz R(l, c);
-
-    for (int i = 0; i < l; ++i)
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            R(i, j) *= d;
-        }
-    }
-    return R;
-}
-// 
-// Metodo para receber operacao na ordem contraria
-Matriz operator* (double d, Matriz& matriz) { return matriz * d; }
-//
-// Para MULTIPLICACAO, assume que (qtd de linhas da primeira == qtd de colunas da segunda) 
-Matriz operator* (Matriz& primeira, Matriz& segunda) 
-{
-    int l = primeira.qtdLinhas();
-    int c = segunda.qtdColunas();
-
-    Matriz R(l, c);
-    
-    for (int i = 0; i < l; ++i) 
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            R(i, j) = 0;
-            
-            for (int k = 0, fim = primeira.qtdColunas(); k < fim; ++k) 
-            {
-                R(i, j) += primeira(i, k) * segunda(k, j);
-            }
-        }
-    }
-    return R;
-}
 
 #endif

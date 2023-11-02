@@ -15,29 +15,29 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 double raycast (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
 {
 	// Vai guardar o menor valor de t 
-	double t_int = -1;
+	double menor_t = -1;
 
 	// Percorrendo os objetos da cena
 	for (auto obj : cena)
 	{
-        // Guardando o retorno da intersecao para comparar com 't_int'
-        double t = obj->intersecao(raio);
+        // Guardando o retorno da intersecao para comparar com menor_t
+        double t_int = obj->intersecao(raio);
 
-        // Computando o menor valor de t_int
-        if (t > 0) 
+        // Computando o menor valor de menor_t
+        if (t_int > 0) 
         {
-            if (t_int > 0) 
+            if (menor_t > 0) 
             { 
-                if (t < t_int) 
+                if (t_int < menor_t) 
                 { 
-                    t_int = t; 
+                    menor_t = t_int; 
                     atingido = obj; 
                 }
             } 
-            else { t_int = t; atingido = obj; }
+            else { menor_t = t_int; atingido = obj; }
         }
     }
-    return t_int;
+    return menor_t;
 }
 
 int main(int argc, char** argv) 
