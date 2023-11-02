@@ -73,7 +73,7 @@ int main(int argc, char** argv)
 	Esfera esfera (centroEsfera, raioEsfera, materialEsfera);
 
 	// Informacoes do Cone *****************************************************
-	double raioCone = 5; // Raio da base do cone em CM
+	double raioCone = 5; // Raio da base do cone em cm
 	Ponto baseCone { 0, -raioEsfera, -50 }; // Centro da base do cone 
 	Ponto verticeCone { 0, 0, -50 }; // Posicao do Vertice do cone
 	// Propriedades de reflectividade do cone
@@ -85,6 +85,20 @@ int main(int argc, char** argv)
 	Material materialCone { kaCone, kdCone, keCone, brilhoCone };
 	// Objeto do Cone
 	Cone cone (baseCone, verticeCone, raioCone, materialCone);
+
+	// Informacoes do Cilindro *****************************************************
+	double raioCilindro = 30; // Raio da base do cilindro em cm
+	Ponto baseCilindro { 0, 0, -50 }; // Centro da base do cilindro 
+	Ponto topoCilindro { 0, 50, -50 }; // Posicao do Vertice do cilindro
+	// Propriedades de reflectividade do cilindro
+	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Propr. ambiente do material do cilindro 
+	Vetor kdCilindro = kaCilindro; // Propr. difusa do material do cilindro 
+	Vetor keCilindro = kaCilindro; // Propr. especular do material do cilindro 
+	double brilhoCilindro = 10; // Fator de brilho especular
+	// Material do Cilindro
+	Material materialCilindro { kaCilindro, kdCilindro, keCilindro, brilhoCilindro };
+	// Objeto do Cilindro
+	Cilindro cilindro (baseCilindro, topoCilindro, raioCilindro, materialCilindro);
 
 	// Informacoes do Plano do Chao ********************************************
 	Ponto pontoChao { 0, -raioEsfera, 0 }; // Ponto presente no plano do chao
@@ -139,7 +153,8 @@ int main(int argc, char** argv)
 	Lista<Objeto> cena;
 	// Adicionando os objetos na cena
 	// cena.add(&esfera);
-	cena.add(&cone);
+	// cena.add(&cone);
+	cena.add(&cilindro);
 	cena.add(&chao);
 	cena.add(&fundo);
 

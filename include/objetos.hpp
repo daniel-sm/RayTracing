@@ -123,7 +123,7 @@ public:
         material = m;
     }
 
-    double intersecao (Raio r) 
+    double intersecao (Raio r) const override
     {
         // guarda o valor do menor t que intersecta cilindro
         double menor_t = -1;
@@ -211,7 +211,7 @@ public:
         }
     }
 
-    Vetor obterNormal (Ponto p) 
+    Vetor obterNormal (Ponto p) const override
     {
         Vetor vetorPonto = (p - base);
         double escalarPonto = escalar(vetorPonto, direcao);
