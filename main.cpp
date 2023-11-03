@@ -73,23 +73,23 @@ int main(int argc, char** argv)
 	Esfera esfera (centroEsfera, raioEsfera, materialEsfera);
 
 	// Informacoes do Cone *****************************************************
-	double raioCone = 5; // Raio da base do cone em cm
-	Ponto baseCone { 0, -raioEsfera, -50 }; // Centro da base do cone 
-	Ponto verticeCone { 0, 0, -50 }; // Posicao do Vertice do cone
-	// Propriedades de reflectividade do cone
-	Vetor kaCone { 0.7, 0.7, 0.2 }; // Propr. ambiente do material do cone 
-	Vetor kdCone = kaCone; // Propr. difusa do material do cone 
-	Vetor keCone = kaCone; // Propr. especular do material do cone 
+	double raioCone = 5; // Raio da base do Cone em cm
+	Ponto baseCone { 0, -raioEsfera, -50 }; // Centro da base do Cone 
+	Ponto verticeCone { 0, 0, -50 }; // Posicao do Vertice do Cone
+	// Propriedades de reflectividade do Cone
+	Vetor kaCone { 0.7, 0.7, 0.2 }; // Propr. ambiente do material do Cone 
+	Vetor kdCone = kaCone; // Propr. difusa do material do Cone 
+	Vetor keCone = kaCone; // Propr. especular do material do Cone 
 	double brilhoCone = 10; // Fator de brilho especular
-	// Material do cone
+	// Material do Cone
 	Material materialCone { kaCone, kdCone, keCone, brilhoCone };
 	// Objeto do Cone
 	Cone cone (baseCone, verticeCone, raioCone, materialCone);
 
-	// Informacoes do Cilindro *****************************************************
-	double raioCilindro = 30; // Raio da base do cilindro em cm
-	Ponto baseCilindro { 0, 0, -50 }; // Centro da base do cilindro 
-	Ponto topoCilindro { 0, 50, -50 }; // Posicao do Vertice do cilindro
+	// Informacoes do Cilindro *************************************************
+	double raioCilindro = 20; // Raio da base do cilindro em cm
+	Ponto baseCilindro { 0, -20, -100 }; // Centro da base do cilindro 
+	Ponto topoCilindro { 0, 20, -100 }; // Posicao do Vertice do cilindro
 	// Propriedades de reflectividade do cilindro
 	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Propr. ambiente do material do cilindro 
 	Vetor kdCilindro = kaCilindro; // Propr. difusa do material do cilindro 
@@ -155,15 +155,15 @@ int main(int argc, char** argv)
 	// cena.add(&esfera);
 	// cena.add(&cone);
 	cena.add(&cilindro);
-	cena.add(&chao);
-	cena.add(&fundo);
+	// cena.add(&chao);
+	// cena.add(&fundo);
 
 	// Lista de Fontes de luz **************************************************
 	Lista<Fonte> fontes;
 	// Adicionando as fontes na lista
 	fontes.add(&pontual);
-	fontes.add(&spot);
-	fontes.add(&direcional);
+	// fontes.add(&spot);
+	// fontes.add(&direcional);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
@@ -190,7 +190,8 @@ int main(int argc, char** argv)
 			double x = -(janela.getWidth() / 2) + (Dx / 2) + (col * Dx);
 
 			// Gerando raio lancado pela janela
-			Raio raio = Raio (olho, { x, y, -janela.getDistance() });
+			Ponto pontoJanela { x, y, -janela.getDistance() };
+			Raio raio = Raio (olho, pontoJanela);
 
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
@@ -206,7 +207,7 @@ int main(int argc, char** argv)
 				// Vetor de intensidade da luz no ponto intersectado
 				Vetor I { 0.0, 0.0, 0.0 };
 				// Adicionando a luz ambiente
-				I = I + (luzAmbiente * atingido->material.ka);
+				I = I + (luzAmbiente * (atingido->material.ka));
 
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : fontes)

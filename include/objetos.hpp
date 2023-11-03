@@ -19,17 +19,17 @@ public:
 class Raio 
 {
 private:
-	Ponto ini; // origem
-	Vetor dir; // unitario
+	Ponto origem; // ponto de origem do raio
+	Vetor direcao; // vetor unitario da direcao do raio 
 public:
-	Raio(Ponto i, Ponto f) : ini{i}, dir{unitario(f - i)} {}
-	Raio(Vetor d, Ponto i) : ini{i}, dir{unitario(d)} {}
+	Raio(Ponto i, Ponto f) : origem{i}, direcao{unitario(f - i)} {}
+	Raio(Ponto i, Vetor d) : origem{i}, direcao{unitario(d)} {}
 
-	Vetor getDirecao() { return dir; }
-	Ponto getOrigem() { return ini; }
+	Vetor getDirecao() { return direcao; }
+	Ponto getOrigem() { return origem; }
 
 	// Ponto de intersecao com parametro "t" 
-	Ponto pontoIntersecao (double t) { return { ini + (t * dir) }; }
+	Ponto pontoIntersecao (double t) { return { origem + (t * direcao) }; }
 }; // fim class Raio
 
 // Hierarquia de classes: Objeto
@@ -70,7 +70,8 @@ public:
         return -1; // se delta <= 0
     }
 
-    Vetor obterNormal (Ponto p) const override { return (p - centro) / raio; }
+    Vetor obterNormal (Ponto p) const override 
+    { return (p - centro) / raio; }
 }; // fim class Esfera
 
 class Plano : public Objeto
@@ -117,11 +118,11 @@ public:
     }
 
     Cilindro (Ponto b, Vetor d, double r, double h, Material m) 
-    : base{b}, direcao{d}, raio{r}, altura{h}
+    : base{b}, direcao{unitario(d)}, raio{r}, altura{h}
     {
-        topo = b + (h * d);
+        topo = b + (h * direcao);
         material = m;
-    }
+    } 
 
     double intersecao (Raio r) const override
     {
@@ -209,6 +210,7 @@ public:
             else 
                 menor_t = t_int;
         }
+        return menor_t;
     }
 
     Vetor obterNormal (Ponto p) const override
@@ -244,9 +246,9 @@ public:
     }
 
     Cone (Ponto b, Vetor d, double r, double h, Material m) 
-    : base{b}, direcao{d}, raio{r}, altura{h} 
+    : base{b}, direcao{unitario(d)}, raio{r}, altura{h} 
     {
-        vertice = b + (h * d); 
+        vertice = b + (h * direcao); 
         material = m;
     }
 
@@ -485,7 +487,7 @@ public:
         // Como nao tem posicao da fonte entao gera-se um ponto qualquer 
         // na direcao contraria da direcao da fonte de luz direcional
         Ponto inicio = p_int + (-0.1 * direcao);
-        Raio raioSombra ((-1) * direcao, inicio);
+        Raio raioSombra (inicio, (-1) * direcao);
 
         // Ponteiro temporario que vai guardar o objeto atingido
         Objeto* temp; // Necessario na funcao mas nao sera usado 
