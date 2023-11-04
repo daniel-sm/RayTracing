@@ -87,13 +87,13 @@ int main(int argc, char** argv)
 	Cone cone (baseCone, verticeCone, raioCone, materialCone);
 
 	// Informacoes do Cilindro *************************************************
-	double raioCilindro = 20; // Raio da base do cilindro em cm
-	Ponto baseCilindro { 0, -20, -100 }; // Centro da base do cilindro 
-	Ponto topoCilindro { 0, 20, -100 }; // Posicao do Vertice do cilindro
-	// Propriedades de reflectividade do cilindro
-	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Propr. ambiente do material do cilindro 
-	Vetor kdCilindro = kaCilindro; // Propr. difusa do material do cilindro 
-	Vetor keCilindro = kaCilindro; // Propr. especular do material do cilindro 
+	double raioCilindro = 20; // Raio da base do Cilindro em cm
+	Ponto baseCilindro { -20, -20, -100 }; // Centro da base do Cilindro 
+	Ponto topoCilindro { 20, 20, -60 }; // Posicao do Vertice do Cilindro
+	// Propriedades de reflectividade do Cilindro
+	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Propr. ambiente do material do Cilindro 
+	Vetor kdCilindro = kaCilindro; // Propr. difusa do material do Cilindro 
+	Vetor keCilindro = kaCilindro; // Propr. especular do material do Cilindro 
 	double brilhoCilindro = 10; // Fator de brilho especular
 	// Material do Cilindro
 	Material materialCilindro { kaCilindro, kdCilindro, keCilindro, brilhoCilindro };
@@ -152,18 +152,18 @@ int main(int argc, char** argv)
 	// Lista de Objetos da Cena ************************************************
 	Lista<Objeto> cena;
 	// Adicionando os objetos na cena
-	// cena.add(&esfera);
-	// cena.add(&cone);
+	cena.add(&esfera);
 	cena.add(&cilindro);
-	// cena.add(&chao);
-	// cena.add(&fundo);
+	// cena.add(&cone);
+	cena.add(&chao);
+	cena.add(&fundo);
 
 	// Lista de Fontes de luz **************************************************
 	Lista<Fonte> fontes;
 	// Adicionando as fontes na lista
 	fontes.add(&pontual);
-	// fontes.add(&spot);
-	// fontes.add(&direcional);
+	fontes.add(&spot);
+	fontes.add(&direcional);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];

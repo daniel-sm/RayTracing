@@ -87,10 +87,11 @@ public:
     double intersecao (Raio raio) const override
 	{
 		double denominador = escalar(normal, raio.getDirecao());
+
 		if (denominador != 0)
 		{
 			Vetor w = raio.getOrigem() - ponto;
-			double t_int = - escalar(normal, w) / denominador;
+			double t_int = -1 * (escalar(normal, w) / denominador);
 			return t_int;
 		}
 		else { return -1; }
@@ -131,21 +132,27 @@ public:
         // guarda o valor do t para cada intersecao
         double t_int = -1;
 
-        Vetor u = (r.getOrigem() - base);
-        Vetor v = u - (escalar(u, direcao) * direcao);
         Vetor w = r.getDirecao() - (escalar(r.getDirecao(), direcao) * direcao);
-
+        // coeficiente "a" da equacao de segundo grau
         double a = escalar(w, w);
-        double b = escalar(v, w);
-        double c = escalar(v, v) - (raio * raio);
 
+        // CHECAR INTERSECAO COM CILINDRO
         // a == 0 significa que o raio é paralelo a superficie cilindrica
         if (a != 0)
         {
+            Vetor u = (r.getOrigem() - base);
+            Vetor v = u - (escalar(u, direcao) * direcao);
+
+            // coeficiente "b" da equacao de segundo grau 
+            double b = escalar(v, w);
+            // coeficiente "c" da equacao de segundo grau 
+            double c = escalar(v, v) - (raio * raio);
+            
+            // delta da equacao de segundo grau 
             double delta = (b * b) - (a * c);
 
-            if (delta >= 0) // significa que tem intersecao
-            {
+            // delta >= 0, significa que tem intersecao
+            if (delta >= 0) { 
                 // duas raizes da equacao (podem ser a mesma raiz)
                 double t1 = (-b - sqrt(delta)) / a;
                 double t2 = (-b + sqrt(delta)) / a;
@@ -166,50 +173,77 @@ public:
         // atualiza menor_t com o valor de t encontrado
         if(t_int > 0) menor_t = t_int;
 
-        // denominador no calculo da intersecao com plano
-		double denominador = escalar(direcao, r.getDirecao());
+        // denominador no calculo da intersecao com planos
+        double denominador;
 
-        // se denominador == 0 nao tem intersecao com plano
-		if (denominador != 0)
-		{
+        // CHECAR INTERSECAO COM BASE
+        // escalar entre a normal da base e a direcao do raio
+		denominador = escalar((-1 * direcao), r.getDirecao());
+
+        // se denominador != 0 tem intersecao com a base
+		if (denominador != 0) {
             // verificando intersecao com base do cilindro
-			double t_base = - escalar(direcao, (r.getOrigem() - base)) / denominador;
-            // verificando intersecao com topo do cilindro
-            double t_topo = - escalar(direcao, (r.getOrigem() - topo)) / denominador;
+			double t_base = -1 * (escalar((-1 * direcao), (r.getOrigem() - base)) / denominador);
 
-            Vetor vetorBase = r.pontoIntersecao(t_base) - base;
-            Vetor vetorTopo = r.pontoIntersecao(t_topo) - topo;
+            // se valor de t_base for valido
+            if (t_base > 0) {
+                // cria vetor do ponto intersectado ate o centro da base
+                Vetor v = r.pontoIntersecao(t_base) - base;
+                // verificando se o ponto pertence ao circulo da base
+                if (escalar(v, v) <= (raio * raio)) 
+                    t_int = t_base;
+                else // se nao pertencer, deixa t_int com valor invalido
+                    t_int = -1;
+            // se o valor de t_base nao for valido, deixa t_int com valor invalido
+            } else { t_int = -1; } 
+        // se denominador == 0 nao tem intersecao com a base
+		} else { t_int = -1; }
 
-            double escalarBase = escalar(vetorBase, vetorBase);
-            double escalarTopo = escalar(vetorTopo, vetorTopo);
-
-            double quadradoRaio = (raio * raio);
-            
-            // verficando se sao pontos validos
-            if (escalarBase > quadradoRaio) t_base = -1;
-            if (escalarTopo > quadradoRaio) t_topo = -1;
-
-            // guarda o menor valor positivo ou -1 
-            if (t_base > 0 && t_topo > 0)
-            {
-                if (t_base < t_topo) t_int = t_base;
-                else t_int = t_topo;
-            } 
-            else if (t_base > 0) t_int = t_base;
-            else if (t_topo > 0) t_int = t_topo;
-            else t_int = -1;
-		}
-		else { t_int = -1; }
-
-        // atualiza menor_t com o valor de t encontrado
-        if (t_int > 0) 
-        {
+        // ATUALIZAR O VALOR DE menor_t
+        // apenas interessa se o t_int for valido
+        if (t_int > 0) {
+            // se menor_t for valido, verifica qual o menor valor
             if (menor_t > 0) 
-                if (t_int < menor_t) 
-                    menor_t = t_int; 
-            else 
-                menor_t = t_int;
+                // menor_t recebe t_int se for menor que o valor atual
+                menor_t = (t_int < menor_t ? t_int : menor_t);
+            // se for invalido, apenas atualiza o valor
+            else menor_t = t_int;
         }
+
+        // CHECAR INTERSECAO COM TOPO
+        // escalar entre a normal do topo e a direcao do raio
+		denominador = escalar(direcao, r.getDirecao());
+
+        // se denominador != 0 tem intersecao com o topo
+		if (denominador != 0) {
+            // verificando intersecao com topo do cilindro
+            double t_topo = -1 * (escalar(direcao, (r.getOrigem() - topo)) / denominador);
+
+            // se valor de t_topo for valido
+            if (t_topo > 0) {
+                // cria vetor do ponto intersectado ate o centro do topo
+                Vetor v = r.pontoIntersecao(t_topo) - topo;
+                // verificando se o ponto pertence ao circulo do topo
+                if (escalar(v, v) <= (raio * raio)) 
+                    t_int = t_topo;
+                else // se nao pertencer, deixa t_int com valor invalido
+                    t_int = -1;
+            // se o valor de t_topo for invalido, deixa t_int com valor invalido
+            } else { t_int = -1; } 
+        // se denominador == 0 nao tem intersecao com o topo
+		} else { t_int = -1; }
+
+        // ATUALIZAR O VALOR DE menor_t
+        // apenas interessa se o t_int for valido
+        if (t_int > 0) {
+            // se menor_t for valido, verifica qual o menor valor
+            if (menor_t > 0) 
+                // menor_t recebe t_int se for menor que o valor atual
+                menor_t = (t_int < menor_t ? t_int : menor_t);
+            // se for invalido, apenas atualiza o valor
+            else menor_t = t_int;
+        }
+        // retorna o menor valor de t encontrado
         return menor_t;
     }
 
@@ -218,8 +252,8 @@ public:
         Vetor vetorPonto = (p - base);
         double escalarPonto = escalar(vetorPonto, direcao);
 
-        if (escalarPonto == 0) return (-1) * direcao;
-        else if (escalarPonto == altura) return direcao;
+        if (escalarPonto - 0.1 <= 0) return (-1) * direcao;
+        else if (escalarPonto + 0.1 >= altura) return direcao;
         else
         {
             Vetor N = vetorPonto - (escalarPonto * direcao);
