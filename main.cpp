@@ -56,8 +56,8 @@ int main(int argc, char** argv)
 	int nLin = 500; // Numero de linhas da grade do canvas
 
 	// Delta X e Y dos quadrados da grade do canvas ****************************
-	double Dx = janela.getWidth()/nCol;
-	double Dy = janela.getHeight()/nLin;
+	double Dx = janela.getWidth() / nCol;
+	double Dy = janela.getHeight() / nLin;
 
 	// Informacoes da Esfera ***************************************************
 	double raioEsfera = 40; // Raio da esfera em CM
@@ -72,24 +72,10 @@ int main(int argc, char** argv)
 	// Objeto da Esfera
 	Esfera esfera (centroEsfera, raioEsfera, materialEsfera);
 
-	// Informacoes do Cone *****************************************************
-	double raioCone = 5; // Raio da base do Cone em cm
-	Ponto baseCone { 0, -raioEsfera, -50 }; // Centro da base do Cone 
-	Ponto verticeCone { 0, 0, -50 }; // Posicao do Vertice do Cone
-	// Propriedades de reflectividade do Cone
-	Vetor kaCone { 0.7, 0.7, 0.2 }; // Propr. ambiente do material do Cone 
-	Vetor kdCone = kaCone; // Propr. difusa do material do Cone 
-	Vetor keCone = kaCone; // Propr. especular do material do Cone 
-	double brilhoCone = 10; // Fator de brilho especular
-	// Material do Cone
-	Material materialCone { kaCone, kdCone, keCone, brilhoCone };
-	// Objeto do Cone
-	Cone cone (baseCone, verticeCone, raioCone, materialCone);
-
 	// Informacoes do Cilindro *************************************************
 	double raioCilindro = 20; // Raio da base do Cilindro em cm
 	Ponto baseCilindro { -20, -20, -100 }; // Centro da base do Cilindro 
-	Ponto topoCilindro { 20, 20, -60 }; // Posicao do Vertice do Cilindro
+	Ponto topoCilindro = { 20, 20, -60 }; // Posicao do topo do Cilindro
 	// Propriedades de reflectividade do Cilindro
 	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Propr. ambiente do material do Cilindro 
 	Vetor kdCilindro = kaCilindro; // Propr. difusa do material do Cilindro 
@@ -99,6 +85,20 @@ int main(int argc, char** argv)
 	Material materialCilindro { kaCilindro, kdCilindro, keCilindro, brilhoCilindro };
 	// Objeto do Cilindro
 	Cilindro cilindro (baseCilindro, topoCilindro, raioCilindro, materialCilindro);
+
+	// Informacoes do Cone *****************************************************
+	double raioCone = 20; // Raio da base do Cone em cm
+	Ponto baseCone { 0, 40, -80 }; // Centro da base do Cone 
+	Ponto verticeCone { -40, 0, -60 }; // Posicao do Vertice do Cone
+	// Propriedades de reflectividade do Cone 
+	Vetor kaCone { 0.7, 0.7, 0.2 }; // Propr. ambiente do material do Cone 
+	Vetor kdCone = kaCone; // Propr. difusa do material do Cone 
+	Vetor keCone = kaCone; // Propr. especular do material do Cone 
+	double brilhoCone = 10; // Fator de brilho especular
+	// Material do Cone
+	Material materialCone { kaCone, kdCone, keCone, brilhoCone };
+	// Objeto do Cone
+	Cone cone (baseCone, verticeCone, raioCone, materialCone);
 
 	// Informacoes do Plano do Chao ********************************************
 	Ponto pontoChao { 0, -raioEsfera, 0 }; // Ponto presente no plano do chao
@@ -154,7 +154,7 @@ int main(int argc, char** argv)
 	// Adicionando os objetos na cena
 	cena.add(&esfera);
 	cena.add(&cilindro);
-	// cena.add(&cone);
+	cena.add(&cone);
 	cena.add(&chao);
 	cena.add(&fundo);
 

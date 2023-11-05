@@ -157,6 +157,7 @@ public:
                 double t1 = (-b - sqrt(delta)) / a;
                 double t2 = (-b + sqrt(delta)) / a;
 
+                // obtendo tamanho da projecao do ponto sobre eixo do cilindro
                 double escalar1 = escalar(r.pontoIntersecao(t1) - base, direcao);
                 double escalar2 = escalar(r.pontoIntersecao(t2) - base, direcao);
 
@@ -288,70 +289,95 @@ public:
 
     double intersecao (Raio r) const override 
     {
+        // guarda o valor do menor t que intersecta cone
+        double menor_t = -1;
+        // guarda o valor do t para cada intersecao
+        double t_int = -1;
+
         // variavel B das formulas 
         double beta = (altura*altura) / (raio*raio);
-
         // variavel w das formulas
-        Vetor w = r.getOrigem() - base;
-
-        // Produto escalar entre direcao do raio e direcao do eixo do cone
+        Vetor v = vertice - r.getOrigem();
+        // Produto escalar entre direcao do raio e direcao do cone
         double escalarRC = escalar(r.getDirecao(), direcao);
-        // Produto escalar entre vetor w e direcao do eixo do cone
-        double escalarWC = escalar(w, direcao);
+        // Produto escalar entre vetor v e direcao do cone
+        double escalarVC = escalar(v, direcao);
+        // Produto escalar entre vetor v e direcao do raio
+        double escalarVR = escalar(v, r.getDirecao());
         
-        Matriz DR (3, 1);
-        DR(0, 0) = r.getDirecao().a;
-        DR(1, 0) = r.getDirecao().b;
-        DR(2, 0) = r.getDirecao().c;
+        // coeficiente "a" da equacao de segundo grau 
+        double a = beta - (1 + beta) * (escalarRC * escalarRC);
+        // coeficiente "b" da equacao de segundo grau 
+        double b = (-beta) * escalarVR + (1 + beta) * escalarVC * escalarRC;
+        // coeficiente "c" da equacao de segundo grau 
+        double c = beta * escalar(v, v) - (1 + beta) * (escalarVC * escalarVC);
 
-        Matriz DRt = transposta(DR);
-        
-        Matriz DC (3, 1);
-        DC(0, 0) = direcao.a;
-        DC(1, 0) = direcao.b;
-        DC(2, 0) = direcao.c;
+        // CHECAR INTERSECAO COM SUPERFICIE DO CONE
+        // delta da equacao de segundo grau 
+        double delta = (b * b) - (a * c);
 
-        Matriz DCt = transposta(DC);
-
-        Matriz W (3, 1);
-        W(0, 0) = w.a;
-        W(1, 0) = w.b;
-        W(2, 0) = w.c;
-
-        Matriz Wt = transposta(W);
-        
-        Matriz P = identidade(3) - (DC * DCt);
-
-        // a = (B * drT * P * dr) - (dr . dc)^2
-        // primeiro termo: (B*drT*P*dr)
-        // segundo termo: (-(dr.dc)^2)
-        double a;
-        //  = (beta * DRt) * (P * DR); 
-
-        // b = (2 * B * wT * P * dr) + (2 * H * (dr . dc)) - (2 * (w . dc) * (dr . dc))
-        // primeiro termo: (2*B*wT*P*dr) 
-        // segundo termo: (2*H*(dr.dc))
-        // terceiro termo: (-2*(w.dc)*(dr.dc))
-        double b; 
-
-        // c = (B * wT * P * w) - H^2 + (2 * H * (w . dc)) - ((w . dc)^2)
-        // primeiro termo: (B*wT*P*w)
-        // segundo termo: (-H^2 + 2*H*(w.dc))
-        // terceiro termo: (-(w.dc)^2)
-        double c; 
-
-        double delta = (b * b) - (4 * a * c);
-
-        if (delta > 0)
+        // delta >= 0, significa que tem intersecao
+        if (delta >= 0) 
         {
-            return (-b - sqrt(delta)) / 2*a;
+            // duas raizes da equacao (podem ser a mesma raiz)
+            double t1 = (-b - sqrt(delta)) / a;
+            double t2 = (-b + sqrt(delta)) / a;
+
+            // obtendo tamanho da projecao do ponto sobre eixo do cilindro
+            double escalar1 = escalar(vertice - r.pontoIntersecao(t1), direcao);
+            double escalar2 = escalar(vertice - r.pontoIntersecao(t2), direcao);
+
+            // se ponto de t1 for valido, atualiza o valor de t pois é a menor raiz
+            if (escalar1 >= 0 && escalar1 <= altura) { t_int = t1; } 
+            // se ponto de t2 for valido, atualiza o valor de t pois é a segunda raiz
+            else if (escalar2 >= 0 && escalar2 <= altura) { t_int = t2; }
+            // se nao houver ponto valido, deixa t com valor invalido
+            else { t_int = -1; }            
+        } else { t_int = -1; }
+
+        // atualiza menor_t com o valor de t encontrado
+        if(t_int > 0) menor_t = t_int;
+
+        // CHECAR INTERSECAO COM BASE
+        // escalar entre a normal da base e a direcao do raio
+		double denominador = escalar((-1 * direcao), r.getDirecao());
+
+        // se denominador != 0 tem intersecao com a base
+		if (denominador != 0) {
+            // verificando intersecao com base do cilindro
+			double t_base = -1 * (escalar((-1 * direcao), (r.getOrigem() - base)) / denominador);
+
+            // se valor de t_base for valido
+            if (t_base > 0) {
+                // cria vetor do ponto intersectado ate o centro da base
+                Vetor v = r.pontoIntersecao(t_base) - base;
+                // verificando se o ponto pertence ao circulo da base
+                if (escalar(v, v) <= (raio * raio)) 
+                    t_int = t_base;
+                else // se nao pertencer, deixa t_int com valor invalido
+                    t_int = -1;
+            // se o valor de t_base nao for valido, deixa t_int com valor invalido
+            } else { t_int = -1; } 
+        // se denominador == 0 nao tem intersecao com a base
+		} else { t_int = -1; }
+
+        // ATUALIZAR O VALOR DE menor_t
+        // apenas interessa se o t_int for positivo
+        if (t_int > 0) {
+            // se menor_t for valido, verifica qual o menor valor
+            if (menor_t > 0) 
+                // menor_t recebe t_int se for menor que o valor atual
+                menor_t = (t_int < menor_t ? t_int : menor_t);
+            // se for invalido, apenas atualiza o valor
+            else menor_t = t_int;
         }
-        return -1;
+        // retorna o menor valor de t encontrado
+        return menor_t;
     }
 
     Vetor obterNormal (Ponto p) const override 
     {
-        if (escalar(direcao, (p - base)) == 0)
+        if (escalar(direcao, (p - base)) - 0.1 <= 0)
         {
             return (-1) * direcao;
         } else
