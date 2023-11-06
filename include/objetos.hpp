@@ -70,13 +70,12 @@ public:
         return -1; // se delta <= 0
     }
 
-    Vetor obterNormal (Ponto p) const override 
-    { return (p - centro) / raio; }
+    Vetor obterNormal (Ponto p) const override { return (p - centro) / raio; }
 }; // fim class Esfera
 
 class Plano : public Objeto
 {
-    Ponto ponto; // ponto pertcente ao plano
+    Ponto ponto; // ponto pertencente ao plano
     Vetor normal; // vetor normal ao plano
 public:
     Plano(Ponto p, Vetor n, Material m) : ponto{p}, normal{unitario(n)} 
@@ -261,7 +260,7 @@ public:
             return (N / raio);
         }
     }
-};
+}; // fim class Cilindro
 
 class Cone : public Objeto 
 {
@@ -389,6 +388,40 @@ public:
         }
     }
 }; // fim class Cone
+
+class Malha : public Objeto
+{
+private:
+    struct Aresta { int v1, v2; };
+    struct Face { int a1, a2, a3; };
+    int numvertices, numarestas, numfaces;
+    Ponto *vertices;
+    Aresta *arestas;
+    Face *faces;
+public:
+    Malha(int v, int a, int f) : numvertices{v}, numarestas{a}, numfaces{f}
+    {
+        vertices = new Ponto[v];
+        arestas = new Aresta[a];
+        faces = new Face[f];
+    }
+    ~Malha() 
+    {
+        delete[] vertices;
+        delete[] arestas;
+        delete[] faces;
+    }
+
+    // recebe id do vertice e posicao do vertice
+    void setVertice (int i, Ponto p) { vertices[i] = p; }
+    // recebe id da aresta e ids dos vertices
+    void setAresta (int i, int v1, int v2) { arestas[i] = { v1, v2 }; }
+    // recebe id da face e ids das arestas
+    void setFace (int i, int a1, int a2, int a3) { faces[i] = { a1, a2, a3 }; }
+
+    double intersecao (Raio raio) const override {}
+    Vetor obterNormal (Ponto ponto) const override {}
+}; // fim class Malha
 //
 // Fim da hierarquia de classes Objeto 
 
