@@ -450,20 +450,20 @@ public:
             int a2 = faces[i].a2;
             int a3 = faces[i].a3;
 
-            // id dos vertices 1 e 2 da aresta 1
-            int v1_a1 = arestas[a1].v1;
-            int v2_a1 = arestas[a1].v2;
+            // id dos vertices 1 e 2 da aresta 1, somando +1 para evitar id = 0
+            int v1_a1 = arestas[a1].v1 + 1; 
+            int v2_a1 = arestas[a1].v2 + 1; 
 
-            // id dos vertices 1 e 2 da aresta 2
-            int v1_a2 = arestas[a2].v1;
-            int v2_a2 = arestas[a2].v2;
+            // id dos vertices 1 e 2 da aresta 2, somando +1 para evitar id = 0
+            int v1_a2 = arestas[a2].v1 + 1; 
+            int v2_a2 = arestas[a2].v2 + 1; 
 
             int v1, v2, v3;
 
             // algoritmo para encontrar id do vertice comum 
             // e id dos vertices na ordem anti-horaria 
-            int n1 = v1_a1 * v2_a1;
-            int n = n1 / v1_a2;
+            float n1 = v1_a1 * v2_a1;
+            float n = n1 / v1_a2;
 
             if (n == v1_a1 || n == v2_a1)
             {
@@ -476,6 +476,8 @@ public:
                 v2 = v1_a2;
                 v3 = n1/v1;
             } 
+            // reajustando o valor dos ids para o normal
+            --v1; --v2; --v3;
             // apos if e else, v1 tem o id do vertice comum
             // v2 e v3 tem o id dos vertices vizinhos na ordem anti-horaria
 
