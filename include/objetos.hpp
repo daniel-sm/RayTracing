@@ -3,6 +3,7 @@
 
 #include "util.hpp"
 #include "matriz.hpp"
+#include <iostream>
 
 class Janela
 {
@@ -38,7 +39,7 @@ class Objeto
 {
 public:
     Material material;
-	virtual double intersecao (Raio) const = 0;
+	virtual double intersecao (Raio) = 0;
     virtual Vetor obterNormal (Ponto) const = 0;
 };
 
@@ -51,7 +52,7 @@ private:
 public:
     Esfera(Ponto c, double r, Material m) : centro{c}, raio{r} { material = m; }
 
-    double intersecao (Raio r) const override
+    double intersecao (Raio r) override
     {
         Vetor w = r.getOrigem() - centro;
 
@@ -83,7 +84,7 @@ public:
         material = m; 
     }
 
-    double intersecao (Raio raio) const override
+    double intersecao (Raio raio) override
 	{
 		double denominador = escalar(normal, raio.getDirecao());
 
@@ -124,7 +125,7 @@ public:
         material = m;
     } 
 
-    double intersecao (Raio r) const override
+    double intersecao (Raio r) override
     {
         // guarda o valor do menor t que intersecta cilindro
         double menor_t = -1;
@@ -286,7 +287,7 @@ public:
         material = m;
     }
 
-    double intersecao (Raio r) const override 
+    double intersecao (Raio r) override 
     {
         // guarda o valor do menor t que intersecta cone
         double menor_t = -1;
@@ -392,18 +393,33 @@ public:
 class Malha : public Objeto
 {
 private:
+    // estrutura de Aresta para a lista de arestas da malha
     struct Aresta { int v1, v2; };
+    // estrutura de Face para a lista de faces da malha
     struct Face { int a1, a2, a3; };
+
+    // quantidades de vertices, arestas e faces na malha
     int numvertices, numarestas, numfaces;
+
+    // lista de vertices
     Ponto *vertices;
+    // lista de arestas
     Aresta *arestas;
+    // lista de faces
     Face *faces;
+
+    // variavel que guarda o id da face atingida pelo raio
+    // apos calcular intersecao atualiza a variavel
+    // quando pedir a normal de um ponto, usa a face atingida 
+    int face_atingida = -1;
+
 public:
-    Malha(int v, int a, int f) : numvertices{v}, numarestas{a}, numfaces{f}
+    Malha(int v, int a, int f, Material m) : numvertices{v}, numarestas{a}, numfaces{f}
     {
         vertices = new Ponto[v];
         arestas = new Aresta[a];
         faces = new Face[f];
+        material = m;
     }
     ~Malha() 
     {
@@ -419,8 +435,199 @@ public:
     // recebe id da face e ids das arestas
     void setFace (int i, int a1, int a2, int a3) { faces[i] = { a1, a2, a3 }; }
 
-    double intersecao (Raio raio) const override {}
-    Vetor obterNormal (Ponto ponto) const override {}
+    double intersecao (Raio raio) override 
+    {
+        // variavel que guarda o menor t de todas intersecoes
+        double menor_t = -1;
+        // variavel de guarda o valor de t de cada intersecao
+        double t_int = -1; 
+
+        // percorrendo todas as faces da malha
+        for (int i = 0; i < numfaces; ++i)
+        {
+            // obtendo id das arestas da face de id "i"
+            int a1 = faces[i].a1;
+            int a2 = faces[i].a2;
+            int a3 = faces[i].a3;
+
+            // id dos vertices 1 e 2 da aresta 1
+            int v1_a1 = arestas[a1].v1;
+            int v2_a1 = arestas[a1].v2;
+
+            // id dos vertices 1 e 2 da aresta 2
+            int v1_a2 = arestas[a2].v1;
+            int v2_a2 = arestas[a2].v2;
+
+            int v1, v2, v3;
+
+            // algoritmo para encontrar id do vertice comum 
+            // e id dos vertices na ordem anti-horaria 
+            int n1 = v1_a1 * v2_a1;
+            int n = n1 / v1_a2;
+
+            if (n == v1_a1 || n == v2_a1)
+            {
+                v1 = v1_a2;
+                v2 = v2_a2;
+                v3 = n;
+            } else 
+            {
+                v1 = v2_a2;
+                v2 = v1_a2;
+                v3 = n1/v1;
+            } 
+            // apos if e else, v1 tem o id do vertice comum
+            // v2 e v3 tem o id dos vertices vizinhos na ordem anti-horaria
+
+            // definindo p1, p2 e p3 como os pontos dos ids v1, v2 e v3
+            Ponto p1 = vertices[v1]; 
+            Ponto p2 = vertices[v2]; 
+            Ponto p3 = vertices[v3]; 
+
+            // definindo os vetores que partem do vertice comum v1 
+            Vetor r1 = p2 - p1;
+            Vetor r2 = p3 - p1;
+
+            // definindo vetor normal nao normalizado
+            Vetor N = vetorial(r1, r2);
+            double modulo = norma(N);
+
+            // vetor normal unitario 
+            Vetor normal = N / modulo;
+
+            // calculando se tem intersecao plano da face
+            double denominador = escalar(normal, raio.getDirecao());
+
+            // se denominador == 0, raio é paralelo ao plano
+            if (denominador != 0)
+            {
+                Vetor w = raio.getOrigem() - p1;
+                t_int = -1 * (escalar(normal, w) / denominador);
+            }
+            else { t_int = -1; }
+
+            // se houve intersecao com plano, entao checa se pertence a face
+            if (t_int > 0)
+            {
+                // std::cout << "t_int é valido!\n";
+                // calcula ponto intersectado
+                Ponto p = raio.pontoIntersecao(t_int);
+
+                // definindo a area total do triangulo 
+                double areatotal = modulo;
+                // std::cout << "A: " << areatotal << "\n";
+
+                // coordenadas baricentricas 
+                double c1, c2, c3;
+
+                Vetor s1 = p1 - p;
+                Vetor s2 = p2 - p;
+                Vetor s3 = p3 - p;
+
+                c1 = escalar(vetorial(s3, s1), normal);
+
+                // se negativo entao intersecao invalida
+                if (c1 < 0) t_int = -1;
+                else { // senao calcula proxima coordenada baricentrica
+                    // std::cout << "c1 é valido!\n";
+                    c1 = c1 / areatotal;
+                    c2 = escalar(vetorial(s1, s2), normal);
+
+                    // se negativo entao intersecao invalida
+                    if (c2 < 0) t_int = -1;
+                    else { // senao calcula proxima coordenada baricentrica
+                        // std::cout << "c2 é valido!\n";
+                        c2 = c2 / areatotal;
+                        c3 = 1 - (c1 + c2);
+                        // std::cout << "c2: " << c2 << "\n";
+                        // std::cout << "c1: " << c1 << "\n";
+                        // std::cout << "c3: " << c3 << "\n";
+
+                        // se negativo entao intersecao invalida
+                        if (c3 < 0) t_int = -1;
+                        // else std::cout << "c3 é valido!\n";
+                        // senao nao precisa fazer nada pois o t_int já é valido
+                    }
+                }
+            }
+
+            // ATUALIZAR O VALOR DE menor_t
+            // apenas interessa se o t_int for positivo
+            if (t_int > 0) {
+                // se menor_t for positivo, verifica qual o menor valor
+                if (menor_t > 0) {
+                    if (t_int < menor_t) 
+                    {
+                        // menor_t recebe t_int se for menor que o valor atual
+                        menor_t = t_int;
+                        // atualiza a face atingida atual
+                        face_atingida = i;
+                    }
+                }
+                // se menor_t for invalido, apenas atualiza o valor
+                else menor_t = t_int;
+            }
+        }
+        // retornando o valor do menor t calculado
+        return menor_t;
+    }
+
+    Vetor obterNormal (Ponto ponto) const override 
+    {
+        // obtendo id das arestas da face atingida
+        int a1 = faces[face_atingida].a1;
+        int a2 = faces[face_atingida].a2;
+        int a3 = faces[face_atingida].a3;
+
+        // id dos vertices 1 e 2 da aresta 1
+        int v1_a1 = arestas[a1].v1;
+        int v2_a1 = arestas[a1].v2;
+
+        // id dos vertices 1 e 2 da aresta 2
+        int v1_a2 = arestas[a2].v1;
+        int v2_a2 = arestas[a2].v2;
+
+        int v1, v2, v3;
+
+        // algoritmo para encontrar id do vertice comum 
+        // e id dos vertices na ordem anti-horaria 
+        int n1 = v1_a1 * v2_a1;
+        int n = n1 / v1_a2;
+        std::cout << "ERRO DE DIVISAO POR ZERO E DE FLOAT\n";
+
+        if (n == v1_a1 || n == v2_a1)
+        {
+            v1 = v1_a2;
+            v2 = v2_a2;
+            v3 = n;
+        } else 
+        {
+            v1 = v2_a2;
+            v2 = v1_a2;
+            v3 = n1/v1;
+        } 
+        // apos if e else, v1 tem o id do vertice comum
+        // v2 e v3 tem o id dos vertices vizinhos na ordem anti-horaria
+
+        // definindo p1, p2 e p3 como os pontos dos ids v1, v2 e v3
+        Ponto p1 = vertices[v1]; 
+        Ponto p2 = vertices[v2]; 
+        Ponto p3 = vertices[v3]; 
+
+        // definindo os vetores que partem do vertice comum v1 
+        Vetor r1 = p2 - p1;
+        Vetor r2 = p3 - p1;
+
+        // definindo vetor normal nao normalizado
+        Vetor N = vetorial(r1, r2); 
+
+        std::cout << norma(N) << "\n";
+
+        // vetor normal unitario 
+        Vetor normal = N / norma(N);
+
+        return normal;
+    }
 }; // fim class Malha
 //
 // Fim da hierarquia de classes Objeto 
