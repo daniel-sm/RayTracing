@@ -120,11 +120,46 @@ int main(int argc, char** argv)
 	Vetor kaFundo { 0.3, 0.3, 0.7 }; // Propr. ambiente do material do fundo 
 	Vetor kdFundo = kaFundo; // Propr. difusa do material do fundo 
 	Vetor keFundo { 0.0, 0.0, 0.0 }; // Propr. difusa do material do fundo 
-	double brilhoFundo = 1; // Fator de brilho espescular
+	double brilhoFundo = 1; // Fator de brilho especular
 	// Material do plano de fundo
 	Material materialFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
 	// Objeto do Plano do Fundo
 	Plano fundo (pontoFundo, normalFundo, materialFundo);
+
+	// Informacoes da Malha ****************************************************
+	Vetor kaMalha { 0.7, 0.2, 0.7 }; // Propr. ambiente do material da Malha
+	Vetor kdMalha = kaMalha; // Propr. difusa do material da Malha
+	Vetor keMalha = kaMalha; // Propr. especular do material da Malha
+	double brilhoMalha = 10; // Fator de brilho especular
+	// Material da Malha
+	Material materialMalha { kaMalha, kdMalha, keMalha, brilhoMalha };
+	// Objeto da Malha
+	int numVertices = 8; // Numero de vertices da Malha
+	int numArestas = 18; // Numero de arestas da Malha
+	int numFaces = 12; // Numero de faces da Malha
+	Malha malha (numVertices, numArestas, numFaces, materialMalha);
+	// Definindo os vertices da Malha
+    malha.setVertice(0, { -30, -30, -50 }); malha.setVertice(1, {  0, -30, -50 });
+    malha.setVertice(2, {  0,  0, -50 }); malha.setVertice(3, { -30,  0, -50 }); 
+    malha.setVertice(4, { -15, -15, -100 }); malha.setVertice(5, {  15, -15, -100 }); 
+    malha.setVertice(6, {  15,  15, -100 }); malha.setVertice(7, { -15,  15, -100 }); 
+	// Definindo as arestas da Malha
+    malha.setAresta(0, 0, 1); malha.setAresta(1, 1, 2); 
+	malha.setAresta(2, 2, 3); malha.setAresta(3, 3, 0); 
+	malha.setAresta(4, 0, 4); malha.setAresta(5, 1, 5); 
+	malha.setAresta(6, 2, 6); malha.setAresta(7, 3, 7); 
+	malha.setAresta(8, 4, 5); malha.setAresta(9, 5, 6); 
+	malha.setAresta(10, 6, 7); malha.setAresta(11, 7, 4); 
+    malha.setAresta(12, 1, 3); malha.setAresta(13, 2, 5); 
+	malha.setAresta(14, 4, 6); malha.setAresta(15, 0, 7); 
+	malha.setAresta(16, 3, 6); malha.setAresta(17, 0, 5); 
+	// Definindo as faces da Malha
+    malha.setFace(0, 3, 0, 12); malha.setFace(1, 1, 2, 12);
+    malha.setFace(2, 1, 5, 13); malha.setFace(3, 9, 6, 13);
+    malha.setFace(4, 9, 8, 14); malha.setFace(5, 11, 10, 14);
+    malha.setFace(6, 4, 3, 15); malha.setFace(7, 7, 11, 15);
+    malha.setFace(8, 2, 6, 16); malha.setFace(9, 10, 7, 16);
+    malha.setFace(10, 4, 8, 17); malha.setFace(11, 5, 0, 17);
 	
 	// Informacoes da Fonte Pontual ********************************************
 	Vetor intensePontual { 0.7, 0.7, 0.7 }; // Intensidade da fonte pontual
@@ -155,6 +190,7 @@ int main(int argc, char** argv)
 	cena.add(&esfera);
 	cena.add(&cilindro);
 	cena.add(&cone);
+	cena.add(&malha);
 	cena.add(&chao);
 	cena.add(&fundo);
 
