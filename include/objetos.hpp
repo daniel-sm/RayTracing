@@ -504,13 +504,11 @@ public:
             // se houve intersecao com plano, entao checa se pertence a face
             if (t_int > 0)
             {
-                // std::cout << "t_int é valido!\n";
-                // calcula ponto intersectado
+                // calculando ponto intersectado
                 Ponto p = raio.pontoIntersecao(t_int);
 
                 // definindo a area total do triangulo 
                 double areatotal = modulo;
-                // std::cout << "A: " << areatotal << "\n";
 
                 // coordenadas baricentricas 
                 double c1, c2, c3;
@@ -524,28 +522,21 @@ public:
                 // se negativo entao intersecao invalida
                 if (c1 < 0) t_int = -1;
                 else { // senao calcula proxima coordenada baricentrica
-                    // std::cout << "c1 é valido!\n";
                     c1 = c1 / areatotal;
                     c2 = escalar(vetorial(s1, s2), normal);
 
                     // se negativo entao intersecao invalida
                     if (c2 < 0) t_int = -1;
                     else { // senao calcula proxima coordenada baricentrica
-                        // std::cout << "c2 é valido!\n";
                         c2 = c2 / areatotal;
                         c3 = 1 - (c1 + c2);
-                        // std::cout << "c2: " << c2 << "\n";
-                        // std::cout << "c1: " << c1 << "\n";
-                        // std::cout << "c3: " << c3 << "\n";
 
                         // se negativo entao intersecao invalida
                         if (c3 < 0) t_int = -1;
-                        // else std::cout << "c3 é valido!\n";
                         // senao nao precisa fazer nada pois o t_int já é valido
                     }
                 }
             }
-
             // ATUALIZAR O VALOR DE menor_t
             // apenas interessa se o t_int for positivo
             if (t_int > 0) {
@@ -560,7 +551,7 @@ public:
                     }
                 }
                 // se menor_t for invalido, apenas atualiza o valor
-                else menor_t = t_int;
+                else { menor_t = t_int; face_atingida = i; }
             }
         }
         // retornando o valor do menor t calculado
@@ -569,26 +560,24 @@ public:
 
     Vetor obterNormal (Ponto ponto) const override 
     {
-        // obtendo id das arestas da face atingida
+        // obtendo id das arestas da face que foi atingida por ultimo
         int a1 = faces[face_atingida].a1;
         int a2 = faces[face_atingida].a2;
-        int a3 = faces[face_atingida].a3;
 
-        // id dos vertices 1 e 2 da aresta 1
-        int v1_a1 = arestas[a1].v1;
-        int v2_a1 = arestas[a1].v2;
+        // id dos vertices 1 e 2 da aresta 1, somando +1 para evitar id = 0
+        int v1_a1 = arestas[a1].v1 + 1; 
+        int v2_a1 = arestas[a1].v2 + 1; 
 
-        // id dos vertices 1 e 2 da aresta 2
-        int v1_a2 = arestas[a2].v1;
-        int v2_a2 = arestas[a2].v2;
+        // id dos vertices 1 e 2 da aresta 2, somando +1 para evitar id = 0
+        int v1_a2 = arestas[a2].v1 + 1; 
+        int v2_a2 = arestas[a2].v2 + 1; 
 
         int v1, v2, v3;
 
         // algoritmo para encontrar id do vertice comum 
         // e id dos vertices na ordem anti-horaria 
-        int n1 = v1_a1 * v2_a1;
-        int n = n1 / v1_a2;
-        std::cout << "ERRO DE DIVISAO POR ZERO E DE FLOAT\n";
+        float n1 = v1_a1 * v2_a1;
+        float n = n1 / v1_a2;
 
         if (n == v1_a1 || n == v2_a1)
         {
@@ -601,6 +590,8 @@ public:
             v2 = v1_a2;
             v3 = n1/v1;
         } 
+        // reajustando o valor dos ids para o original
+        --v1; --v2; --v3;
         // apos if e else, v1 tem o id do vertice comum
         // v2 e v3 tem o id dos vertices vizinhos na ordem anti-horaria
 
@@ -615,8 +606,6 @@ public:
 
         // definindo vetor normal nao normalizado
         Vetor N = vetorial(r1, r2); 
-
-        std::cout << norma(N) << "\n";
 
         // vetor normal unitario 
         Vetor normal = N / norma(N);
