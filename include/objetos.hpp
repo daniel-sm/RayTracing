@@ -79,10 +79,7 @@ class Plano : public Objeto
     Ponto ponto; // ponto pertencente ao plano
     Vetor normal; // vetor normal ao plano
 public:
-    Plano(Ponto p, Vetor n, Material m) : ponto{p}, normal{unitario(n)} 
-    {
-        material = m; 
-    }
+    Plano(Ponto p, Vetor n, Material m) : ponto{p}, normal{unitario(n)} { material = m; }
 
     double intersecao (Raio raio) override
 	{
@@ -398,15 +395,12 @@ private:
     // estrutura de Face para a lista de faces da malha
     struct Face { int a1, a2, a3; };
 
-    // quantidades de vertices, arestas e faces na malha
+    // quantidade de vertices, arestas e faces na malha
     int numvertices, numarestas, numfaces;
 
-    // lista de vertices
-    Ponto *vertices;
-    // lista de arestas
-    Aresta *arestas;
-    // lista de faces
-    Face *faces;
+    Ponto *vertices; // lista de vertices
+    Aresta *arestas; // lista de arestas
+    Face *faces; // lista de faces
 
     // variavel que guarda o id da face atingida pelo raio
     // apos calcular intersecao atualiza a variavel
@@ -448,7 +442,6 @@ public:
             // obtendo id das arestas da face de id "i"
             int a1 = faces[i].a1;
             int a2 = faces[i].a2;
-            int a3 = faces[i].a3;
 
             // id dos vertices 1 e 2 da aresta 1, somando +1 para evitar id = 0
             int v1_a1 = arestas[a1].v1 + 1; 
@@ -476,7 +469,7 @@ public:
                 v2 = v1_a2;
                 v3 = n1/v1;
             } 
-            // reajustando o valor dos ids para o normal
+            // reajustando o valor dos ids para o original
             --v1; --v2; --v3;
             // apos if e else, v1 tem o id do vertice comum
             // v2 e v3 tem o id dos vertices vizinhos na ordem anti-horaria
