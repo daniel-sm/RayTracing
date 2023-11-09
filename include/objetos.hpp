@@ -3,7 +3,6 @@
 
 #include "util.hpp"
 #include "matriz.hpp"
-#include <iostream>
 
 class Janela
 {

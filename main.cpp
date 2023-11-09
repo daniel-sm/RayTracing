@@ -63,9 +63,9 @@ int main(int argc, char** argv)
 	double raioEsfera = 40; // Raio da esfera em CM
 	Ponto centroEsfera { 0, 0, -100 }; // Centro da esfera
 	// Propriedades de reflectividade da esfera
-	Vetor kaEsfera { 0.7, 0.2, 0.2 }; // Propr. ambiente do material da esfera 
-	Vetor kdEsfera = kaEsfera; // Propr. difusa do material da esfera 
-	Vetor keEsfera = kaEsfera; // Propr. especular do material da esfera 
+	Vetor kaEsfera { 0.7, 0.2, 0.2 }; // Prop. ambiente do material da esfera 
+	Vetor kdEsfera = kaEsfera; // Prop. difusa do material da esfera 
+	Vetor keEsfera = kaEsfera; // Prop. especular do material da esfera 
 	double brilhoEsfera = 10; // Fator de brilho especular
 	// Material da esfera
 	Material materialEsfera { kaEsfera, kdEsfera, keEsfera, brilhoEsfera };
@@ -77,9 +77,9 @@ int main(int argc, char** argv)
 	Ponto baseCilindro { -20, -20, -100 }; // Centro da base do Cilindro 
 	Ponto topoCilindro = { 20, 20, -60 }; // Posicao do topo do Cilindro
 	// Propriedades de reflectividade do Cilindro
-	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Propr. ambiente do material do Cilindro 
-	Vetor kdCilindro = kaCilindro; // Propr. difusa do material do Cilindro 
-	Vetor keCilindro = kaCilindro; // Propr. especular do material do Cilindro 
+	Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Prop. ambiente do material do Cilindro 
+	Vetor kdCilindro = kaCilindro; // Prop. difusa do material do Cilindro 
+	Vetor keCilindro = kaCilindro; // Prop. especular do material do Cilindro 
 	double brilhoCilindro = 10; // Fator de brilho especular
 	// Material do Cilindro
 	Material materialCilindro { kaCilindro, kdCilindro, keCilindro, brilhoCilindro };
@@ -91,9 +91,9 @@ int main(int argc, char** argv)
 	Ponto baseCone { 0, 40, -80 }; // Centro da base do Cone 
 	Ponto verticeCone { -40, 0, -60 }; // Posicao do Vertice do Cone
 	// Propriedades de reflectividade do Cone 
-	Vetor kaCone { 0.7, 0.7, 0.2 }; // Propr. ambiente do material do Cone 
-	Vetor kdCone = kaCone; // Propr. difusa do material do Cone 
-	Vetor keCone = kaCone; // Propr. especular do material do Cone 
+	Vetor kaCone { 0.7, 0.7, 0.2 }; // Prop. ambiente do material do Cone 
+	Vetor kdCone = kaCone; // Prop. difusa do material do Cone 
+	Vetor keCone = kaCone; // Prop. especular do material do Cone 
 	double brilhoCone = 10; // Fator de brilho especular
 	// Material do Cone
 	Material materialCone { kaCone, kdCone, keCone, brilhoCone };
@@ -104,9 +104,9 @@ int main(int argc, char** argv)
 	Ponto pontoChao { 0, -raioEsfera, 0 }; // Ponto presente no plano do chao
 	Vetor normalChao { 0, 1, 0 }; // Vetor normal ao plano do chao
 	// Propriedades de reflectividade do plano do chao
-	Vetor kaChao { 0.2, 0.7, 0.2 }; // Propr. ambiente do material do chao 
-	Vetor kdChao = kaChao; // Propr. difusa do material do chao 
-	Vetor keChao { 0.0, 0.0, 0.0 }; // Propr. difusa do material do chao 
+	Vetor kaChao { 0.2, 0.7, 0.2 }; // Prop. ambiente do material do chao 
+	Vetor kdChao = kaChao; // Prop. difusa do material do chao 
+	Vetor keChao { 0.0, 0.0, 0.0 }; // Prop. especular do material do chao 
 	double brilhoChao = 1; // Fator de brilho espescular
 	// Material do plano do chao
 	Material materialChao { kaChao, kdChao, keChao, brilhoChao };
@@ -117,9 +117,9 @@ int main(int argc, char** argv)
 	Ponto pontoFundo { 0, 0, -200 }; // Ponto presente no plano do fundo
 	Vetor normalFundo { 0, 0, 1 }; // Vetor normal ao plano do fundo
 	// Propriedades de reflectividade do plano de fundo
-	Vetor kaFundo { 0.3, 0.3, 0.7 }; // Propr. ambiente do material do fundo 
-	Vetor kdFundo = kaFundo; // Propr. difusa do material do fundo 
-	Vetor keFundo { 0.0, 0.0, 0.0 }; // Propr. difusa do material do fundo 
+	Vetor kaFundo { 0.3, 0.3, 0.7 }; // Prop. ambiente do material do fundo 
+	Vetor kdFundo = kaFundo; // Prop. difusa do material do fundo 
+	Vetor keFundo { 0.0, 0.0, 0.0 }; // Prop. especular do material do fundo 
 	double brilhoFundo = 1; // Fator de brilho especular
 	// Material do plano de fundo
 	Material materialFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
@@ -127,9 +127,9 @@ int main(int argc, char** argv)
 	Plano fundo (pontoFundo, normalFundo, materialFundo);
 
 	// Informacoes da Malha ****************************************************
-	Vetor kaMalha { 0.7, 0.2, 0.7 }; // Propr. ambiente do material da Malha
-	Vetor kdMalha = kaMalha; // Propr. difusa do material da Malha
-	Vetor keMalha = kaMalha; // Propr. especular do material da Malha
+	Vetor kaMalha { 0.7, 0.2, 0.7 }; // Prop. ambiente do material da Malha
+	Vetor kdMalha = kaMalha; // Prop. difusa do material da Malha
+	Vetor keMalha = kaMalha; // Prop. especular do material da Malha
 	double brilhoMalha = 10; // Fator de brilho especular
 	// Material da Malha
 	Material materialMalha { kaMalha, kdMalha, keMalha, brilhoMalha };
