@@ -12,7 +12,7 @@ struct Cor { int r, g, b; };
 struct Ponto { double x, y, z; };
 //
 // Valores de um vetor tridimensional
-struct Vetor { double a, b, c; };
+struct Vetor { double x, y, z; };
 //
 // Propriedades de cada material 
 struct Material 
@@ -24,17 +24,17 @@ struct Material
 // ********* Operacoes ************
 // 
 // Operacoes com vetor
-Vetor operator+(Vetor v, Vetor u) { return { (v.a + u.a), (v.b + u.b), (v.c + u.c) }; }
-Vetor operator-(Vetor v, Vetor u) { return { (v.a - u.a), (v.b - u.b), (v.c - u.c) }; }
-Vetor operator*(Vetor v, Vetor u) { return { (v.a * u.a), (v.b * u.b), (v.c * u.c) }; }
+Vetor operator+(Vetor v, Vetor u) { return { (v.x + u.x), (v.y + u.y), (v.z + u.z) }; }
+Vetor operator-(Vetor v, Vetor u) { return { (v.x - u.x), (v.y - u.y), (v.z - u.z) }; }
+Vetor operator*(Vetor v, Vetor u) { return { (v.x * u.x), (v.y * u.y), (v.z * u.z) }; }
 //
 // Operacoes entre vetor e numero
-Vetor operator*(Vetor v, double k) { return { (k * v.a), (k * v.b), (k * v.c) }; }
-Vetor operator*(double k, Vetor v) { return { (k * v.a), (k * v.b), (k * v.c) }; }
-Vetor operator/(Vetor v, double k) { return { (v.a / k), (v.b / k), (v.c / k) }; }
+Vetor operator*(Vetor v, double k) { return { (k * v.x), (k * v.y), (k * v.z) }; }
+Vetor operator*(double k, Vetor v) { return (v * k); }
+Vetor operator/(Vetor v, double k) { return { (v.x / k), (v.y / k), (v.z / k) }; }
 //
 // Operacoes com ponto 
-Ponto operator+ (Ponto p, Vetor v) { return { (p.x + v.a), (p.y + v.b), (p.z + v.c) }; }
+Ponto operator+ (Ponto p, Vetor v) { return { (p.x + v.x), (p.y + v.y), (p.z + v.z) }; }
 Vetor operator- (Ponto p1, Ponto p2) { return { (p1.x - p2.x), (p1.y - p2.y), (p1.z - p2.z) }; }
 
 // ********** Funcoes Auxiliares ***********
@@ -43,14 +43,14 @@ Vetor operator- (Ponto p1, Ponto p2) { return { (p1.x - p2.x), (p1.y - p2.y), (p
 Vetor vetorial (Vetor v, Vetor u) 
 {
     return {
-        (v.b * u.c) - (v.c * u.b),
-        (v.c * u.a) - (v.a * u.c),
-        (v.a * u.b) - (v.b * u.a)
+        (v.y * u.z) - (v.z * u.y),
+        (v.z * u.x) - (v.x * u.z),
+        (v.x * u.y) - (v.y * u.x)
     };
 }
 
 // Produto escalar entre vetores
-double escalar (Vetor v, Vetor u) { return (v.a * u.a) + (v.b * u.b) + (v.c * u.c); }
+double escalar (Vetor v, Vetor u) { return (v.x * u.x) + (v.y * u.y) + (v.z * u.z); }
 
 // Modulo (tamanho) de um vetor
 double norma(Vetor v) { return sqrt(escalar(v, v)); }

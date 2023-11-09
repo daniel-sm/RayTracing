@@ -32,6 +32,39 @@ public:
 	Ponto pontoIntersecao (double t) { return { origem + (t * direcao) }; }
 }; // fim class Raio
 
+class Camera 
+{
+private:
+    Ponto eye, at, up;
+    Vetor viewup, i, j, k;
+    Matriz W2C, C2W;
+public:
+    Camera (Ponto e, Ponto a, Ponto u) : eye{e}, at{a}, up{u}, viewup{u - e}
+    {
+        // eixo Z do sistema de coordenadas da camera
+        k = unitario(eye - at);
+        // eixo X do sistema de coordenadas da camera
+        i = unitario(vetorial(viewup, k));
+        // eixo Y do sistema de coordenadas da camera
+        j = vetorial(k, i);
+        // Definindo tamanho da matriz
+        W2C.setSize(4, 4);
+        // Setando a primeira linha da matriz
+        W2C(0, 0) = i.x; W2C(0, 1) = i.y; W2C(0, 2) = i.z; 
+        W2C(0, 3) = (-1) * escalar(i, { eye.x, eye.y, eye.z });
+        // Setando a segunda linha da matriz
+        W2C(1, 0) = j.x; W2C(1, 1) = j.y; W2C(1, 2) = j.z; 
+        W2C(1, 3) = (-1) * escalar(j, { eye.x, eye.y, eye.z });
+        // Setando a terceira linha da matriz
+        W2C(2, 0) = k.x; W2C(2, 1) = k.y; W2C(2, 2) = k.z; 
+        W2C(2, 3) = (-1) * escalar(k, { eye.x, eye.y, eye.z });
+        // Setando a quarta linha da matriz
+        W2C(3, 0) = 0; W2C(3, 1) = 0; W2C(3, 2) = 0; W2C(3, 3) = 1;
+
+        // CONTINUAR IMPLEMENTACAO DA CAMERA
+    }
+};
+
 // Hierarquia de classes: Objeto
 //
 class Objeto

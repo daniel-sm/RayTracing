@@ -265,16 +265,16 @@ int main(int argc, char** argv)
 					}
 				}
 				// Computando a maior intensidade de cor
-				if (I.a > maiorCor) maiorCor = I.a;
-				if (I.b > maiorCor) maiorCor = I.b;
-				if (I.c > maiorCor) maiorCor = I.c;
+				if (I.x > maiorCor) maiorCor = I.x;
+				if (I.y > maiorCor) maiorCor = I.y;
+				if (I.z > maiorCor) maiorCor = I.z;
 
 				Cor cor { 255, 255, 255 };
 
 				// Calcular a cor em RGB
-				cor.r = (cor.r * I.a);
-				cor.g = (cor.g * I.b);
-				cor.b = (cor.b * I.c);
+				cor.r = (cor.r * I.x);
+				cor.g = (cor.g * I.y);
+				cor.b = (cor.b * I.z);
 
 				cores[lin][col] = cor;
 			} else { 

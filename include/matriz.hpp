@@ -13,11 +13,15 @@ private:
     std::vector<std::vector<double>> matriz;
     int linhas, colunas;
 public:
+    Matriz () : linhas{0}, colunas{0} {}
     Matriz (int l, int c) : linhas{l}, colunas{c} 
     {
         // Redimensiona o vetor para uma matriz (l x c) com valores 0.0
         matriz.resize(l, std::vector<double>(c, 0.0)); 
     }
+    // Define o tamanho da matriz quando inicializada vazia
+    void setSize (int l, int c) { matriz.resize(l, std::vector<double>(c, 0.0)); }
+    
     // Retorna o numero de linhas da matriz
     int numLinhas () { return linhas; }
     // Retorna o numero de colunas da matriz
