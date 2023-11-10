@@ -11,6 +11,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 
 #include <SDL.h>
 #include "include/objetos.hpp"
+#include "include/intersecoes.cpp"
 #include "include/cena.hpp"
 #include "include/matriz.hpp"
 #include "include/util.hpp"
