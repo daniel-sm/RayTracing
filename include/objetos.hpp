@@ -167,6 +167,8 @@ public:
         ponto.x = p(0, 0); ponto.y = p(1, 0); ponto.z = p(2, 0);
         // Definindo novas coordenadas do vetor normal ao plano
         normal.x = v(0, 0); normal.y = v(1, 0); normal.z = v(2, 0);
+        // Ajustando vetor normal ao plano para unitario
+        normal = unitario(normal);
     }
 }; // fim class Plano
 
@@ -232,6 +234,8 @@ public:
         topo.x = t(0, 0); topo.y = t(1, 0); topo.z = t(2, 0);
         // Definindo novas coordenadas do vetor direcao do cilindro
         direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
+        // Ajustando vetor direcao do cilindro para unitario
+        direcao = unitario(direcao);
     }
 }; // fim class Cilindro
 
@@ -296,6 +300,8 @@ public:
         vertice.x = v(0, 0); vertice.y = v(1, 0); vertice.z = v(2, 0);
         // Definindo novas coordenadas do vetor direcao do cone
         direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
+        // Ajustando vetor direcao do cone para unitario
+        direcao = unitario(direcao);
     }
 }; // fim class Cone
 
@@ -571,6 +577,8 @@ public:
         posicao.x = p(0, 0); posicao.y = p(1, 0); posicao.z = p(2, 0);
         // Definindo novas coordenadas do vetor direcao da fonte
         direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
+        // Ajustando vetor direcao da fonte para unitario
+        direcao = unitario(direcao);
     }
 }; // fim class Spot
 
@@ -634,6 +642,8 @@ public:
         d = matriz * d; // transformando vetor direcao da fonte
         // Definindo novas coordenadas do vetor direcao da fonte
         direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
+        // Ajustando vetor direcao da fonte para unitario
+        direcao = unitario(direcao);
     }
 }; // fim class Direcional
 //

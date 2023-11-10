@@ -10,9 +10,10 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
+#include "include/cena.hpp"
 #include "include/objetos.hpp"
 #include "include/intersecoes.cpp"
-#include "include/cena.hpp"
+#include "include/transformacoes.hpp"
 #include "include/matriz.hpp"
 #include "include/util.hpp"
 
@@ -71,19 +72,19 @@ int main(int argc, char** argv)
 	Cena::definirFontes();
 
 	// Informacoes da Camera ***************************************************
-	// Visão de frente
+	// Visão de frente --------------------------
 	Ponto eye = { 0, 0, 0 };
 	Ponto at = { 0, 0, -1 };
 	Ponto up = { 0, 1, 0 };
-	// Visão de cima
+	// Visão de cima ----------------------------
 	// Ponto eye = { 0, 100, -80 };
 	// Ponto at = { 0, 0, -80 };
 	// Ponto up = { 0, 100, -100 };
-	// Visão de lado direito
+	// Visão de lado direito --------------------
 	// Ponto eye = { 100, 0, -100 };
 	// Ponto at = { 0, 0, -100 };
 	// Ponto up = { 100, 1, -100 };
-	// Visão de lado esquerdo
+	// Visão de lado esquerdo --------------------
 	// Ponto eye = { -100, 0, -80 };
 	// Ponto at = { 0, 0, -80 };
 	// Ponto up = { -100, 1, -80 };
@@ -91,6 +92,9 @@ int main(int argc, char** argv)
 	Camera camera (eye, at, up);
 	// Realizando transformacao de coordenadas de mundo em de camera
 	camera.toCamera(Cena::cena, Cena::fontes);
+
+	Transformacao::translacao(&(Cena::esfera), { 50, 0, 0 });
+	Transformacao::escala(&(Cena::malha), { 2, 0.5, 1 });
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
