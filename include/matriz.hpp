@@ -20,7 +20,12 @@ public:
         matriz.resize(l, std::vector<double>(c, 0.0)); 
     }
     // Define o tamanho da matriz quando inicializada vazia
-    void setSize (int l, int c) { matriz.resize(l, std::vector<double>(c, 0.0)); }
+    void setSize (int l, int c) 
+    {
+        linhas = l; // redefine o numero de linhas
+        colunas = c; // redefine o numero de colunas
+        matriz.resize(linhas, std::vector<double>(colunas, 0.0)); 
+    }
     
     // Retorna o numero de linhas da matriz
     int numLinhas () { return linhas; }
