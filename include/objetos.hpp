@@ -32,12 +32,35 @@ public:
 	Ponto pontoIntersecao (double t) { return { origem + (t * direcao) }; }
 }; // fim class Raio
 
+class Objeto
+{
+public:
+    Material material;
+	virtual double intersecao (Raio) = 0;
+    virtual Vetor obterNormal (Ponto) const = 0;
+    virtual void transformar (Matriz) = 0;
+};
+
+// Gerando um tipo chamado RC que correponde ao tipo da funcao raycast
+// Esse tipo sera usado para um ponteiro da função raycast
+using RC = double(Lista<Objeto>&, Raio, Objeto*&);
+
+class Fonte 
+{
+public:
+	Vetor intensidade; // intensidade da luz
+
+    virtual Vetor iluminacao(Vetor, Ponto, Vetor, Material) const = 0;
+    virtual bool sombra(Ponto, Lista<Objeto>&, RC*) const = 0;
+    virtual void transformar (Matriz) = 0;
+};
+
 class Camera 
 {
 private:
     Ponto eye, at, up;
     Vetor viewup, i, j, k;
-    Matriz W2C, C2W;
+    Matriz w2c, c2w;
 public:
     Camera (Ponto e, Ponto a, Ponto u) : eye{e}, at{a}, up{u}, viewup{u - e}
     {
@@ -47,34 +70,52 @@ public:
         i = unitario(vetorial(viewup, k));
         // eixo Y do sistema de coordenadas da camera
         j = vetorial(k, i);
-        // Definindo tamanho da matriz
-        W2C.setSize(4, 4);
-        // Setando a primeira linha da matriz
-        W2C(0, 0) = i.x; W2C(0, 1) = i.y; W2C(0, 2) = i.z; 
-        W2C(0, 3) = (-1) * escalar(i, { eye.x, eye.y, eye.z });
-        // Setando a segunda linha da matriz
-        W2C(1, 0) = j.x; W2C(1, 1) = j.y; W2C(1, 2) = j.z; 
-        W2C(1, 3) = (-1) * escalar(j, { eye.x, eye.y, eye.z });
-        // Setando a terceira linha da matriz
-        W2C(2, 0) = k.x; W2C(2, 1) = k.y; W2C(2, 2) = k.z; 
-        W2C(2, 3) = (-1) * escalar(k, { eye.x, eye.y, eye.z });
-        // Setando a quarta linha da matriz
-        W2C(3, 0) = 0; W2C(3, 1) = 0; W2C(3, 2) = 0; W2C(3, 3) = 1;
 
-        // CONTINUAR IMPLEMENTACAO DA CAMERA
+        // Definindo da matriz 4x4 de mundo para camera
+        w2c.setSize(4, 4);
+        // Definindo a primeira linha da matriz
+        w2c(0, 0) = i.x; w2c(0, 1) = i.y; w2c(0, 2) = i.z; 
+        w2c(0, 3) = (-1) * escalar(i, { eye.x, eye.y, eye.z });
+        // Definindo a segunda linha da matriz
+        w2c(1, 0) = j.x; w2c(1, 1) = j.y; w2c(1, 2) = j.z; 
+        w2c(1, 3) = (-1) * escalar(j, { eye.x, eye.y, eye.z });
+        // Definindo a terceira linha da matriz
+        w2c(2, 0) = k.x; w2c(2, 1) = k.y; w2c(2, 2) = k.z; 
+        w2c(2, 3) = (-1) * escalar(k, { eye.x, eye.y, eye.z });
+        // Definindo a quarta linha da matriz
+        w2c(3, 0) = 0; w2c(3, 1) = 0; w2c(3, 2) = 0; w2c(3, 3) = 1;
+
+        // Definindo da matriz 4x4 de camera para mundo
+        c2w.setSize(4, 4);
+        // Definindo a primeira linha da matriz
+        c2w(0, 0) = i.x; c2w(0, 1) = j.x; c2w(0, 2) = k.x; c2w(0, 3) = eye.x;
+        // Definindo a segunda linha da matriz
+        c2w(1, 0) = i.y; c2w(1, 1) = j.y; c2w(1, 2) = k.y; c2w(1, 3) = eye.y;
+        // Definindo a terceira linha da matriz
+        c2w(2, 0) = i.z; c2w(2, 1) = j.z; c2w(2, 2) = k.z; c2w(2, 3) = eye.z;
+        // Definindo a quarta linha da matriz
+        c2w(3, 0) = 0; c2w(3, 1) = 0; c2w(3, 2) = 0; c2w(3, 3) = 1;
+    }
+
+    void toCamera (Lista<Objeto> &cena, Lista<Fonte> &fontes) 
+    {
+        // Percorrendo os objetos e transformando em coordenadas de camera
+        for (auto obj : cena) { obj->transformar(w2c); }
+        // Percorrendo as fontes e transformando em coordenadas de camera
+        for (auto fonte : fontes) { fonte->transformar(w2c); }
+    }
+
+    void toWorld (Lista<Objeto> &cena, Lista<Fonte> &fontes) 
+    {
+        // Percorrendo os objetos e transformando em coordenadas de mundo
+        for (auto obj : cena) { obj->transformar(c2w); }
+        // Percorrendo as fontes e transformando em coordenadas de mundo
+        for (auto fonte : fontes) { fonte->transformar(c2w); };
     }
 };
 
 // Hierarquia de classes: Objeto
 //
-class Objeto
-{
-public:
-    Material material;
-	virtual double intersecao (Raio) = 0;
-    virtual Vetor obterNormal (Ponto) const = 0;
-};
-
 class Esfera : public Objeto
 {
 private:
@@ -104,6 +145,17 @@ public:
     }
 
     Vetor obterNormal (Ponto p) const override { return (p - centro) / raio; }
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo ponto em formato de matriz para fazer transformacao
+        Matriz p (4, 1);
+        p(0, 0) = centro.x; p(1, 0) = centro.y; p(2, 0) = centro.z; p(3, 0) = 1;
+        // Realizando multiplicacao
+        p = matriz * p; // transformando o ponto do centro da esfera
+        // Definindo novas coordenadas do centro da esfera
+        centro.x = p(0, 0); centro.y = p(1, 0); centro.z = p(2, 0);
+    }
 }; // fim class Esfera
 
 class Plano : public Objeto
@@ -127,6 +179,23 @@ public:
 	}
 
     Vetor obterNormal (Ponto p) const override { return normal; }
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo ponto em formato de matriz para fazer transformacao
+        Matriz p (4, 1);
+        p(0, 0) = ponto.x; p(1, 0) = ponto.y; p(2, 0) = ponto.z; p(3, 0) = 1;
+        // Definindo vetor em formato de matriz para fazer transformacao
+        Matriz v (4, 1);
+        v(0, 0) = normal.x; v(1, 0) = normal.y; v(2, 0) = normal.z; v(3, 0) = 0;
+        // Realizando multiplicacoes
+        p = matriz * p; // transformando ponto do plano
+        v = matriz * v; // transformando vetor normal ao plano
+        // Definindo novas coordenadas do ponto do plano
+        ponto.x = p(0, 0); ponto.y = p(1, 0); ponto.z = p(2, 0);
+        // Definindo novas coordenadas do vetor normal ao plano
+        normal.x = v(0, 0); normal.y = v(1, 0); normal.z = v(2, 0);
+    }
 }; // fim class Plano
 
 class Cilindro : public Objeto 
@@ -290,6 +359,29 @@ public:
             return (N / raio);
         }
     }
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo ponto da base em formato de matriz para fazer transformacao
+        Matriz b (4, 1);
+        b(0, 0) = base.x; b(1, 0) = base.y; b(2, 0) = base.z; b(3, 0) = 1;
+        // Definindo ponto do topo em formato de matriz para fazer transformacao
+        Matriz t (4, 1);
+        t(0, 0) = topo.x; t(1, 0) = topo.y; t(2, 0) = topo.z; t(3, 0) = 1;
+        // Definindo vetor direcao em formato de matriz para fazer transformacao
+        Matriz d (4, 1);
+        d(0, 0) = direcao.x; d(1, 0) = direcao.y; d(2, 0) = direcao.z; d(3, 0) = 0;
+        // Realizando multiplicacoes
+        b = matriz * b; // transformando ponto do centro da base
+        t = matriz * t; // transformando ponto do centro do topo
+        d = matriz * d; // transformando vetor direcao do cilindro
+        // Definindo novas coordenadas do ponto do centro da base
+        base.x = b(0, 0); base.y = b(1, 0); base.z = b(2, 0);
+        // Definindo novas coordenadas do ponto do centro do topo
+        topo.x = t(0, 0); topo.y = t(1, 0); topo.z = t(2, 0);
+        // Definindo novas coordenadas do vetor direcao do cilindro
+        direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
+    }
 }; // fim class Cilindro
 
 class Cone : public Objeto 
@@ -416,6 +508,29 @@ public:
             
             return unitario(normal);
         }
+    }
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo ponto da base em formato de matriz para fazer transformacao
+        Matriz b (4, 1);
+        b(0, 0) = base.x; b(1, 0) = base.y; b(2, 0) = base.z; b(3, 0) = 1;
+        // Definindo ponto do vertice em formato de matriz para fazer transformacao
+        Matriz v (4, 1);
+        v(0, 0) = vertice.x; v(1, 0) = vertice.y; v(2, 0) = vertice.z; v(3, 0) = 1;
+        // Definindo vetor direcao em formato de matriz para fazer transformacao
+        Matriz d (4, 1);
+        d(0, 0) = direcao.x; d(1, 0) = direcao.y; d(2, 0) = direcao.z; d(3, 0) = 0;
+        // Realizando multiplicacoes
+        b = matriz * b; // transformando ponto do centro da base
+        v = matriz * v; // transformando ponto do centro do vertice
+        d = matriz * d; // transformando vetor direcao do cone
+        // Definindo novas coordenadas do ponto do centro da base
+        base.x = b(0, 0); base.y = b(1, 0); base.z = b(2, 0);
+        // Definindo novas coordenadas do ponto do centro do vertice
+        vertice.x = v(0, 0); vertice.y = v(1, 0); vertice.z = v(2, 0);
+        // Definindo novas coordenadas do vetor direcao do cone
+        direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
     }
 }; // fim class Cone
 
@@ -644,25 +759,28 @@ public:
 
         return normal;
     }
+
+    void transformar (Matriz matriz) override
+    {
+        for (int i = 0; i < numvertices; ++i)
+        {
+            // Definindo ponto do vertice atual
+            Ponto v = vertices[i];
+            // Definindo ponto da base em formato de matriz para fazer transformacao
+            Matriz p (4, 1);
+            p(0, 0) = v.x; p(1, 0) = v.y; p(2, 0) = v.z; p(3, 0) = 1;
+            // Realizando multiplicacoes
+            p = matriz * p; // transformando ponto do vertice atual
+            // Definindo novas coordenadas do ponto do vertice atual
+            vertices[i].x = p(0, 0); vertices[i].y = p(1, 0); vertices[i].z = p(2, 0);
+        }
+    }
 }; // fim class Malha
 //
-// Fim da hierarquia de classes Objeto 
-
-// Gerando um tipo chamado RC que correponde ao tipo da funcao raycast
-// Esse tipo sera usado para um ponteiro da função raycast
-using RC = double(Lista<Objeto>&, Raio, Objeto*&);
+// Fim da Hierarquia de classes Objeto 
 
 // Hierarquia de classes: Fonte
 //
-class Fonte 
-{
-public:
-	Vetor intensidade; // intensidade da luz
-
-    virtual Vetor iluminacao(Vetor, Ponto, Vetor, Material) const = 0;
-    virtual bool sombra(Ponto, Lista<Objeto>&, RC*) const = 0;
-};
-
 class Pontual : public Fonte
 {
     Ponto posicao; // local da fonte de luz
@@ -711,6 +829,17 @@ public:
         // Retorna a soma das duas intensidades
         return (Id + Ie);
 	}
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo ponto da fonte em formato de matriz para fazer transformacao
+        Matriz p (4, 1);
+        p(0, 0) = posicao.x; p(1, 0) = posicao.y; p(2, 0) = posicao.z; p(3, 0) = 1;
+        // Realizando multiplicacao
+        p = matriz * p; // transformando ponto da fonte
+        // Definindo novas coordenadas do ponto da fonte
+        posicao.x = p(0, 0); posicao.y = p(1, 0); posicao.z = p(2, 0);
+    }
 }; // fim class Pontual
 
 class Spot : public Fonte
@@ -788,6 +917,23 @@ public:
         
         return (Id + Ie);// * cosLuzDirecao;
     }
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo ponto da fonte em formato de matriz para fazer transformacao
+        Matriz p (4, 1);
+        p(0, 0) = posicao.x; p(1, 0) = posicao.y; p(2, 0) = posicao.z; p(3, 0) = 1;
+        // Definindo vetor direcao em formato de matriz para fazer transformacao
+        Matriz d (4, 1);
+        d(0, 0) = direcao.x; d(1, 0) = direcao.y; d(2, 0) = direcao.z; d(3, 0) = 0;
+        // Realizando multiplicacoes
+        p = matriz * p; // transformando ponto da fonte
+        d = matriz * d; // transformando vetor direcao da fonte
+        // Definindo novas coordenadas do ponto da fonte
+        posicao.x = p(0, 0); posicao.y = p(1, 0); posicao.z = p(2, 0);
+        // Definindo novas coordenadas do vetor direcao da fonte
+        direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
+    }
 }; // fim class Spot
 
 class Direcional : public Fonte
@@ -839,6 +985,17 @@ public:
 
         // Retorna a soma das duas intensidades
         return (Id + Ie);
+    }
+
+    void transformar (Matriz matriz) override
+    {
+        // Definindo vetor direcao em formato de matriz para fazer transformacao
+        Matriz d (4, 1);
+        d(0, 0) = direcao.x; d(1, 0) = direcao.y; d(2, 0) = direcao.z; d(3, 0) = 0;
+        // Realizando multiplicacoes
+        d = matriz * d; // transformando vetor direcao da fonte
+        // Definindo novas coordenadas do vetor direcao da fonte
+        direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
     }
 }; // fim class Direcional
 //
