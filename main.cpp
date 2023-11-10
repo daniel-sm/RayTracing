@@ -46,7 +46,7 @@ double raycast (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
 int main(int argc, char** argv) 
 {
 	// Ponto de visao da cena, origem dos raios
-	Ponto olho = { 0, 0, 0 };
+	Ponto origem = { 0, 0, 0 };
 
 	// Informacoes da janela ***************************************************
 	double wJanela = 60; // Largura da janela em CM
@@ -68,6 +68,28 @@ int main(int argc, char** argv)
 	Cena::definirCena();
 	// Funcao que define a lista de fontes da cena
 	Cena::definirFontes();
+
+	// Informacoes da Camera ***************************************************
+	// Visão de frente
+	Ponto eye = { 0, 0, 0 };
+	Ponto at = { 0, 0, -1 };
+	Ponto up = { 0, 1, 0 };
+	// Visão de cima
+	// Ponto eye = { 0, 100, -80 };
+	// Ponto at = { 0, 0, -80 };
+	// Ponto up = { 0, 100, -100 };
+	// Visão de lado direito
+	// Ponto eye = { 100, 0, -100 };
+	// Ponto at = { 0, 0, -100 };
+	// Ponto up = { 100, 1, -100 };
+	// Visão de lado esquerdo
+	// Ponto eye = { -100, 0, -80 };
+	// Ponto at = { 0, 0, -80 };
+	// Ponto up = { -100, 1, -80 };
+	// Objeto da Camera 
+	Camera camera (eye, at, up);
+	// Realizando transformacao de coordenadas de mundo em de camera
+	camera.toCamera(Cena::cena, Cena::fontes);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
@@ -95,7 +117,7 @@ int main(int argc, char** argv)
 
 			// Gerando raio lancado pela janela
 			Ponto pontoJanela { x, y, -janela.getDistance() };
-			Raio raio = Raio (olho, pontoJanela);
+			Raio raio = Raio (origem, pontoJanela);
 
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
