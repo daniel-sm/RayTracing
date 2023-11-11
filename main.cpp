@@ -73,9 +73,9 @@ int main(int argc, char** argv)
 
 	// Informacoes da Camera ***************************************************
 	// Visão de frente --------------------------
-	Ponto eye = { 0, 0, 0 };
-	Ponto at = { 0, 0, -1 };
-	Ponto up = { 0, 1, 0 };
+	Ponto eye = { 0, 10, 50 };
+	Ponto at = { 0, 10, -1 };
+	Ponto up = { 0, 100, 0 };
 	// Visão de cima ----------------------------
 	// Ponto eye = { 0, 100, -80 };
 	// Ponto at = { 0, 0, -80 };
@@ -95,6 +95,9 @@ int main(int argc, char** argv)
 
 	Transformacao::translacao(&(Cena::esfera), { 50, 0, 0 });
 	Transformacao::escala(&(Cena::malha), { 2, 0.5, 1 });
+	// Ponto p1 { 0, 0, -75 }, p2 { 0, 10, -85 };
+	// Transformacao::rotacaoArbitrario(&(Cena::malha), p1, p2, 3.1415926 / 2);
+	// Transformacao::espelhoArbitrario(&(Cena::malha), {15,0,0}, {-1,0,0});
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
