@@ -145,8 +145,42 @@ namespace Transformacao
     {
         Matriz XY = identidade(4);
         XY(1, 0) = tan(angulo);
-
         obj->transformar(XY);
+    }
+
+    void cisalhamentoYX (Objeto *obj, double angulo) 
+    {
+        Matriz YX = identidade(4);
+        YX(0, 1) = tan(angulo);
+        obj->transformar(YX);
+    }
+
+    void cisalhamentoXZ (Objeto *obj, double angulo) 
+    {
+        Matriz XZ = identidade(4);
+        XZ(2, 0) = tan(angulo);
+        obj->transformar(XZ);
+    }
+
+    void cisalhamentoZX (Objeto *obj, double angulo) 
+    {
+        Matriz ZX = identidade(4);
+        ZX(0, 2) = tan(angulo);
+        obj->transformar(ZX);
+    }
+
+    void cisalhamentoYZ (Objeto *obj, double angulo) 
+    {
+        Matriz YZ = identidade(4);
+        YZ(2, 1) = tan(angulo);
+        obj->transformar(YZ);
+    }
+
+    void cisalhamentoZY (Objeto *obj, double angulo) 
+    {
+        Matriz ZY = identidade(4);
+        ZY(1, 2) = tan(angulo);
+        obj->transformar(ZY);
     }
 } // namespace Transformacao
 

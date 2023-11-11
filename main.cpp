@@ -93,11 +93,13 @@ int main(int argc, char** argv)
 	// Realizando transformacao de coordenadas de mundo em de camera
 	camera.toCamera(Cena::cena, Cena::fontes);
 
-	Transformacao::translacao(&(Cena::esfera), { 50, 0, 0 });
-	Transformacao::escala(&(Cena::malha), { 2, 0.5, 1 });
+	// Transformacao::translacao(&(Cena::esfera), { 50, 0, 0 });
+	// Transformacao::escala(&(Cena::malha), { 2, 0.5, 1 });
 	// Ponto p1 { 0, 0, -75 }, p2 { 0, 10, -85 };
 	// Transformacao::rotacaoArbitrario(&(Cena::malha), p1, p2, 3.1415926 / 2);
 	// Transformacao::espelhoArbitrario(&(Cena::malha), {15,0,0}, {-1,0,0});
+	// Transformacao::cisalhamentoYX(&(Cena::malha), 3.1415926 / 4);
+	Transformacao::cisalhamentoXY(&(Cena::malha), 3.1415926 / 4);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
