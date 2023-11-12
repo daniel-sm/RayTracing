@@ -419,6 +419,13 @@ public:
             vertices[i].x = p(0, 0); vertices[i].y = p(1, 0); vertices[i].z = p(2, 0);
         }
     }
+
+    void duplicar (Malha* copia) 
+    { // Assume que a malha recebida tem mesmo numero de vertices, arestas e faces
+        for (int i = 0; i < numvertices; ++i) copia->vertices[i] = vertices[i];
+        for (int i = 0; i < numarestas; ++i) copia->arestas[i] = arestas[i];
+        for (int i = 0; i < numfaces; ++i) copia->faces[i] = faces[i];
+    }
 }; // fim class Malha
 //
 // Fim da Hierarquia de classes Objeto 

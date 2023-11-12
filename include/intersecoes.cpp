@@ -338,19 +338,19 @@ double Malha::intersecao (Raio raio)
             c1 = escalar(vetorial(s3, s1), normal);
 
             // se negativo entao intersecao invalida
-            if (c1 < 0) t_int = -1;
+            if (c1 + 0.01 < 0) t_int = -1;
             else { // senao calcula proxima coordenada baricentrica
                 c1 = c1 / areatotal;
                 c2 = escalar(vetorial(s1, s2), normal);
 
                 // se negativo entao intersecao invalida
-                if (c2 < 0) t_int = -1;
+                if (c2 + 0.01 < 0) t_int = -1;
                 else { // senao calcula proxima coordenada baricentrica
                     c2 = c2 / areatotal;
                     c3 = 1 - (c1 + c2);
 
                     // se negativo entao intersecao invalida
-                    if (c3 < 0) t_int = -1;
+                    if (c3 + 0.01 < 0) t_int = -1;
                     // senao nao precisa fazer nada pois o t_int já é valido
                 }
             }
