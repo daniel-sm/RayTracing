@@ -12,18 +12,18 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 #include <SDL.h>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
-#include "include/intersecoes.cpp"
+#include "include/intersecoes.hpp"
 #include "include/transformacoes.hpp"
 #include "include/matriz.hpp"
 #include "include/util.hpp"
 
-double raycast (Lista<Objeto> &cena, Raio raio, Objeto* &atingido)
+double raycast (Lista<Objeto> &listaObjetos, Raio raio, Objeto* &atingido)
 {
 	// Vai guardar o menor valor de t 
 	double menor_t = -1;
 
 	// Percorrendo os objetos da cena
-	for (auto obj : cena)
+	for (auto obj : listaObjetos)
 	{
         // Guardando o retorno da intersecao para comparar com menor_t
         double t_int = obj->intersecao(raio);
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Realizando transformacao de coordenadas de mundo em de camera
-	camera.toCamera(Cena::cena, Cena::fontes);
+	camera.toCamera(Cena::listaObjetos, Cena::listaFontes);
 
 	// Transformacao::translacao(&(Cena::esfera), { 50, 0, 0 });
 	// Transformacao::escala(&(Cena::malha), { 2, 0.5, 1 });
@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
-			double t_int = raycast(Cena::cena, raio, atingido);
+			double t_int = raycast(Cena::listaObjetos, raio, atingido);
 
 			// Verificando de atingiu algum objeto
 			if (t_int > 0) 
@@ -146,10 +146,10 @@ int main(int argc, char** argv)
 				I = I + (Cena::luzAmbiente * (atingido->material.ka));
 
 				// Percorrendo as fontes de luz da cena
-				for (auto fonte : Cena::fontes)
+				for (auto fonte : Cena::listaFontes)
 				{
 					// Checa se o ponto esta na sombra
-					if (fonte->sombra(p_int, Cena::cena, raycast)) 
+					if (fonte->sombra(p_int, Cena::listaObjetos, raycast)) 
 					{
 						Vetor normal = atingido->obterNormal(p_int);
 

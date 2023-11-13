@@ -84,14 +84,14 @@ namespace Cena
 	int numArestas = 18; // Numero de arestas da Malha
 	int numFaces = 12; // Numero de faces da Malha
 	Malha malha (numVertices, numArestas, numFaces, materialMalha);
-    
+
     void definirMalha () 
     {
         // Definindo os vertices da Malha
-        malha.setVertice(0, { -30, -30, -50 }); malha.setVertice(1, {  0, -30, -50 });
-        malha.setVertice(2, {  0,  0, -50 }); malha.setVertice(3, { -30,  0, -50 }); 
-        malha.setVertice(4, { -15, -15, -100 }); malha.setVertice(5, {  15, -15, -100 }); 
-        malha.setVertice(6, {  15,  15, -100 }); malha.setVertice(7, { -15,  15, -100 }); 
+        malha.setVertice(0, { 0, 0, 0 }); malha.setVertice(1, { 1, 0, 0 });
+        malha.setVertice(2, { 1, 1, 0 }); malha.setVertice(3, { 0, 1, 0 }); 
+        malha.setVertice(4, { 0, 0, 1 }); malha.setVertice(5, { 1, 0, 1 }); 
+        malha.setVertice(6, { 1, 1, 1 }); malha.setVertice(7, { 0, 1, 1 }); 
         // Definindo as arestas da Malha
         malha.setAresta(0, 0, 1); malha.setAresta(1, 1, 2); 
         malha.setAresta(2, 2, 3); malha.setAresta(3, 3, 0); 
@@ -110,6 +110,7 @@ namespace Cena
         malha.setFace(8, 2, 6, 16); malha.setFace(9, 10, 7, 16);
         malha.setFace(10, 4, 8, 17); malha.setFace(11, 5, 0, 17);
     }
+
 	// Informacoes da Fonte Pontual ********************************************
 	Vetor intensePontual { 0.7, 0.7, 0.7 }; // Intensidade da fonte pontual
 	Ponto posicaoPontual { 0, 60, -30 }; // Posicao da fonte pontual
@@ -134,28 +135,28 @@ namespace Cena
     Vetor luzAmbiente { 0.3, 0.3, 0.3 };
 
 	// Lista de Objetos da Cena ************************************************
-	Lista<Objeto> cena;
+	Lista<Objeto> listaObjetos;
     // Definindo a lista de objetos da cena
     void definirCena() 
     {
         // Adicionando os objetos na cena
-        cena.add(&esfera);
-        cena.add(&cilindro);
-        cena.add(&cone);
-        cena.add(&malha);
-        cena.add(&chao);
-        cena.add(&fundo);
+        listaObjetos.add(&esfera);
+        listaObjetos.add(&cilindro);
+        listaObjetos.add(&cone);
+        listaObjetos.add(&malha);
+        listaObjetos.add(&chao);
+        listaObjetos.add(&fundo);
     }
 
 	// Lista de Fontes de luz **************************************************
-	Lista<Fonte> fontes;
+	Lista<Fonte> listaFontes;
     // Definindo a lista de fontes da cena
     void definirFontes () 
     {
         // Adicionando as fontes na lista
-        fontes.add(&pontual);
-        fontes.add(&spot);
-        fontes.add(&direcional);
+        listaFontes.add(&pontual);
+        listaFontes.add(&spot);
+        listaFontes.add(&direcional);
     }
 } // namespace Cena
 
