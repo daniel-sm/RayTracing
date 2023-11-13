@@ -57,49 +57,28 @@ int main(int argc, char** argv)
 	Janela janela (wJanela, hJanela, dJanela); // Objeto da janela
 
 	// Informacoes do Canvas ***************************************************
-	int nCol = 500; // Numero de colunas da grade do canvas
-	int nLin = 500; // Numero de linhas da grade do canvas
+	int nCol = 1000; // Numero de colunas da grade do canvas
+	int nLin = 1000; // Numero de linhas da grade do canvas
 
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = janela.getWidth() / nCol;
 	double Dy = janela.getHeight() / nLin;
 
-	// Funcao que define os vertices, arestas e faces da malha
-	Cena::definirMalha();
+	// Funcao que define os vertices, arestas e faces do cubo
+	Cena::definirCubo();
 	// Funcao que define a lista de objetos da cena
 	Cena::definirCena();
 	// Funcao que define a lista de fontes da cena
 	Cena::definirFontes();
 
 	// Informacoes da Camera ***************************************************
-	// Visão de frente --------------------------
-	Ponto eye = { 0, 10, 50 };
-	Ponto at = { 0, 10, -1 };
-	Ponto up = { 0, 100, 0 };
-	// Visão de cima ----------------------------
-	// Ponto eye = { 0, 100, -80 };
-	// Ponto at = { 0, 0, -80 };
-	// Ponto up = { 0, 100, -100 };
-	// Visão de lado direito --------------------
-	// Ponto eye = { 100, 0, -100 };
-	// Ponto at = { 0, 0, -100 };
-	// Ponto up = { 100, 1, -100 };
-	// Visão de lado esquerdo --------------------
-	// Ponto eye = { -100, 0, -80 };
-	// Ponto at = { 0, 0, -80 };
-	// Ponto up = { -100, 1, -80 };
+	Ponto eye = { 80, 200, 80 };
+	Ponto at = { 80, 0, 80 };
+	Ponto up = { 0, 0, 0 };
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
-	// Realizando transformacao de coordenadas de mundo em de camera
+	// Transformando de Mundo para Camera
 	camera.toCamera(Cena::listaObjetos, Cena::listaFontes);
-
-	// Transformacao::translacao(&(Cena::esfera), { 50, 0, 0 });
-	// Transformacao::escala(&(Cena::malha), { 2, 0.5, 1 });
-	// Ponto p1 { 0, 0, -75 }, p2 { 0, 10, -85 };
-	// Transformacao::rotacaoArbitrario(&(Cena::malha), p1, p2, 3.1415926 / 2);
-	// Transformacao::espelhoArbitrario(&(Cena::malha), {15,0,0}, {-1,0,0});
-	// Transformacao::cisalhamentoYX(&(Cena::malha), 3.1415926 / 4);
-	Transformacao::cisalhamentoXY(&(Cena::malha), 3.1415926 / 4);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
