@@ -62,6 +62,9 @@ namespace Cena
 	Material materialCubo { kaCubo, kdCubo, keCubo, brilhoCubo };
 
 	// Objetos da Cena *********************************************************
+	// Objetos em coordenadas de mundo onde todos objetos estao no primeiro
+	// octante do sistema de coordenadas. O plano do chao é o plano XZ (y = 0)
+	// e os planos XY e YZ sao delimitantes de fundo para o cenario
 
 	// Informacoes da Esfera ***************************************************
 	double raioEsfera = 40; // Raio da esfera em CM

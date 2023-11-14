@@ -1,8 +1,7 @@
 #ifndef OBJETOS_HPP
 #define OBJETOS_HPP
 
-#include "util.hpp"
-#include "matriz.hpp"
+#include "basics.hpp"
 
 class Janela
 {

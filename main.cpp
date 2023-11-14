@@ -14,8 +14,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 #include "include/objetos.hpp"
 #include "include/intersecoes.hpp"
 #include "include/transformacoes.hpp"
-#include "include/matriz.hpp"
-#include "include/util.hpp"
+#include "include/basics.hpp"
 
 double raycast (Lista<Objeto> &listaObjetos, Raio raio, Objeto* &atingido)
 {
