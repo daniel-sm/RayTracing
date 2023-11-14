@@ -163,29 +163,29 @@ namespace Cena
     Vetor luzAmbiente { 0.2, 0.2, 0.2 };
 
 	// Lista de Objetos da Cena ************************************************
-	Lista<Objeto> listaObjetos;
+	Lista<Objeto> cenario;
     // Definindo a lista de objetos da cena
     void definirCena() 
     {
         // Adicionando os objetos na cena
-        listaObjetos.add(&esfera);
-        listaObjetos.add(&cilindro);
-        listaObjetos.add(&cone);
-        listaObjetos.add(&cubo);
-        listaObjetos.add(&chao);
-        listaObjetos.add(&fundo1);
-        listaObjetos.add(&fundo2);
+        cenario.add(&esfera);
+        cenario.add(&cilindro);
+        cenario.add(&cone);
+        cenario.add(&cubo);
+        cenario.add(&chao);
+        cenario.add(&fundo1);
+        cenario.add(&fundo2);
     }
 
 	// Lista de Fontes de luz **************************************************
-	Lista<Fonte> listaFontes;
+	Lista<Fonte> fontes;
     // Definindo a lista de fontes da cena
-    void definirFontes () 
+    void definirFontes() 
     {
         // Adicionando as fontes na lista
-        listaFontes.add(&pontual);
-        listaFontes.add(&spot);
-        listaFontes.add(&direcional);
+        fontes.add(&pontual);
+        fontes.add(&spot);
+        fontes.add(&direcional);
     }
 } // namespace Cena
 

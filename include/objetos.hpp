@@ -315,9 +315,12 @@ private:
     // quantidade de vertices, arestas e faces na malha
     int numvertices, numarestas, numfaces;
 
-    std::vector<Ponto> vertices; // lista de vertices
-    std::vector<Aresta> arestas; // lista de arestas
-    std::vector<Face> faces; // lista de faces
+    // std::vector<Ponto> vertices; // lista de vertices
+    // std::vector<Aresta> arestas; // lista de arestas
+    // std::vector<Face> faces; // lista de faces
+    Ponto* vertices; // lista de vertices
+    Aresta* arestas; // lista de arestas
+    Face* faces; // lista de faces
 
     // variavel que guarda o id da face atingida pelo raio
     // apos calcular intersecao atualiza a variavel
@@ -327,11 +330,16 @@ private:
 public:
     Malha(int v, int a, int f, Material m) : numvertices{v}, numarestas{a}, numfaces{f}
     {
-        vertices.resize(v);
-        arestas.resize(a);
-        faces.resize(f);
+        // vertices.resize(v);
+        // arestas.resize(a);
+        // faces.resize(f);
+        vertices = new Ponto[v];
+        arestas = new Aresta[a];
+        faces = new Face[f];
         material = m;
     }
+    ~Malha () 
+    { delete[] vertices; delete[] arestas; delete[] faces; }
 
     // recebe id do vertice e posicao do vertice
     void setVertice (int i, Ponto p) { vertices[i] = p; }
@@ -413,11 +421,14 @@ public:
         }
     }
 
-    void duplicar (Malha* copia) 
-    { // Assume que a malha recebida tem mesmo numero de vertices, arestas e faces
-        copia->vertices = vertices;
-        copia->arestas = arestas;
-        copia->faces = faces;
+    void copiar (Malha* outro) 
+    { // Assume que a nova malha tem mesmo numero de vertices, arestas e faces
+        // outro->vertices = vertices;
+        // outro->arestas = arestas;
+        // outro->faces = faces;
+        for (int i = 0; i < numvertices; ++i) outro->vertices[i] = vertices[i];
+        for (int i = 0; i < numarestas; ++i) outro->arestas[i] = arestas[i];
+        for (int i = 0; i < numfaces; ++i) outro->faces[i] = faces[i];
     }
 }; // fim class Malha
 //

@@ -16,13 +16,13 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 #include "include/transformacoes.hpp"
 #include "include/basics.hpp"
 
-double raycast (Lista<Objeto> &listaObjetos, Raio raio, Objeto* &atingido)
+double raycast (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
 {
 	// Vai guardar o menor valor de t 
 	double menor_t = -1;
 
 	// Percorrendo os objetos da cena
-	for (auto obj : listaObjetos)
+	for (auto obj : cenario)
 	{
         // Guardando o retorno da intersecao para comparar com menor_t
         double t_int = obj->intersecao(raio);
@@ -71,13 +71,18 @@ int main(int argc, char** argv)
 	Cena::definirFontes();
 
 	// Informacoes da Camera ***************************************************
+	// Vista de Cima
 	Ponto eye = { 80, 200, 80 };
 	Ponto at = { 80, 0, 80 };
 	Ponto up = { 0, 0, 0 };
+	// Vista em Diagonal
+	// Ponto eye = { 200, 200, 200 };
+	// Ponto at = { 0, 0, 0 };
+	// Ponto up = { 0, 200, 0 };
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
-	camera.toCamera(Cena::listaObjetos, Cena::listaFontes);
+	camera.toCamera(Cena::cenario, Cena::fontes);
 
 	// Matriz de cores *********************************************************
 	Cor** cores = new Cor*[nLin];
@@ -110,7 +115,7 @@ int main(int argc, char** argv)
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
-			double t_int = raycast(Cena::listaObjetos, raio, atingido);
+			double t_int = raycast(Cena::cenario, raio, atingido);
 
 			// Verificando de atingiu algum objeto
 			if (t_int > 0) 
@@ -124,10 +129,10 @@ int main(int argc, char** argv)
 				I = I + (Cena::luzAmbiente * (atingido->material.ka));
 
 				// Percorrendo as fontes de luz da cena
-				for (auto fonte : Cena::listaFontes)
+				for (auto fonte : Cena::fontes)
 				{
 					// Checa se o ponto esta na sombra
-					if (fonte->sombra(p_int, Cena::listaObjetos, raycast)) 
+					if (fonte->sombra(p_int, Cena::cenario, raycast)) 
 					{
 						Vetor normal = atingido->obterNormal(p_int);
 
