@@ -184,8 +184,8 @@ int main(int argc, char** argv)
 	// Criando uma janela
 	SDL_Window* window = SDL_CreateWindow(
 		"Computação Gráfica",             // Título da Janela
-		SDL_WINDOWPOS_UNDEFINED,        // Posição inicial X
-		SDL_WINDOWPOS_UNDEFINED,        // Posição inicial Y
+		SDL_WINDOWPOS_CENTERED,        // Posição inicial X
+		SDL_WINDOWPOS_CENTERED,        // Posição inicial Y
 		nCol,                           // Largura da janela em pixels
 		nLin,                           // Altura da janela em pixels
 		SDL_WINDOW_SHOWN                // Flags
