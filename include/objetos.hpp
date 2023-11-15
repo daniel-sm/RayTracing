@@ -266,10 +266,8 @@ public:
 
     Vetor obterNormal (Ponto p) const override 
     {
-        if (escalar(direcao, (p - base)) - 0.1 <= 0)
-        {
-            return (-1) * direcao;
-        } else
+        if (escalar(direcao, (p - base)) - 0.1 <= 0) { return (-1) * direcao; }
+        else
         {
             Vetor w = vetorial(direcao, (p - base));
             Vetor normal = vetorial(w, (vertice - p));
@@ -429,6 +427,17 @@ public:
         for (int i = 0; i < numvertices; ++i) outro->vertices[i] = vertices[i];
         for (int i = 0; i < numarestas; ++i) outro->arestas[i] = arestas[i];
         for (int i = 0; i < numfaces; ++i) outro->faces[i] = faces[i];
+    }
+
+    // Funcao que inverte a ordem das arestas das faces quando se usa espelho
+    void inverterOrdem () 
+    {
+        for (int i = 0; i < numfaces; ++i)
+        {
+            int aux = faces[i].a1;
+            faces[i].a1 = faces[i].a3;
+            faces[i].a3 = aux;
+        }
     }
 }; // fim class Malha
 //

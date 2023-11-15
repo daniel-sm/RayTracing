@@ -56,8 +56,8 @@ int main(int argc, char** argv)
 	Janela janela (wJanela, hJanela, dJanela); // Objeto da janela
 
 	// Informacoes do Canvas ***************************************************
-	int nCol = 1000; // Numero de colunas da grade do canvas
-	int nLin = 1000; // Numero de linhas da grade do canvas
+	int nCol = 700; // Numero de colunas da grade do canvas
+	int nLin = 700; // Numero de linhas da grade do canvas
 
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = janela.getWidth() / nCol;
