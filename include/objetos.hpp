@@ -6,12 +6,15 @@
 class Janela
 {
 private:
-    double width, height, distance;
+    double xmin, xmax, ymin, ymax, distance;
 public:
-    Janela(double w, double h, double d) : width{w}, height{h}, distance{d} {}
+    Janela(double xm, double xM, double ym, double yM, double d) 
+    : xmin{xm}, xmax{xM}, ymin{ym}, ymax{yM}, distance{d} {}
 
-    double getWidth() { return width; }
-    double getHeight() { return height; }
+    double getXMin() { return xmin; }
+    double getYMax() { return ymax; }
+    double getWidth() { return xmax - xmin; }
+    double getHeight() { return ymax - ymin; }
     double getDistance() { return distance; }
 }; // fim class Janela
 

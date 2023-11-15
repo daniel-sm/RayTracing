@@ -46,14 +46,25 @@ double raycast (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
 
 int main(int argc, char** argv) 
 {
-	// Ponto de visao da cena, origem dos raios
-	Ponto origem = { 0, 0, 0 };
+	// Funcao que define os vertices, arestas e faces do cubo
+	Cena::definirCubo();
+	// Funcao que define a lista de objetos da cena
+	Cena::definirCena();
+	// Funcao que define a lista de fontes da cena
+	Cena::definirFontes();
+
+	// Projecao (1 - perspectiva), (2 - ortografica), (3 - obliqua) 
+	int projecao = 1;
+	Vetor direcaoRaio = { 0.2, 0, -1 };
 
 	// Informacoes da janela ***************************************************
-	double wJanela = 60; // Largura da janela em CM
-	double hJanela = 60; // Altura da janela em CM
-	double dJanela = 30; // Distancia da janela em CM
-	Janela janela (wJanela, hJanela, dJanela); // Objeto da janela
+	double xminJanela = -20; // Valor do lado esquerdo da janela em cm
+	double xmaxJanela = 50; // Valor do lado direito da janela em cm
+	double yminJanela = -20; // Valor da parte de cima da janela em cm
+	double ymaxJanela = 50; // Valor da parte de baixo da janela em cm
+	double dJanela = 30; // Distancia da janela em cm
+	// Objeto da janela
+	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
 	// Informacoes do Canvas ***************************************************
 	int nCol = 700; // Numero de colunas da grade do canvas
@@ -63,22 +74,15 @@ int main(int argc, char** argv)
 	double Dx = janela.getWidth() / nCol;
 	double Dy = janela.getHeight() / nLin;
 
-	// Funcao que define os vertices, arestas e faces do cubo
-	Cena::definirCubo();
-	// Funcao que define a lista de objetos da cena
-	Cena::definirCena();
-	// Funcao que define a lista de fontes da cena
-	Cena::definirFontes();
-
 	// Informacoes da Camera ***************************************************
 	// Vista de Cima
-	Ponto eye = { 80, 200, 80 };
-	Ponto at = { 80, 0, 80 };
-	Ponto up = { 0, 0, 0 };
+	// Ponto eye = { 80, 200, 80 };
+	// Ponto at = { 80, 0, 80 };
+	// Ponto up = { 0, 0, 0 };
 	// Vista em Diagonal
-	// Ponto eye = { 200, 200, 200 };
-	// Ponto at = { 0, 0, 0 };
-	// Ponto up = { 0, 200, 0 };
+	Ponto eye = { 200, 200, 200 };
+	Ponto at = { 0, 0, 0 };
+	Ponto up = { 0, 200, 0 };
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
@@ -88,6 +92,12 @@ int main(int argc, char** argv)
 	Cor** cores = new Cor*[nLin];
 	// Inicializando cada linha da matriz
 	for (int i = 0; i < nLin; ++i) { cores[i] = new Cor[nCol]; }
+
+	// Matriz de objetos atingidos *********************************************
+	// Array de arrays de ponteiro para Objeto
+	Objeto*** objetos_atingidos = new Objeto**[nLin];
+	// Inicializando cada linha da matriz
+	for (int i = 0; i < nLin; ++i) { objetos_atingidos[i] = new Objeto*[nCol]; }
 
 	// Maior intensidade de cor ************************************************
 	// Usada para reprocessar as cores com base na maior
@@ -100,18 +110,34 @@ int main(int argc, char** argv)
 	for (int lin = 0; lin < nLin; ++lin) 
 	{
 		// Coordenada Y do centro do quadriculo no frame
-		double y = (janela.getHeight() / 2) - (Dy / 2) - (lin * Dy);
+		double y = janela.getYMax() - (Dy / 2) - (lin * Dy);
 
 		// Percorre as colunas da grade do canvas
 		for (int col = 0; col < nCol; ++col) 
 		{
 			// Coordenada X do centro do quadriculo no frame
-			double x = -(janela.getWidth() / 2) + (Dx / 2) + (col * Dx);
+			double x = janela.getXMin() + (Dx / 2) + (col * Dx);
 
-			// Gerando raio lancado pela janela
+			// Ponto do centro do quadrado do frame
 			Ponto pontoJanela { x, y, -janela.getDistance() };
-			Raio raio = Raio (origem, pontoJanela);
+			// Raio que vai ser lancado, dependendo da projecao
+			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Por padrao é perspectiva
 
+			// Gerando Raio lancado pela janela
+			switch (projecao)
+			{
+			case 1: // Caso seja persperctiva
+				raio = Raio({ 0, 0, 0 }, pontoJanela);
+				break;
+			case 2: // Caso seja ortografica
+				raio = Raio(pontoJanela, Vetor{0, 0, -1});
+				break;
+			case 3: // Caso seja obliqua
+				raio = Raio(pontoJanela, direcaoRaio);
+				break;
+			default: 
+				break;
+			}
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
@@ -160,8 +186,10 @@ int main(int argc, char** argv)
 				cor.b = (cor.b * I.z);
 
 				cores[lin][col] = cor;
+				objetos_atingidos[lin][col] = atingido;
 			} else { 
 				cores[lin][col] = { 0, 0, 0 };
+				objetos_atingidos[lin][col] = nullptr;
 			}
 		}
 	}
@@ -188,12 +216,12 @@ int main(int argc, char** argv)
   
 	// Criando uma janela
 	SDL_Window* window = SDL_CreateWindow(
-		"Computação Gráfica",             // Título da Janela
-		SDL_WINDOWPOS_CENTERED,        // Posição inicial X
-		SDL_WINDOWPOS_CENTERED,        // Posição inicial Y
-		nCol,                           // Largura da janela em pixels
-		nLin,                           // Altura da janela em pixels
-		SDL_WINDOW_SHOWN                // Flags
+		"Computação Gráfica",   // Título da Janela
+		SDL_WINDOWPOS_CENTERED, // Posição inicial X
+		SDL_WINDOWPOS_CENTERED, // Posição inicial Y
+		nCol,                   // Largura da janela em pixels
+		nLin,                   // Altura da janela em pixels
+		SDL_WINDOW_SHOWN        // Flags
 	);
   
 	// Verificando se a janela foi criada corretamente
@@ -223,25 +251,36 @@ int main(int argc, char** argv)
 	while (isRunning) {
 		// Checando eventos
 		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT) {
-				isRunning = false;
+			switch (event.type)
+			{
+			case SDL_QUIT:
+				isRunning = false; 
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				for (int i = 0; i < nLin; ++i)
+					for (int j = 0; j < nCol; ++j) 
+						if (objetos_atingidos[event.button.y][event.button.x] == objetos_atingidos[i][j])
+							cores[i][j] = { 0, 0, 0 };
+				break;
+			default:
+				break;
 			}
 		}
 		// Limpando o renderer
 		SDL_RenderClear(renderer);
 		
-		for (int y = 0; y < nLin; ++y) {
-			for (int x = 0; x < nCol; ++x) {
+		for (int i = 0; i < nLin; ++i) {
+			for (int j = 0; j < nCol; ++j) {
 				// Designando a cor que vai pintar
 				SDL_SetRenderDrawColor(
 					renderer, 
-					cores[y][x].r, 
-					cores[y][x].g, 
-					cores[y][x].b, 
+					cores[i][j].r, 
+					cores[i][j].g, 
+					cores[i][j].b, 
 					SDL_ALPHA_OPAQUE
 				);
 				// Pintando o pixel
-				SDL_RenderDrawPoint(renderer, x, y);
+				SDL_RenderDrawPoint(renderer, j, i);
 			}
 		}
 		// Atualizando a janela com o renderer

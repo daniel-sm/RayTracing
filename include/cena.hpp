@@ -68,7 +68,7 @@ namespace Cena
 
 	// Informacoes da Esfera ***************************************************
 	double raioEsfera = 40; // Raio da esfera em CM
-	Ponto centroEsfera { 140, 0, 140 }; // Centro da esfera
+	Ponto centroEsfera { 140, raioEsfera, 140 }; // Centro da esfera
 	// Objeto da Esfera
 	Esfera esfera (centroEsfera, raioEsfera, materialEsfera);
 
