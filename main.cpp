@@ -47,7 +47,7 @@ double raycast (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
 int main(int argc, char** argv) 
 {
 	// Funcao que define os vertices, arestas e faces do cubo
-	Cena::definirCubo();
+	Cena::definirMalha();
 	// Funcao que define a lista de objetos da cena
 	Cena::definirCena();
 	// Funcao que define a lista de fontes da cena
@@ -57,13 +57,13 @@ int main(int argc, char** argv)
 	int projecao = 1;
 	Vetor direcaoRaio = { 0.2, 0, -1 };
 
-	// Informacoes da janela ***************************************************
-	double xminJanela = -20; // Valor do lado esquerdo da janela em cm
-	double xmaxJanela = 50; // Valor do lado direito da janela em cm
-	double yminJanela = -20; // Valor da parte de cima da janela em cm
-	double ymaxJanela = 50; // Valor da parte de baixo da janela em cm
-	double dJanela = 30; // Distancia da janela em cm
-	// Objeto da janela
+	// Informacoes da Janela ***************************************************
+	double xminJanela = -30; // Valor do lado esquerdo da janela em cm
+	double xmaxJanela = 30; // Valor do lado direito da janela em cm
+	double yminJanela = -30; // Valor da parte de cima da janela em cm
+	double ymaxJanela = 30; // Valor da parte de baixo da janela em cm
+	double dJanela = 80; // Distancia da janela em cm
+	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
 	// Informacoes do Canvas ***************************************************
@@ -76,13 +76,13 @@ int main(int argc, char** argv)
 
 	// Informacoes da Camera ***************************************************
 	// Vista de Cima
-	// Ponto eye = { 80, 200, 80 };
-	// Ponto at = { 80, 0, 80 };
-	// Ponto up = { 0, 0, 0 };
+	Ponto eye = { 50, 200, 50 };
+	Ponto at = { 50, 0, 50 };
+	Ponto up = { 0, 0, 0 };
 	// Vista em Diagonal
-	Ponto eye = { 200, 200, 200 };
-	Ponto at = { 0, 0, 0 };
-	Ponto up = { 0, 200, 0 };
+	// Ponto eye = { 150, 100, 150 };
+	// Ponto at = { 0, 0, 0 };
+	// Ponto up = { 0, 200, 0 };
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
