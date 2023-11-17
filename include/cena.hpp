@@ -4,6 +4,8 @@
 #include "objetos.hpp"
 #include "transformacoes.hpp"
 
+#define PI 3.14159265359
+
 namespace Cena
 {
 	// Materiais dos objetos ***************************************************
@@ -64,19 +66,19 @@ namespace Cena
 
 	// Material da Pista *******************************************************
 	// Propriedades de reflectividade da Pista
-	Vetor kaPista = { 0.1, 0.1, 0.1 }; // Prop. ambiente do material da Pista
+	Vetor kaPista = { 0.2, 0.2, 0.2 }; // Prop. ambiente do material da Pista
 	Vetor kdPista = kaPista; // Prop. difusa do material da Pista
-	Vetor kePista = { 0.2, 0.2, 0.2 }; // Prop. especular do material da Pista
+	Vetor kePista = kaPista; // Prop. especular do material da Pista
 	double brilhoPista = 1; // Fator de brilho especular
 	// Material da Pista
 	Material materialPista { kaPista, kdPista, kePista, brilhoPista };
 
 	// Material da Casa *******************************************************
 	// Propriedades de reflectividade da Casa
-	Vetor kaCasa = { 0.8, 0.8, 0.8 }; // Prop. ambiente do material da Casa
+	Vetor kaCasa = { 0.9, 0.9, 0.9 }; // Prop. ambiente do material da Casa
 	Vetor kdCasa = kaCasa; // Prop. difusa do material da Casa
 	Vetor keCasa = kaCasa; // Prop. especular do material da Casa
-	double brilhoCasa = 5; // Fator de brilho especular
+	double brilhoCasa = 10; // Fator de brilho especular
 	// Material da Casa
 	Material materialCasa { kaCasa, kdCasa, keCasa, brilhoCasa };
 
@@ -88,6 +90,15 @@ namespace Cena
 	double brilhoTelhado = 5; // Fator de brilho especular
 	// Material do Telhado
 	Material materialTelhado { kaTelhado, kdTelhado, keTelhado, brilhoTelhado };
+
+	// Material do Poste *******************************************************
+	// Propriedades de reflectividade do Poste
+	Vetor kaPoste = { 0.4, 0.4, 0.4 }; // Prop. ambiente do material do Poste
+	Vetor kdPoste = kaPoste; // Prop. difusa do material do Poste
+	Vetor kePoste = { 0.5, 0.5, 0.5 }; // Prop. especular do material do Poste
+	double brilhoPoste = 5; // Fator de brilho especular
+	// Material do Poste
+	Material materialPoste { kaPoste, kdPoste, kePoste, brilhoPoste };
 
 	// Objetos da Cena *********************************************************
 	// Objetos em coordenadas de mundo onde todos objetos estao no primeiro
@@ -184,6 +195,45 @@ namespace Cena
 	// Objeto da Pista 6
 	Malha pista6 (verticesQuad, arestasQuad, facesQuad, materialPista);
 
+	// Informacoes do Poste ****************************************************
+	double raioPoste = 0.5; // Raio da base do Poste em cm
+	Ponto basePoste { 0, 0, 0 }; // Centro da base do Poste 
+	Ponto topoPoste = { 0, 20, 0 }; // Posicao do topo do Poste
+	// Objeto do Poste 1
+	Cilindro poste1 (basePoste, topoPoste, raioPoste, materialPoste);
+	// Objeto do Poste 2
+	Cilindro poste2 (basePoste, topoPoste, raioPoste, materialPoste);
+	// Objeto do Poste 3
+	Cilindro poste3 (basePoste, topoPoste, raioPoste, materialPoste);
+	// Objeto do Poste 4
+	Cilindro poste4 (basePoste, topoPoste, raioPoste, materialPoste);
+
+	// Informacoes da Haste ****************************************************
+	double raioHaste = 0.25; // Raio da base da Haste em cm
+	Ponto baseHaste { 0, 0, 0 }; // Centro da base da Haste 
+	Ponto topoHaste = { 5, 0, 0 }; // Posicao do topo da Haste
+	// Objeto da Haste 1
+	Cilindro haste1 (baseHaste, topoHaste, raioHaste, materialPoste);
+	// Objeto da Haste 2
+	Cilindro haste2 (baseHaste, topoHaste, raioHaste, materialPoste);
+	// Objeto da Haste 3
+	Cilindro haste3 (baseHaste, topoHaste, raioHaste, materialPoste);
+	// Objeto da Haste 4
+	Cilindro haste4 (baseHaste, topoHaste, raioHaste, materialPoste);
+
+	// Informacoes do Suporte ****************************************************
+	double raioSuporte = 0.5; // Raio da base do Suporte em cm
+	Ponto baseSuporte { 0, 0, 0 }; // Centro da base do Suporte 
+	Ponto verticeSuporte = { 0, 1, 0 }; // Posicao do topo do Suporte
+	// Objeto do Suporte 1
+	Cone suporte1 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
+	// Objeto do Suporte 2
+	Cone suporte2 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
+	// Objeto do Suporte 3
+	Cone suporte3 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
+	// Objeto do Suporte 4
+	Cone suporte4 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
+
 	void definirMalha() 
 	{
         // Definindo os vertices da Piramide ***********************************
@@ -245,15 +295,21 @@ namespace Cena
 
 	// Informacoes da Fonte Spot ***********************************************
 	Vetor intenseSpot = { 1.0, 1.0, 1.0 };
-	Ponto posicaoSpot = { 50, 50, 50 };
-	Vetor direcaoSpot = { -50, -50, -50 }; //{ 0, -1, 0 };
-	double anguloSpot = 3.1415926 / 6;
+	Ponto posicaoSpot = { 0, 1, 0 };
+	Vetor direcaoSpot = { 0, -1, 0 };
+	double anguloSpot = PI / 4;
 	// Objeto da fonte de luz Spot
-	Spot spot (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	// Objeto da fonte de luz Spot
+	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	// Objeto da fonte de luz Spot
+	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	// Objeto da fonte de luz Spot
+	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 
 	// Informacoes da Fonte Direcional *****************************************
 	Vetor intenseDirecional = { 0.5, 0.5, 0.5 };
-	Vetor direcaoDirecional = { 0, -1, 0 };
+	Vetor direcaoDirecional = { -1, -1, -1 };
 	// Objeto da fonte de luz Direcional
 	Direcional direcional (intenseDirecional, direcaoDirecional);
 
@@ -265,55 +321,96 @@ namespace Cena
     // Definindo a lista de objetos da cena
     void definirCena() 
     {
-		// Definindo a pista 1
+		// Realizando transformacoes nos objetos *******************************
+		//
+		// Ajustando tamanho e local da pista 1
 		quadrado.copiar(&pista1);
 		Transformacao::escala(&pista1, { 10, 1, 1 });
 		Transformacao::translacao(&pista1, { 0, 0, 20 });
-		// Definindo a pista 2
+		// Ajustando tamanho e local da pista 2
 		pista1.copiar(&pista2);
 		Transformacao::translacao(&pista2, { 0, 0, 20 });
-		// Definindo a pista 3
+		// Ajustando tamanho e local da pista 3
 		pista2.copiar(&pista3);
 		Transformacao::translacao(&pista3, { 0, 0, 20 });
-		// Definindo a pista 4
+		// Ajustando tamanho e local da pista 4
 		quadrado.copiar(&pista4);
 		Transformacao::escala(&pista4, { 1, 1, 10 });
 		Transformacao::translacao(&pista4, { 20, 0, 0 });
-		// Definindo a pista 5
+		// Ajustando tamanho e local da pista 5
 		pista4.copiar(&pista5);
 		Transformacao::translacao(&pista5, { 20, 0, 0 });
-		// Definindo a pista 6
+		// Ajustando tamanho e local da pista 6
 		pista5.copiar(&pista6);
 		Transformacao::translacao(&pista6, { 20, 0, 0 });
 
-		// Definindo as casas
+		// Ajustando local das casas
 		cubo.copiar(&casa1); cubo.copiar(&casa2); 
 		cubo.copiar(&casa3); cubo.copiar(&casa4);
 		Transformacao::translacao(&casa1, { 30, 0, 30 });
 		Transformacao::translacao(&casa2, { 50, 0, 30 });
 		Transformacao::translacao(&casa3, { 30, 0, 50 });
 		Transformacao::translacao(&casa4, { 50, 0, 50 });
-
+		// Ajustando local dos telhados
 		piramide.copiar(&telhado1); piramide.copiar(&telhado2);
 		piramide.copiar(&telhado3); piramide.copiar(&telhado4);  
 		Transformacao::translacao(&telhado1, { 30, 10, 30 });
 		Transformacao::translacao(&telhado2, { 50, 10, 30 });
 		Transformacao::translacao(&telhado3, { 30, 10, 50 });
 		Transformacao::translacao(&telhado4, { 50, 10, 50 });
+		// Ajustando local dos postes
+		Transformacao::translacao(&poste1, { 20, 0, 20 });
+		Transformacao::translacao(&poste2, { 70, 0, 20 });
+		Transformacao::translacao(&poste3, { 20, 0, 70 });
+		Transformacao::translacao(&poste4, { 70, 0, 70 });
+		// Ajustando direcao e local das hastes
+		Transformacao::rotacaoY(&haste1, -PI / 4);
+		Transformacao::translacao(&haste1, { 20, 19.75, 20 });
+		Transformacao::rotacaoY(&haste2, -(3 * PI) / 4);
+		Transformacao::translacao(&haste2, { 70, 19.75, 20 });
+		Transformacao::rotacaoY(&haste3, PI / 4);
+		Transformacao::translacao(&haste3, { 20, 19.75, 70 });
+		Transformacao::rotacaoY(&haste4, (3 * PI) / 4);
+		Transformacao::translacao(&haste4, { 70, 19.75, 70 });
 
-        // Adicionando os objetos na cena
+		// Transformacao::translacao(&suporte1, { 25, 19, 25 });
+		// Transformacao::translacao(&suporte2, { 25, 19, 25 });
+		Transformacao::translacao(&suporte3, { 23.5, 18.5, 66.5 });
+		// Transformacao::translacao(&suporte4, { 25, 19, 25 });
+
+        // Adicionando os objetos na cena **************************************
         // cenario.add(&esfera);
         // cenario.add(&cilindro);
         // cenario.add(&cone);
         // cenario.add(&cubo);
 		// cenario.add(&quadrado);
 		// cenario.add(&piramide);
+
+		// Adicionando objetos das pistas
 		cenario.add(&pista1); cenario.add(&pista2); cenario.add(&pista3);
 		cenario.add(&pista4); cenario.add(&pista5); cenario.add(&pista6);
+		// Adicionando objetos das casas
 		cenario.add(&casa1); cenario.add(&casa2); 
 		cenario.add(&casa3); cenario.add(&casa4);
+		// Adicionando objetos dos telhados
 		cenario.add(&telhado1); cenario.add(&telhado2); 
 		cenario.add(&telhado3); cenario.add(&telhado4);
+		// Adicionando objetos dos postes
+		cenario.add(&poste1);
+		cenario.add(&poste2);
+		cenario.add(&poste3);
+		cenario.add(&poste4);
+		// Adicionando objetos das hastes
+		cenario.add(&haste1);
+		cenario.add(&haste2);
+		cenario.add(&haste3);
+		cenario.add(&haste4);
+		// Adicionando objetos dos suportes
+		cenario.add(&suporte1);
+		// cenario.add(&suporte2);
+		cenario.add(&suporte3);
+		// cenario.add(&suporte4);
+		// Adicionando planos de fundo
         cenario.add(&chao);
         cenario.add(&fundo1);
         cenario.add(&fundo2);
@@ -326,7 +423,7 @@ namespace Cena
     {
         // Adicionando as fontes na lista
         // fontes.add(&spot);
-        fontes.add(&pontual);
+        // fontes.add(&pontual);
         fontes.add(&direcional);
     }
 } // namespace Cena

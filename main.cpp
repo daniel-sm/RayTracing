@@ -62,13 +62,13 @@ int main(int argc, char** argv)
 	double xmaxJanela = 30; // Valor do lado direito da janela em cm
 	double yminJanela = -30; // Valor da parte de cima da janela em cm
 	double ymaxJanela = 30; // Valor da parte de baixo da janela em cm
-	double dJanela = 80; // Distancia da janela em cm
+	double dJanela = 700; // Distancia da janela em cm
 	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
 	// Informacoes do Canvas ***************************************************
-	int nCol = 700; // Numero de colunas da grade do canvas
-	int nLin = 700; // Numero de linhas da grade do canvas
+	int nCol = 1000; // Numero de colunas da grade do canvas
+	int nLin = 1000; // Numero de linhas da grade do canvas
 
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = janela.getWidth() / nCol;
@@ -76,13 +76,13 @@ int main(int argc, char** argv)
 
 	// Informacoes da Camera ***************************************************
 	// Vista de Cima
-	Ponto eye = { 50, 200, 50 };
-	Ponto at = { 50, 0, 50 };
-	Ponto up = { 0, 0, 0 };
+	// Ponto eye = { 50, 200, 50 };
+	// Ponto at = { 50, 0, 50 };
+	// Ponto up = { 0, 0, 0 };
 	// Vista em Diagonal
-	// Ponto eye = { 150, 100, 150 };
-	// Ponto at = { 0, 0, 0 };
-	// Ponto up = { 0, 200, 0 };
+	Ponto eye = { 150, 100, 120 };
+	Ponto at = { 24, 19, 67 }; //{ 40, 0, 40 };
+	Ponto up = { 150, 200, 120 };
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
