@@ -294,18 +294,18 @@ namespace Cena
 	Pontual pontual (intensePontual, posicaoPontual);
 
 	// Informacoes da Fonte Spot ***********************************************
-	Vetor intenseSpot = { 1.0, 1.0, 1.0 };
-	Ponto posicaoSpot = { 0, 1, 0 };
+	Vetor intenseSpot = { 0.6, 0.6, 0.6 };
+	Ponto posicaoSpot = { 0, 0, 0 };
 	Vetor direcaoSpot = { 0, -1, 0 };
-	double anguloSpot = PI / 4;
+	double anguloSpot = PI / 3;
 	// Objeto da fonte de luz Spot
 	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 	// Objeto da fonte de luz Spot
-	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	Spot spot2 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 	// Objeto da fonte de luz Spot
-	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	Spot spot3 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 	// Objeto da fonte de luz Spot
-	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	Spot spot4 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 
 	// Informacoes da Fonte Direcional *****************************************
 	Vetor intenseDirecional = { 0.5, 0.5, 0.5 };
@@ -373,10 +373,15 @@ namespace Cena
 		Transformacao::rotacaoY(&haste4, (3 * PI) / 4);
 		Transformacao::translacao(&haste4, { 70, 19.75, 70 });
 
-		// Transformacao::translacao(&suporte1, { 25, 19, 25 });
-		// Transformacao::translacao(&suporte2, { 25, 19, 25 });
+		Transformacao::translacao(&suporte1, { 23.5, 18.5, 23.5 });
+		Transformacao::translacao(&suporte2, { 66.5, 18.5, 23.5 });
 		Transformacao::translacao(&suporte3, { 23.5, 18.5, 66.5 });
-		// Transformacao::translacao(&suporte4, { 25, 19, 25 });
+		Transformacao::translacao(&suporte4, { 66.5, 18.5, 66.5 });
+
+		Transformacao::translacao(&spot1, { 23.5, 18, 23.5 });
+		Transformacao::translacao(&spot2, { 66.5, 18, 23.5 });
+		Transformacao::translacao(&spot3, { 23.5, 18, 66.5 });
+		Transformacao::translacao(&spot4, { 66.5, 18, 66.5 });
 
         // Adicionando os objetos na cena **************************************
         // cenario.add(&esfera);
@@ -407,9 +412,9 @@ namespace Cena
 		cenario.add(&haste4);
 		// Adicionando objetos dos suportes
 		cenario.add(&suporte1);
-		// cenario.add(&suporte2);
+		cenario.add(&suporte2);
 		cenario.add(&suporte3);
-		// cenario.add(&suporte4);
+		cenario.add(&suporte4);
 		// Adicionando planos de fundo
         cenario.add(&chao);
         cenario.add(&fundo1);
@@ -422,7 +427,10 @@ namespace Cena
     void definirFontes() 
     {
         // Adicionando as fontes na lista
-        // fontes.add(&spot);
+        fontes.add(&spot1);
+        fontes.add(&spot2);
+        fontes.add(&spot3);
+        fontes.add(&spot4);
         // fontes.add(&pontual);
         fontes.add(&direcional);
     }
