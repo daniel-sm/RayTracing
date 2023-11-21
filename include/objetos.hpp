@@ -238,6 +238,8 @@ public:
         direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
         // Ajustando vetor direcao do cilindro para unitario
         direcao = unitario(direcao);
+        // Ajustando a altura do cilindro apos transformacao
+        altura = norma(topo - base);
     }
 }; // fim class Cilindro
 
@@ -302,6 +304,8 @@ public:
         direcao.x = d(0, 0); direcao.y = d(1, 0); direcao.z = d(2, 0);
         // Ajustando vetor direcao do cone para unitario
         direcao = unitario(direcao);
+        // Ajustando a altura do cilindro apos transformacao
+        altura = norma(vertice - base);
     }
 }; // fim class Cone
 
@@ -316,9 +320,6 @@ private:
     // quantidade de vertices, arestas e faces na malha
     int numvertices, numarestas, numfaces;
 
-    // std::vector<Ponto> vertices; // lista de vertices
-    // std::vector<Aresta> arestas; // lista de arestas
-    // std::vector<Face> faces; // lista de faces
     Ponto* vertices; // lista de vertices
     Aresta* arestas; // lista de arestas
     Face* faces; // lista de faces
@@ -331,16 +332,17 @@ private:
 public:
     Malha(int v, int a, int f, Material m) : numvertices{v}, numarestas{a}, numfaces{f}
     {
-        // vertices.resize(v);
-        // arestas.resize(a);
-        // faces.resize(f);
         vertices = new Ponto[v];
         arestas = new Aresta[a];
         faces = new Face[f];
         material = m;
     }
     ~Malha () 
-    { delete[] vertices; delete[] arestas; delete[] faces; }
+    { 
+        delete[] vertices; 
+        delete[] arestas; 
+        delete[] faces; 
+    }
 
     // recebe id do vertice e posicao do vertice
     void setVertice (int i, Ponto p) { vertices[i] = p; }
@@ -424,16 +426,13 @@ public:
 
     void copiar (Malha* outro) 
     { // Assume que a nova malha tem mesmo numero de vertices, arestas e faces
-        // outro->vertices = vertices;
-        // outro->arestas = arestas;
-        // outro->faces = faces;
         for (int i = 0; i < numvertices; ++i) outro->vertices[i] = vertices[i];
         for (int i = 0; i < numarestas; ++i) outro->arestas[i] = arestas[i];
         for (int i = 0; i < numfaces; ++i) outro->faces[i] = faces[i];
     }
 
     // Funcao que inverte a ordem das arestas das faces quando se usa espelho
-    void inverterOrdem () 
+    void inverterFaces () 
     {
         for (int i = 0; i < numfaces; ++i)
         {
@@ -443,6 +442,20 @@ public:
         }
     }
 }; // fim class Malha
+
+class Textura : public Objeto 
+{
+private:
+    double xmin, xmax, ymin, ymax; // limitantes da textura
+    Plano plano; // plano que contem a textura
+
+public:
+    double intersecao (Raio raio) override;
+
+    Vetor obterNormal (Ponto p) const override { return plano.obterNormal(p); }
+
+    void transformar (Matriz matriz) override { plano.transformar(matriz); }
+};
 //
 // Fim da Hierarquia de classes Objeto 
 

@@ -127,7 +127,7 @@ int main(int argc, char** argv)
 			switch (projecao)
 			{
 			case 1: // Caso seja persperctiva
-				raio = Raio({ 0, 0, 0 }, pontoJanela);
+				raio = Raio(Ponto{ 0, 0, 0 }, pontoJanela);
 				break;
 			case 2: // Caso seja ortografica
 				raio = Raio(pontoJanela, Vetor{0, 0, -1});

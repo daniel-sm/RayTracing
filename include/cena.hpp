@@ -55,6 +55,15 @@ namespace Cena
 	// Material do plano de fundo
 	Material materialFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
 
+	// Material do Plano do Teto ***********************************************
+	// Propriedades de reflectividade do plano do Teto
+	Vetor kaTeto { 0.3, 0.3, 0.7 }; // Prop. ambiente do material do teto 
+	Vetor kdTeto = kaTeto; // Prop. difusa do material do teto 
+	Vetor keTeto { 0.0, 0.0, 0.0 }; // Prop. especular do material do teto 
+	double brilhoTeto = 1; // Fator de brilho especular
+	// Material do plano do Teto
+	Material materialTeto { kaTeto, kdTeto, keTeto, brilhoTeto };
+
 	// Material do Cubo ********************************************************
 	// Propriedades de reflectividade do Cubo
 	Vetor kaCubo { 0.7, 0.2, 0.7 }; // Prop. ambiente do material do Cubo
@@ -143,6 +152,12 @@ namespace Cena
 	// Objeto do Plano do Fundo 2
 	Plano fundo2 (pontoFundo2, normalFundo2, materialFundo);
 
+	// Informacoes do Plano do Fundo 2 *****************************************
+	Ponto pontoTeto { 0, 500, 0 }; // Ponto presente no plano do fundo 2
+	Vetor normalTeto { 0, -1, 0 }; // Vetor normal ao plano do fundo 2
+	// Objeto do Plano do Fundo 2
+	Plano teto (pontoTeto, normalTeto, materialTeto);
+
 	// Informacoes do Cubo *****************************************************
 	int verticesCubo = 8; // Numero de vertices do Cubo
 	int arestasCubo = 18; // Numero de arestas do Cubo
@@ -198,7 +213,7 @@ namespace Cena
 	// Informacoes do Poste ****************************************************
 	double raioPoste = 0.5; // Raio da base do Poste em cm
 	Ponto basePoste { 0, 0, 0 }; // Centro da base do Poste 
-	Ponto topoPoste = { 0, 20, 0 }; // Posicao do topo do Poste
+	Ponto topoPoste = { 0, 25, 0 }; // Posicao do topo do Poste
 	// Objeto do Poste 1
 	Cilindro poste1 (basePoste, topoPoste, raioPoste, materialPoste);
 	// Objeto do Poste 2
@@ -294,7 +309,7 @@ namespace Cena
 	Pontual pontual (intensePontual, posicaoPontual);
 
 	// Informacoes da Fonte Spot ***********************************************
-	Vetor intenseSpot = { 0.6, 0.6, 0.6 };
+	Vetor intenseSpot = { 0.3, 0.3, 0.3 };
 	Ponto posicaoSpot = { 0, 0, 0 };
 	Vetor direcaoSpot = { 0, -1, 0 };
 	double anguloSpot = PI / 3;
@@ -365,23 +380,23 @@ namespace Cena
 		Transformacao::translacao(&poste4, { 70, 0, 70 });
 		// Ajustando direcao e local das hastes
 		Transformacao::rotacaoY(&haste1, -PI / 4);
-		Transformacao::translacao(&haste1, { 20, 19.75, 20 });
+		Transformacao::translacao(&haste1, { 20, 24.75, 20 });
 		Transformacao::rotacaoY(&haste2, -(3 * PI) / 4);
-		Transformacao::translacao(&haste2, { 70, 19.75, 20 });
+		Transformacao::translacao(&haste2, { 70, 24.75, 20 });
 		Transformacao::rotacaoY(&haste3, PI / 4);
-		Transformacao::translacao(&haste3, { 20, 19.75, 70 });
+		Transformacao::translacao(&haste3, { 20, 24.75, 70 });
 		Transformacao::rotacaoY(&haste4, (3 * PI) / 4);
-		Transformacao::translacao(&haste4, { 70, 19.75, 70 });
+		Transformacao::translacao(&haste4, { 70, 24.75, 70 });
 
-		Transformacao::translacao(&suporte1, { 23.5, 18.5, 23.5 });
-		Transformacao::translacao(&suporte2, { 66.5, 18.5, 23.5 });
-		Transformacao::translacao(&suporte3, { 23.5, 18.5, 66.5 });
-		Transformacao::translacao(&suporte4, { 66.5, 18.5, 66.5 });
+		Transformacao::translacao(&suporte1, { 23.5, 23.5, 23.5 });
+		Transformacao::translacao(&suporte2, { 66.5, 23.5, 23.5 });
+		Transformacao::translacao(&suporte3, { 23.5, 23.5, 66.5 });
+		Transformacao::translacao(&suporte4, { 66.5, 23.5, 66.5 });
 
-		Transformacao::translacao(&spot1, { 23.5, 18, 23.5 });
-		Transformacao::translacao(&spot2, { 66.5, 18, 23.5 });
-		Transformacao::translacao(&spot3, { 23.5, 18, 66.5 });
-		Transformacao::translacao(&spot4, { 66.5, 18, 66.5 });
+		Transformacao::translacao(&spot1, { 23.5, 23, 23.5 });
+		Transformacao::translacao(&spot2, { 66.5, 23, 23.5 });
+		Transformacao::translacao(&spot3, { 23.5, 23, 66.5 });
+		Transformacao::translacao(&spot4, { 66.5, 23, 66.5 });
 
         // Adicionando os objetos na cena **************************************
         // cenario.add(&esfera);
@@ -415,10 +430,11 @@ namespace Cena
 		cenario.add(&suporte2);
 		cenario.add(&suporte3);
 		cenario.add(&suporte4);
-		// Adicionando planos de fundo
+		// Adicionando planos limitantes
         cenario.add(&chao);
         cenario.add(&fundo1);
         cenario.add(&fundo2);
+		// cenario.add(&teto);
     }
 
 	// Lista de Fontes de luz **************************************************
