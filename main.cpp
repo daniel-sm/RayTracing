@@ -10,6 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
+#include <iostream>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
 #include "include/intersecoes.hpp"
@@ -44,60 +45,14 @@ double raycast (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
     return menor_t;
 }
 
-int main(int argc, char** argv) 
-{
-	// Funcao que define os vertices, arestas e faces do cubo
-	Cena::definirMalha();
-	// Funcao que define a lista de objetos da cena
-	Cena::definirCena();
-	// Funcao que define a lista de fontes da cena
-	Cena::definirFontes();
-
-	// Projecao (1 - perspectiva), (2 - ortografica), (3 - obliqua) 
-	int projecao = 1;
-	Vetor direcaoRaio = { 0.2, 0, -1 };
-
-	// Informacoes da Janela ***************************************************
-	double xminJanela = -30; // Valor do lado esquerdo da janela em cm
-	double xmaxJanela = 30; // Valor do lado direito da janela em cm
-	double yminJanela = -30; // Valor da parte de cima da janela em cm
-	double ymaxJanela = 30; // Valor da parte de baixo da janela em cm
-	double dJanela = 80; // Distancia da janela em cm
-	// Objeto da Janela
-	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
-
-	// Informacoes do Canvas ***************************************************
-	int nCol = 700; // Numero de colunas da grade do canvas
-	int nLin = 700; // Numero de linhas da grade do canvas
-
+void RayCasting (
+	int linhas, int colunas, 
+	int projecao, Vetor dirProjecao, 
+	Cor** colors, Objeto*** hitted
+) {
 	// Delta X e Y dos quadrados da grade do canvas ****************************
-	double Dx = janela.getWidth() / nCol;
-	double Dy = janela.getHeight() / nLin;
-
-	// Informacoes da Camera ***************************************************
-	// Vista de Cima
-	// Ponto eye = { 50, 200, 50 };
-	// Ponto at = { 50, 0, 50 };
-	// Ponto up = { 0, 0, 0 };
-	// Vista em Diagonal
-	Ponto eye = { 150, 100, 120 };
-	Ponto at = { 40, 0, 40 };
-	Ponto up = { 40, 200, 40 };
-	// Objeto da Camera 
-	Camera camera (eye, at, up);
-	// Transformando de Mundo para Camera
-	camera.toCamera(Cena::cenario, Cena::fontes);
-
-	// Matriz de cores *********************************************************
-	Cor** cores = new Cor*[nLin];
-	// Inicializando cada linha da matriz
-	for (int i = 0; i < nLin; ++i) { cores[i] = new Cor[nCol]; }
-
-	// Matriz de objetos atingidos *********************************************
-	// Array de arrays de ponteiro para Objeto
-	Objeto*** objetos_atingidos = new Objeto**[nLin];
-	// Inicializando cada linha da matriz
-	for (int i = 0; i < nLin; ++i) { objetos_atingidos[i] = new Objeto*[nCol]; }
+	double Dx = Cena::janela.getWidth() / colunas;
+	double Dy = Cena::janela.getHeight() / linhas;
 
 	// Maior intensidade de cor ************************************************
 	// Usada para reprocessar as cores com base na maior
@@ -107,37 +62,39 @@ int main(int argc, char** argv)
 	// Lancando raios para cada quadrado na grade do canvas
 	//
 	// Percorre as linhas da grade do canvas
-	for (int lin = 0; lin < nLin; ++lin) 
+	for (int l = 0; l < linhas; ++l) 
 	{
-		// Coordenada Y do centro do quadriculo no frame
-		double y = janela.getYMax() - (Dy / 2) - (lin * Dy);
+		// Coordenada Y do centro do quadriculo na Janela
+		double y = Cena::janela.getYMax() - (Dy / 2) - (l * Dy);
 
 		// Percorre as colunas da grade do canvas
-		for (int col = 0; col < nCol; ++col) 
+		for (int c = 0; c < colunas; ++c) 
 		{
-			// Coordenada X do centro do quadriculo no frame
-			double x = janela.getXMin() + (Dx / 2) + (col * Dx);
+			// Coordenada X do centro do quadriculo na Janela
+			double x = Cena::janela.getXMin() + (Dx / 2) + (c * Dx);
 
-			// Ponto do centro do quadrado do frame
-			Ponto pontoJanela { x, y, -janela.getDistance() };
-			// Raio que vai ser lancado, dependendo da projecao
-			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Por padrao é perspectiva
+			// Ponto do centro do quadrado da Janela
+			Ponto pontoJanela { x, y, -Cena::janela.getDistance() };
 
-			// Gerando Raio lancado pela janela
+			// Raio que vai ser lancado pela Janela
+			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Perspectiva por padrao
+
+			// Gerando raio de acordo com a projecao
 			switch (projecao)
 			{
 			case 1: // Caso seja persperctiva
-				raio = Raio(Ponto{ 0, 0, 0 }, pontoJanela);
+				raio = Raio (Ponto{ 0, 0, 0 }, pontoJanela);
 				break;
 			case 2: // Caso seja ortografica
-				raio = Raio(pontoJanela, Vetor{0, 0, -1});
+				raio = Raio (pontoJanela, Vetor{0, 0, -1});
 				break;
 			case 3: // Caso seja obliqua
-				raio = Raio(pontoJanela, direcaoRaio);
+				raio = Raio (pontoJanela, dirProjecao);
 				break;
 			default: 
 				break;
 			}
+
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
@@ -185,29 +142,74 @@ int main(int argc, char** argv)
 				cor.g = (cor.g * I.y);
 				cor.b = (cor.b * I.z);
 
-				cores[lin][col] = cor;
-				objetos_atingidos[lin][col] = atingido;
+				colors[l][c] = cor;
+				hitted[l][c] = atingido;
 			} else { 
-				cores[lin][col] = { 0, 0, 0 };
-				objetos_atingidos[lin][col] = nullptr;
+				colors[l][c] = { 0, 0, 0 };
+				hitted[l][c] = nullptr;
 			}
 		}
 	}
 
 	// Reprocessar as cores com base na maior intensidade de cor
-	for (int l = 0; l < nLin; ++l) {
-		for (int c = 0; c < nCol; ++c) {
+	for (int l = 0; l < linhas; ++l) {
+		for (int c = 0; c < colunas; ++c) {
 			// Arredondando para valor inteiro 
-			cores[l][c].r = round(cores[l][c].r / maiorCor);
-			cores[l][c].g = round(cores[l][c].g / maiorCor);
-			cores[l][c].b = round(cores[l][c].b / maiorCor);
+			colors[l][c].r = round(colors[l][c].r / maiorCor);
+			colors[l][c].g = round(colors[l][c].g / maiorCor);
+			colors[l][c].b = round(colors[l][c].b / maiorCor);
 		}
 	}
+}
 
-    // ##############################################################
-    // ########################### SDL ##############################
-    // ##############################################################
+int main(int argc, char** argv) 
+{
+	// Funcao que define os vertices, arestas e faces do cubo
+	Cena::definirMalha();
+	// Funcao que define a lista de objetos da cena
+	Cena::definirCena();
+	// Funcao que define a lista de fontes da cena
+	Cena::definirFontes();
 
+	// Projecao (1 - perspectiva), (2 - ortografica), (3 - obliqua) 
+	int projecao = 1;
+	Vetor dirProjecao = { 0.2, 0, -1 };
+
+	// Informacoes do Canvas ***************************************************
+	int linhas = 700; // Numero de linhas da grade do canvas
+	int colunas = 700; // Numero de colunas da grade do canvas
+
+	// Informacoes da Camera ***************************************************
+	// Vista de Cima
+	// Ponto eye = { 50, 200, 50 };
+	// Ponto at = { 50, 0, 50 };
+	// Ponto up = { 0, 0, 0 };
+	// Vista em Diagonal
+	Ponto eye = { 150, 100, 120 };
+	Ponto at = { 40, 0, 40 };
+	Ponto up = { 40, 200, 40 }; 
+	// Objeto da Camera 
+	Camera camera (eye, at, up);
+	// Transformando de Mundo para Camera
+	camera.toCamera(Cena::cenario, Cena::fontes);
+
+	// Matriz de cores *********************************************************
+	Cor** colors = new Cor*[linhas];
+	// Inicializando cada linha da matriz
+	for (int i = 0; i < linhas; ++i) { colors[i] = new Cor[colunas]; }
+
+	// Matriz de objetos atingidos *********************************************
+	// Array de arrays de ponteiro para Objeto
+	Objeto*** hitted = new Objeto**[linhas];
+	// Inicializando cada linha da matriz
+	for (int i = 0; i < linhas; ++i) { hitted[i] = new Objeto*[colunas]; }
+
+	// Realizando o RayCasting *************************************************
+	// Chama funcao que percorre o canvas e lanca os raios pela janela
+	RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+
+    // Utilizando SDL **********************************************************
+	//
 	// Inicializando a biblioteca para poder usar suas funções
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		SDL_Log("Não foi possível inicializar o SDL! SDL_Error: %s", SDL_GetError());
@@ -219,8 +221,8 @@ int main(int argc, char** argv)
 		"Computação Gráfica",   // Título da Janela
 		SDL_WINDOWPOS_CENTERED, // Posição inicial X
 		SDL_WINDOWPOS_CENTERED, // Posição inicial Y
-		nCol,                   // Largura da janela em pixels
-		nLin,                   // Altura da janela em pixels
+		colunas,                   // Largura da janela em pixels
+		linhas,                   // Altura da janela em pixels
 		SDL_WINDOW_SHOWN        // Flags
 	);
   
@@ -246,6 +248,7 @@ int main(int argc, char** argv)
 	SDL_Event event;
 	// Controle de loop
 	bool isRunning = true;
+	Objeto* clicked = nullptr;
 
 	// Main loop 
 	while (isRunning) {
@@ -256,12 +259,38 @@ int main(int argc, char** argv)
 			case SDL_QUIT:
 				isRunning = false; 
 				break;
+
 			case SDL_MOUSEBUTTONDOWN:
-				for (int i = 0; i < nLin; ++i)
-					for (int j = 0; j < nCol; ++j) 
-						if (objetos_atingidos[event.button.y][event.button.x] == objetos_atingidos[i][j])
-							cores[i][j] = { 0, 0, 0 };
+				clicked = hitted[event.button.y][event.button.x];
 				break;
+
+			case SDL_KEYDOWN:
+				if (clicked != nullptr)
+				{
+					switch (event.key.keysym.sym)
+					{
+					case SDLK_x:
+						camera.toWorld(Cena::cenario, Cena::fontes);
+						Transformacao::translacao(clicked, { 10, 0, 0 });
+						camera.toCamera(Cena::cenario, Cena::fontes);
+						break;
+					case SDLK_y:
+						camera.toWorld(Cena::cenario, Cena::fontes);
+						Transformacao::translacao(clicked, { 0, 10, 0 });
+						camera.toCamera(Cena::cenario, Cena::fontes);
+						break;
+					case SDLK_z:
+						camera.toWorld(Cena::cenario, Cena::fontes);
+						Transformacao::translacao(clicked, { 0, 0, 10 });
+						camera.toCamera(Cena::cenario, Cena::fontes);
+						break;
+					default:
+						break;
+					}
+					RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+				}
+				break;
+
 			default:
 				break;
 			}
@@ -269,14 +298,14 @@ int main(int argc, char** argv)
 		// Limpando o renderer
 		SDL_RenderClear(renderer);
 		
-		for (int i = 0; i < nLin; ++i) {
-			for (int j = 0; j < nCol; ++j) {
+		for (int i = 0; i < linhas; ++i) {
+			for (int j = 0; j < colunas; ++j) {
 				// Designando a cor que vai pintar
 				SDL_SetRenderDrawColor(
 					renderer, 
-					cores[i][j].r, 
-					cores[i][j].g, 
-					cores[i][j].b, 
+					colors[i][j].r, 
+					colors[i][j].g, 
+					colors[i][j].b, 
 					SDL_ALPHA_OPAQUE
 				);
 				// Pintando o pixel
@@ -292,8 +321,8 @@ int main(int argc, char** argv)
 	SDL_Quit();
 
 	// Desalocando cada linha da matriz de cores
-	for (int i = 0; i < nLin; ++i) { delete cores[i]; }
-	delete[] cores; // Desaloca a matriz por completo
+	for (int i = 0; i < linhas; ++i) { delete colors[i]; }
+	delete[] colors; // Desaloca a matriz por completo
 
 	return 0;
 }

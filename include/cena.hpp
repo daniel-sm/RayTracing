@@ -331,6 +331,15 @@ namespace Cena
     // Informacoes da luz Ambiente *********************************************
     Vetor luzAmbiente { 0.2, 0.2, 0.2 };
 
+	// Informacoes da Janela ***************************************************
+	double xminJanela = -30; // Valor do lado esquerdo da janela em cm
+	double xmaxJanela = 30; // Valor do lado direito da janela em cm
+	double yminJanela = -30; // Valor da parte de cima da janela em cm
+	double ymaxJanela = 30; // Valor da parte de baixo da janela em cm
+	double dJanela = 80; // Distancia da janela em cm
+	// Objeto da Janela
+	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
+
 	// Lista de Objetos da Cena ************************************************
 	Lista<Objeto> cenario;
     // Definindo a lista de objetos da cena
@@ -408,28 +417,28 @@ namespace Cena
 
 		// Adicionando objetos das pistas
 		cenario.add(&pista1); cenario.add(&pista2); cenario.add(&pista3);
-		cenario.add(&pista4); cenario.add(&pista5); cenario.add(&pista6);
+		// cenario.add(&pista4); cenario.add(&pista5); cenario.add(&pista6);
 		// Adicionando objetos das casas
 		cenario.add(&casa1); cenario.add(&casa2); 
-		cenario.add(&casa3); cenario.add(&casa4);
+		// cenario.add(&casa3); cenario.add(&casa4);
 		// Adicionando objetos dos telhados
 		cenario.add(&telhado1); cenario.add(&telhado2); 
-		cenario.add(&telhado3); cenario.add(&telhado4);
+		// cenario.add(&telhado3); cenario.add(&telhado4);
 		// Adicionando objetos dos postes
 		cenario.add(&poste1);
-		cenario.add(&poste2);
-		cenario.add(&poste3);
-		cenario.add(&poste4);
+		// cenario.add(&poste2);
+		// cenario.add(&poste3);
+		// cenario.add(&poste4);
 		// Adicionando objetos das hastes
 		cenario.add(&haste1);
-		cenario.add(&haste2);
-		cenario.add(&haste3);
-		cenario.add(&haste4);
+		// cenario.add(&haste2);
+		// cenario.add(&haste3);
+		// cenario.add(&haste4);
 		// Adicionando objetos dos suportes
 		cenario.add(&suporte1);
-		cenario.add(&suporte2);
-		cenario.add(&suporte3);
-		cenario.add(&suporte4);
+		// cenario.add(&suporte2);
+		// cenario.add(&suporte3);
+		// cenario.add(&suporte4);
 		// Adicionando planos limitantes
         cenario.add(&chao);
         cenario.add(&fundo1);
@@ -444,9 +453,9 @@ namespace Cena
     {
         // Adicionando as fontes na lista
         fontes.add(&spot1);
-        fontes.add(&spot2);
-        fontes.add(&spot3);
-        fontes.add(&spot4);
+        // fontes.add(&spot2);
+        // fontes.add(&spot3);
+        // fontes.add(&spot4);
         // fontes.add(&pontual);
         fontes.add(&direcional);
     }
