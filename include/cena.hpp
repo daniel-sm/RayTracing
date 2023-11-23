@@ -416,13 +416,13 @@ namespace Cena
 		// cenario.add(&piramide);
 
 		// Adicionando objetos das pistas
-		cenario.add(&pista1); cenario.add(&pista2); cenario.add(&pista3);
-		// cenario.add(&pista4); cenario.add(&pista5); cenario.add(&pista6);
+		cenario.add(&pista1); cenario.add(&pista2); // cenario.add(&pista3);
+		cenario.add(&pista4); cenario.add(&pista5); // cenario.add(&pista6);
 		// Adicionando objetos das casas
-		cenario.add(&casa1); cenario.add(&casa2); 
+		cenario.add(&casa1); // cenario.add(&casa2); 
 		// cenario.add(&casa3); cenario.add(&casa4);
 		// Adicionando objetos dos telhados
-		cenario.add(&telhado1); cenario.add(&telhado2); 
+		cenario.add(&telhado1); // cenario.add(&telhado2); 
 		// cenario.add(&telhado3); cenario.add(&telhado4);
 		// Adicionando objetos dos postes
 		cenario.add(&poste1);

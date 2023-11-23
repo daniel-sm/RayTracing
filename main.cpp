@@ -118,7 +118,7 @@ void RayCasting (
 					// Checa se o ponto esta na sombra
 					if (fonte->sombra(p_int, Cena::cenario, raycast)) 
 					{
-						Vetor normal = atingido->obterNormal(p_int);
+						Vetor normal = atingido->getNormal(p_int);
 
 						// Armazena a intensidade no ponto para a fonte atual
 						Vetor aux = fonte->iluminacao(
@@ -186,9 +186,9 @@ int main(int argc, char** argv)
 	// Ponto at = { 50, 0, 50 };
 	// Ponto up = { 0, 0, 0 };
 	// Vista em Diagonal
-	Ponto eye = { 150, 100, 120 };
+	Ponto eye = { 50, 30, 20 };
 	Ponto at = { 40, 0, 40 };
-	Ponto up = { 40, 200, 40 }; 
+	Ponto up = { 40, 50, 40 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
