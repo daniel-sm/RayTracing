@@ -10,6 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
+// #include <SDL_image.h>
 #include <iostream>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
@@ -208,9 +209,10 @@ int main(int argc, char** argv)
 	// Chama funcao que percorre o canvas e lanca os raios pela janela
 	RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
 
+	// *************************************************************************
     // Utilizando SDL **********************************************************
 	//
-	// Inicializando a biblioteca para poder usar suas funções
+	// Inicializando a biblioteca SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		SDL_Log("Não foi possível inicializar o SDL! SDL_Error: %s", SDL_GetError());
 		return 1;
@@ -232,7 +234,7 @@ int main(int argc, char** argv)
 		SDL_Quit();
 		return 1;
 	}
-  
+
 	// Criar o objeto renderer
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	
