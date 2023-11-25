@@ -39,7 +39,7 @@ class Objeto
 public:
     Material material;
 	virtual double intersecao (Raio) = 0;
-    virtual Vetor obterNormal (Ponto) const = 0;
+    virtual Vetor getNormal (Ponto) const = 0;
     virtual void transformar (Matriz) = 0;
 };
 
@@ -129,7 +129,7 @@ public:
 
     double intersecao (Raio r) override;
 
-    Vetor obterNormal (Ponto p) const override { return (p - centro) / raio; }
+    Vetor getNormal (Ponto p) const override { return (p - centro) / raio; }
 
     void transformar (Matriz matriz) override
     {
@@ -152,7 +152,7 @@ public:
 
     double intersecao (Raio raio) override;
 
-    Vetor obterNormal (Ponto p) const override { return normal; }
+    Vetor getNormal (Ponto p) const override { return normal; }
 
     void transformar (Matriz matriz) override
     {
@@ -201,7 +201,7 @@ public:
 
     double intersecao (Raio r) override;
 
-    Vetor obterNormal (Ponto p) const override
+    Vetor getNormal (Ponto p) const override
     {
         Vetor vetorPonto = (p - base);
         double escalarPonto = escalar(vetorPonto, direcao);
@@ -269,7 +269,7 @@ public:
 
     double intersecao (Raio r) override;
 
-    Vetor obterNormal (Ponto p) const override 
+    Vetor getNormal (Ponto p) const override 
     {
         if (escalar(direcao, (p - base)) - 0.1 <= 0) { return (-1) * direcao; }
         else
@@ -330,6 +330,8 @@ private:
     int face_atingida = -1;
 
 public:
+    Malha() : numvertices{0}, numarestas{0}, numfaces{0} {}
+
     Malha(int v, int a, int f, Material m) : numvertices{v}, numarestas{a}, numfaces{f}
     {
         vertices = new Ponto[v];
@@ -353,7 +355,7 @@ public:
 
     double intersecao (Raio raio) override;
 
-    Vetor obterNormal (Ponto ponto) const override 
+    Vetor getNormal (Ponto ponto) const override 
     {
         // obtendo id das arestas da face que foi atingida por ultimo
         int a1 = faces[face_atingida].a1;
@@ -452,7 +454,7 @@ private:
 public:
     double intersecao (Raio raio) override;
 
-    Vetor obterNormal (Ponto p) const override { return plano.obterNormal(p); }
+    Vetor getNormal (Ponto p) const override { return plano.getNormal(p); }
 
     void transformar (Matriz matriz) override { plano.transformar(matriz); }
 };
