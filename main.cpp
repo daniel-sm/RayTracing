@@ -10,7 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
-#include <SDL_image.h>
+// #include <SDL_image.h>
 #include <iostream>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
@@ -181,14 +181,10 @@ int main(int argc, char** argv)
 	int colunas = 700; // Numero de colunas da grade do canvas
 
 	// Informacoes da Camera ***************************************************
-	// Vista de Cima
-	// Ponto eye = { 50, 200, 50 };
-	// Ponto at = { 50, 0, 50 };
-	// Ponto up = { 0, 0, 0 };
 	// Vista em Diagonal
-	Ponto eye = { 50, 30, 20 };
-	Ponto at = { 40, 0, 40 };
-	Ponto up = { 40, 50, 40 }; 
+	Ponto eye = { 2000, 1000, 1800 };
+	Ponto at = { 0, 0, 0 };
+	Ponto up = { 0, 1000, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera

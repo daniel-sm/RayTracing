@@ -53,7 +53,7 @@ public:
 		telhado.setFace(4, 1, 0, 8); telhado.setFace(5, 3, 2, 8);
     }
 
-    double intersecao (Raio raio) // override
+    double intersecao (Raio raio) override
     {
         double t_parede = parede.intersecao(raio);
         double t_telhado = telhado.intersecao(raio);
@@ -83,7 +83,7 @@ public:
         }
     }
 
-    Vetor getNormal (Ponto p) // const override
+    Vetor getNormal (Ponto p) const override
     {
         if (atingido == &telhado)
             return telhado.getNormal(p);
@@ -91,7 +91,7 @@ public:
             return parede.getNormal(p);
     }
 
-    void transformar (Matriz matriz)
+    void transformar (Matriz matriz) override
     {
         telhado.transformar(matriz);
         parede.transformar(matriz);
