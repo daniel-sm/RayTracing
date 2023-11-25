@@ -10,7 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
-// #include <SDL_image.h>
+#include <SDL_image.h>
 #include <iostream>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
@@ -18,7 +18,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 #include "include/transformacoes.hpp"
 #include "include/basics.hpp"
 
-double raycast (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
+double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
 {
 	// Vai guardar o menor valor de t 
 	double menor_t = -1;
@@ -99,7 +99,7 @@ void RayCasting (
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
-			double t_int = raycast(Cena::cenario, raio, atingido);
+			double t_int = CastRay(Cena::cenario, raio, atingido);
 
 			// Verificando de atingiu algum objeto
 			if (t_int > 0) 
@@ -116,7 +116,7 @@ void RayCasting (
 				for (auto fonte : Cena::fontes)
 				{
 					// Checa se o ponto esta na sombra
-					if (fonte->sombra(p_int, Cena::cenario, raycast)) 
+					if (fonte->sombra(p_int, Cena::cenario, CastRay)) 
 					{
 						Vetor normal = atingido->obterNormal(p_int);
 

@@ -43,9 +43,9 @@ public:
     virtual void transformar (Matriz) = 0;
 };
 
-// Gerando um tipo chamado RC que correponde ao tipo da funcao raycast
-// Esse tipo sera usado para um ponteiro da função raycast
-using RC = double(Lista<Objeto>&, Raio, Objeto*&);
+// Gerando um tipo chamado CR que correponde ao tipo da funcao CastRay
+// Esse tipo sera usado para um ponteiro da função CastRay
+using CR = double(Lista<Objeto>&, Raio, Objeto*&);
 
 class Fonte 
 {
@@ -53,7 +53,7 @@ public:
 	Vetor intensidade; // intensidade da luz
 
     virtual Vetor iluminacao(Vetor, Ponto, Vetor, Material) const = 0;
-    virtual bool sombra(Ponto, Lista<Objeto>&, RC*) const = 0;
+    virtual bool sombra(Ponto, Lista<Objeto>&, CR*) const = 0;
     virtual void transformar (Matriz) = 0;
 };
 
@@ -467,7 +467,7 @@ class Pontual : public Fonte
 public:
     Pontual (Vetor i, Ponto p) : posicao{p} { intensidade = i; }
 
-    bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override 
+    bool sombra (Ponto p_int, Lista<Objeto> &cena, CR* CastRay) const override 
     {
         // Raio que parte da posicao da fonte ao ponto de intersecao
         Raio raioSombra (posicao, p_int);
@@ -476,7 +476,7 @@ public:
         Objeto* temp; // Necessario na funcao mas nao sera usado 
 
         // Lancando raio na cena para ver se tem sombra
-        double t_sombra = raycast(cena, raioSombra, temp);
+        double t_sombra = CastRay(cena, raioSombra, temp);
 
         // Obtendo distancia da fonte ao ponto de intersecao
         double distanciaFonte = norma(p_int - posicao);
@@ -535,7 +535,7 @@ public:
         angulo{a} 
         { intensidade = i; }
 
-    bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override
+    bool sombra (Ponto p_int, Lista<Objeto> &cena, CR* CastRay) const override
     {
         // Vetor em direcao a fonte de luz  (unitario)
         Vetor luz = unitario(posicao - p_int);
@@ -552,7 +552,7 @@ public:
         Objeto* temp; // Necessario na funcao mas nao sera usado 
 
         // Lancando raio na cena para ver se tem sombra
-        double t_sombra = raycast(cena, raioSombra, temp);
+        double t_sombra = CastRay(cena, raioSombra, temp);
 
         // Obtendo distancia da fonte ao ponto de intersecao
         double distanciaFonte = norma(p_int - posicao);
@@ -625,7 +625,7 @@ private:
 public:
     Direcional(Vetor i, Vetor d) : direcao{unitario(d)} { intensidade = i; }
 
-    bool sombra (Ponto p_int, Lista<Objeto> &cena, RC* raycast) const override
+    bool sombra (Ponto p_int, Lista<Objeto> &cena, CR* CastRay) const override
     {
         // Raio que parte do ponto de intersecao em direcao a fonte
         // Como nao tem posicao da fonte entao gera-se um ponto qualquer 
@@ -637,7 +637,7 @@ public:
         Objeto* temp; // Necessario na funcao mas nao sera usado 
 
         // Lancando raio na cena para ver se tem sombra
-        double t_sombra = raycast(cena, raioSombra, temp);
+        double t_sombra = CastRay(cena, raioSombra, temp);
 
         // Retorna TRUE se houve qualquer intersecao no caminho
         // Como nao tem posicao, qualquer intersecao torna-se valida
