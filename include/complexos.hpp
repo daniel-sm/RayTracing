@@ -7,8 +7,7 @@
 class Casa : public Objeto
 {
 private:
-    Malha *telhado, *parede;
-    Malha* atingido = nullptr;
+    Malha *telhado, *parede, *atingido = nullptr;
 public:
     Casa(Material mp, Material mt) 
     {
@@ -57,7 +56,6 @@ public:
 
     double intersecao (Raio raio) override
     {
-        std::cout << "Abrindo intersecao...\n";
         double t_parede = parede->intersecao(raio);
         double t_telhado = telhado->intersecao(raio);
 
@@ -84,12 +82,10 @@ public:
             material = telhado->material;
             return t_telhado;
         }
-        std::cout << "Fechando intersecao...\n";
     }
 
     Vetor getNormal (Ponto ponto) const override
     {
-        std::cout << "Abrindo getNormal...\n";
         if (atingido == telhado)
             return telhado->getNormal(ponto);
         else 
@@ -112,12 +108,10 @@ private:
 public:
     Arvore (Material mf, Material mt) 
     {
-        std::cout << "Criando arvore...\n";
-        folha = new Esfera ({ 0, 0, 0 }, 150, mf);
+        folha = new Esfera ({ 0, 300, 0 }, 150, mf);
         tronco = new Cone({ 0, 0, 0 }, { 0, 300, 0 }, 75, mt);
-        std::cout << "Arvore criada...\n";
     }
-    ~Arvore () { delete folha; delete tronco; }
+    // ~Arvore () { delete folha; delete tronco; }
 
     double intersecao (Raio raio) override
     {

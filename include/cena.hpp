@@ -211,7 +211,8 @@ namespace Cena
 	// Objeto da Piramide
 	Malha piramide (verticesPiram, arestasPiram, facesPiram, materialTelhado);
 
-	// Casa casa (materialCasa, materialTelhado);
+	Casa casa (materialCasa, materialTelhado);
+	Arvore arv (materialArvore, materialTronco);
 
 	// Objeto da Casa 1
 	Malha casa1 (verticesCubo, arestasCubo, facesCubo, materialCasa);
@@ -445,6 +446,7 @@ namespace Cena
 		// Transformacao::translacao(&spot3, { 23.5, 23, 66.5 });
 		// Transformacao::translacao(&spot4, { 66.5, 23, 66.5 });
 
+		Transformacao::translacao(&arv, { 400, 0, 400 });
 		Transformacao::translacao(&arvore, { 400, 300, 400 });
 		Transformacao::translacao(&tronco, { 400, 0, 400 });
 
@@ -455,13 +457,11 @@ namespace Cena
         // cenario.add(&cubo);
 		// cenario.add(&quadrado);
 		// cenario.add(&piramide);
-		Arvore arv (materialArvore, materialTronco);
-		std::cout << "Adicionando arvore na cena...\n";
-		cenario.add(&arv);
-		std::cout << "Arvore foi adicionada...\n";
 
-		cenario.add(&arvore);
-		cenario.add(&tronco);
+		cenario.add(&arv);
+		cenario.add(&casa);
+		// cenario.add(&arvore);
+		// cenario.add(&tronco);
 
 		// Adicionando objetos das pistas
 		// cenario.add(&pista1); cenario.add(&pista2); // cenario.add(&pista3);

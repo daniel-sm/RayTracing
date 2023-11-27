@@ -1,6 +1,7 @@
 #ifndef OBJETOS_HPP
 #define OBJETOS_HPP
 
+#include <iostream>
 #include "basics.hpp"
 
 class Janela
@@ -102,10 +103,7 @@ public:
     void toCamera (Lista<Objeto> &cena, Lista<Fonte> &fontes) 
     {
         // Percorrendo os objetos e transformando em coordenadas de camera
-        
-	    std::cout << "Transformando cena em camera...\n";
         for (auto obj : cena) { obj->transformar(w2c); }
-	    std::cout << "Cena transformada...\n";
         // Percorrendo as fontes e transformando em coordenadas de camera
         for (auto fonte : fontes) { fonte->transformar(w2c); }
     }
@@ -128,6 +126,7 @@ private:
     double raio;
 
 public:
+    Esfera () {}
     Esfera(Ponto c, double r, Material m) : centro{c}, raio{r} { material = m; }
 
     double intersecao (Raio r) override;
@@ -255,6 +254,7 @@ class Cone : public Objeto
     double altura; // altura do cone 
 
 public:
+    Cone () {}
     Cone (Ponto b, Ponto v, double r, Material m) : base{b}, vertice{v}, raio{r}
     {
         direcao = (v - b); 
