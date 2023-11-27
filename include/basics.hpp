@@ -4,6 +4,8 @@
 #include <cmath>
 #include <vector>
 
+#define PI 3.14159265359
+
 // Tipos de dados **************************************************************
 //
 // Cor com componentes red, green e blue

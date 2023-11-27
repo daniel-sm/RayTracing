@@ -5,8 +5,6 @@
 #include "complexos.hpp"
 #include "transformacoes.hpp"
 
-#define PI 3.14159265359
-
 namespace Cena
 {
 	// Materiais dos objetos ***************************************************
@@ -247,9 +245,9 @@ namespace Cena
 	// Malha pista6 (verticesQuad, arestasQuad, facesQuad, materialPista);
 
 	// Informacoes do Poste ****************************************************
-	double raioPoste = 0.5; // Raio da base do Poste em cm
+	double raioPoste = 12; // Raio da base do Poste em cm
 	Ponto basePoste { 0, 0, 0 }; // Centro da base do Poste 
-	Ponto topoPoste = { 0, 25, 0 }; // Posicao do topo do Poste
+	Ponto topoPoste = { 0, 500, 0 }; // Posicao do topo do Poste
 	// Objeto do Poste 1
 	Cilindro poste1 (basePoste, topoPoste, raioPoste, materialPoste);
 	// Objeto do Poste 2
@@ -260,9 +258,9 @@ namespace Cena
 	// Cilindro poste4 (basePoste, topoPoste, raioPoste, materialPoste);
 
 	// Informacoes da Haste ****************************************************
-	double raioHaste = 0.25; // Raio da base da Haste em cm
+	double raioHaste = 6; // Raio da base da Haste em cm
 	Ponto baseHaste { 0, 0, 0 }; // Centro da base da Haste 
-	Ponto topoHaste = { 5, 0, 0 }; // Posicao do topo da Haste
+	Ponto topoHaste = { 0, 100, 0 }; // Posicao do topo da Haste
 	// Objeto da Haste 1
 	Cilindro haste1 (baseHaste, topoHaste, raioHaste, materialPoste);
 	// Objeto da Haste 2
@@ -345,7 +343,7 @@ namespace Cena
 	Pontual pontual (intensePontual, posicaoPontual);
 
 	// Informacoes da Fonte Spot ***********************************************
-	Vetor intenseSpot = { 0.3, 0.3, 0.3 };
+	Vetor intenseSpot = { 0.3, 0.3, 0.3 }; 
 	Ponto posicaoSpot = { 0, 0, 0 };
 	Vetor direcaoSpot = { 0, -1, 0 };
 	double anguloSpot = PI / 3;
@@ -360,7 +358,7 @@ namespace Cena
 
 	// Informacoes da Fonte Direcional *****************************************
 	Vetor intenseDirecional = { 0.5, 0.5, 0.5 };
-	Vetor direcaoDirecional = { -1, -1, -1 };
+	Vetor direcaoDirecional = { -1, -1, -2 };
 	// Objeto da fonte de luz Direcional
 	Direcional direcional (intenseDirecional, direcaoDirecional);
 
@@ -408,7 +406,7 @@ namespace Cena
 		cubo.copiar(&casa1); 
 		// cubo.copiar(&casa2); 
 		// cubo.copiar(&casa3); cubo.copiar(&casa4);
-		Transformacao::escala(&casa1, { 30, 30, 30 });
+		Transformacao::escala(&casa1, { 50, 30, 30 });
 		Transformacao::translacao(&casa1, { 700, 0, 300 });
 		// Transformacao::translacao(&casa2, { 50, 0, 30 });
 		// Transformacao::translacao(&casa3, { 30, 0, 50 });
@@ -417,19 +415,19 @@ namespace Cena
 		piramide.copiar(&telhado1); 
 		// piramide.copiar(&telhado2);
 		// piramide.copiar(&telhado3); piramide.copiar(&telhado4);  
-		Transformacao::escala(&telhado1, { 30, 30, 30 });
+		Transformacao::escala(&telhado1, { 50, 30, 30 });
 		Transformacao::translacao(&telhado1, { 700, 300, 300 });
 		// Transformacao::translacao(&telhado2, { 50, 10, 30 });
 		// Transformacao::translacao(&telhado3, { 30, 10, 50 });
 		// Transformacao::translacao(&telhado4, { 50, 10, 50 });
 		// Ajustando local dos postes
-		// Transformacao::translacao(&poste1, { 20, 0, 20 });
+		Transformacao::translacao(&poste1, { 400, 0, 700 });
 		// Transformacao::translacao(&poste2, { 70, 0, 20 });
 		// Transformacao::translacao(&poste3, { 20, 0, 70 });
 		// Transformacao::translacao(&poste4, { 70, 0, 70 });
 		// Ajustando direcao e local das hastes
-		// Transformacao::rotacaoY(&haste1, -PI / 4);
-		// Transformacao::translacao(&haste1, { 20, 24.75, 20 });
+		Transformacao::rotacaoZ(&haste1, -PI / 2);
+		Transformacao::translacao(&haste1, { 400, 500-6, 700 });
 		// Transformacao::rotacaoY(&haste2, -(3 * PI) / 4);
 		// Transformacao::translacao(&haste2, { 70, 24.75, 20 });
 		// Transformacao::rotacaoY(&haste3, PI / 4);
@@ -442,7 +440,7 @@ namespace Cena
 		// Transformacao::translacao(&suporte3, { 23.5, 23.5, 66.5 });
 		// Transformacao::translacao(&suporte4, { 66.5, 23.5, 66.5 });
 
-		// Transformacao::translacao(&spot1, { 23.5, 23, 23.5 });
+		Transformacao::translacao(&spot1, { 500, 500-13, 700 });
 		// Transformacao::translacao(&spot2, { 66.5, 23, 23.5 });
 		// Transformacao::translacao(&spot3, { 23.5, 23, 66.5 });
 		// Transformacao::translacao(&spot4, { 66.5, 23, 66.5 });
@@ -457,6 +455,10 @@ namespace Cena
         // cenario.add(&cubo);
 		// cenario.add(&quadrado);
 		// cenario.add(&piramide);
+		Arvore arv (materialArvore, materialTronco);
+		std::cout << "Adicionando arvore na cena...\n";
+		cenario.add(&arv);
+		std::cout << "Arvore foi adicionada...\n";
 
 		cenario.add(&arvore);
 		cenario.add(&tronco);
@@ -504,8 +506,8 @@ namespace Cena
         // fontes.add(&spot2);
         // fontes.add(&spot3);
         // fontes.add(&spot4);
-        fontes.add(&pontual);
-        fontes.add(&direcional);
+        // fontes.add(&pontual);
+        // fontes.add(&direcional);
     }
 } // namespace Cena
 

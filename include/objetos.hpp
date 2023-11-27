@@ -102,7 +102,10 @@ public:
     void toCamera (Lista<Objeto> &cena, Lista<Fonte> &fontes) 
     {
         // Percorrendo os objetos e transformando em coordenadas de camera
+        
+	    std::cout << "Transformando cena em camera...\n";
         for (auto obj : cena) { obj->transformar(w2c); }
+	    std::cout << "Cena transformada...\n";
         // Percorrendo as fontes e transformando em coordenadas de camera
         for (auto fonte : fontes) { fonte->transformar(w2c); }
     }
@@ -330,7 +333,6 @@ private:
     int face_atingida = -1;
 
 public:
-    Malha() : numvertices{0}, numarestas{0}, numfaces{0} {}
 
     Malha(int v, int a, int f, Material m) : numvertices{v}, numarestas{a}, numfaces{f}
     {

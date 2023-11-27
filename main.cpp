@@ -11,7 +11,6 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 
 #include <SDL.h>
 // #include <SDL_image.h>
-#include <iostream>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
 #include "include/intersecoes.hpp"
@@ -20,6 +19,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 
 double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
 {
+    std::cout << "Abrindo CastRay...\n";
 	// Vai guardar o menor valor de t 
 	double menor_t = -1;
 
@@ -43,6 +43,7 @@ double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
             else { menor_t = t_int; atingido = obj; }
         }
     }
+	std::cout << "Fechando CastRay...\n";
     return menor_t;
 }
 
@@ -168,7 +169,10 @@ int main(int argc, char** argv)
 	// Funcao que define os vertices, arestas e faces do cubo
 	Cena::definirMalha();
 	// Funcao que define a lista de objetos da cena
+	
+	std::cout << "Definindo cena...\n";
 	Cena::definirCena();
+	std::cout << "Cena definida...\n";
 	// Funcao que define a lista de fontes da cena
 	Cena::definirFontes();
 
@@ -182,13 +186,16 @@ int main(int argc, char** argv)
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 2000, 1000, 1800 };
-	Ponto at = { 0, 0, 0 };
-	Ponto up = { 0, 1000, 0 }; 
+	Ponto eye = { 500, 1000, 2000 };
+	Ponto at = { 500, 0, 0 };
+	Ponto up = { 500, 1000, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
+	
+	std::cout << "Abrindo toCamera...\n";
 	camera.toCamera(Cena::cenario, Cena::fontes);
+	std::cout << "Saindo toCamera...\n";
 
 	// Matriz de cores *********************************************************
 	Cor** colors = new Cor*[linhas];
@@ -203,7 +210,10 @@ int main(int argc, char** argv)
 
 	// Realizando o RayCasting *************************************************
 	// Chama funcao que percorre o canvas e lanca os raios pela janela
+	
+	std::cout << "Antes de RayCasting...\n";
 	RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+	std::cout << "Depois  de RayCasting...\n";
 
 	// *************************************************************************
     // Utilizando SDL **********************************************************
