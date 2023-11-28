@@ -7,264 +7,108 @@
 
 namespace Cena
 {
-	// Materiais dos objetos ***************************************************
-	
-	// Material da Esfera ******************************************************
-	// Propriedades de reflectividade da esfera
-	// Vetor kaEsfera { 0.7, 0.2, 0.2 }; // Prop. ambiente do material da esfera 
-	// Vetor kdEsfera = kaEsfera; // Prop. difusa do material da esfera 
-	// Vetor keEsfera = kaEsfera; // Prop. especular do material da esfera 
-	// double brilhoEsfera = 10; // Fator de brilho especular
-	// Material da esfera
-	// Material materialEsfera { kaEsfera, kdEsfera, keEsfera, brilhoEsfera };
-	
-	// Material do Cilindro ****************************************************
-	// Propriedades de reflectividade do Cilindro
-	// Vetor kaCilindro { 0.2, 0.7, 0.7 }; // Prop. ambiente do material do Cilindro 
-	// Vetor kdCilindro = kaCilindro; // Prop. difusa do material do Cilindro 
-	// Vetor keCilindro = kaCilindro; // Prop. especular do material do Cilindro 
-	// double brilhoCilindro = 10; // Fator de brilho especular
-	// Material do Cilindro
-	// Material materialCilindro { kaCilindro, kdCilindro, keCilindro, brilhoCilindro };
-
-	// Material do Cone ********************************************************
-	// Propriedades de reflectividade do Cone 
-	// Vetor kaCone { 0.7, 0.7, 0.2 }; // Prop. ambiente do material do Cone 
-	// Vetor kdCone = kaCone; // Prop. difusa do material do Cone 
-	// Vetor keCone = kaCone; // Prop. especular do material do Cone 
-	// double brilhoCone = 10; // Fator de brilho especular
-	// Material do Cone
-	// Material materialCone { kaCone, kdCone, keCone, brilhoCone };
-
+	// Materiais dos objetos 
+	//
 	// Material do Plano do Chao ***********************************************
 	// Propriedades de reflectividade do plano do chao
-	Vetor kaChao { 0.2, 0.7, 0.2 }; // Prop. ambiente do material do chao 
-	Vetor kdChao = kaChao; // Prop. difusa do material do chao 
-	Vetor keChao { 0.0, 0.0, 0.0 }; // Prop. especular do material do chao 
+	Vetor kaChao { 0.2, 0.7, 0.2 }; // Prop ambiente do material do chao 
+	Vetor kdChao = kaChao; // Prop difusa do material do chao 
+	Vetor keChao { 0.0, 0.0, 0.0 }; // Prop especular do material do chao 
 	double brilhoChao = 1; // Fator de brilho espescular
 	// Material do plano do chao
 	Material materialChao { kaChao, kdChao, keChao, brilhoChao };
 
 	// Material do Plano de Fundo **********************************************
 	// Propriedades de reflectividade do plano de fundo
-	Vetor kaFundo { 0.3, 0.3, 0.7 }; // Prop. ambiente do material do fundo 
-	Vetor kdFundo = kaFundo; // Prop. difusa do material do fundo 
-	Vetor keFundo { 0.0, 0.0, 0.0 }; // Prop. especular do material do fundo 
+	Vetor kaFundo { 0.3, 0.3, 0.7 }; // Prop ambiente do material do fundo 
+	Vetor kdFundo = kaFundo; // Prop difusa do material do fundo 
+	Vetor keFundo { 0.0, 0.0, 0.0 }; // Prop especular do material do fundo 
 	double brilhoFundo = 1; // Fator de brilho especular
 	// Material do plano de fundo
 	Material materialFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
 
-	// Material do Plano do Teto ***********************************************
-	// Propriedades de reflectividade do plano do Teto
-	Vetor kaTeto { 0.3, 0.3, 0.7 }; // Prop. ambiente do material do teto 
-	Vetor kdTeto = kaTeto; // Prop. difusa do material do teto 
-	Vetor keTeto { 0.0, 0.0, 0.0 }; // Prop. especular do material do teto 
-	double brilhoTeto = 1; // Fator de brilho especular
-	// Material do plano do Teto
-	Material materialTeto { kaTeto, kdTeto, keTeto, brilhoTeto };
-
-	// Material do Cubo ********************************************************
-	// Propriedades de reflectividade do Cubo
-	Vetor kaCubo { 0.7, 0.2, 0.7 }; // Prop. ambiente do material do Cubo
-	Vetor kdCubo = kaCubo; // Prop. difusa do material do Cubo
-	Vetor keCubo = kaCubo; // Prop. especular do material do Cubo
-	double brilhoCubo = 10; // Fator de brilho especular
-	// Material do Cubo
-	Material materialCubo { kaCubo, kdCubo, keCubo, brilhoCubo };
-
-	// Material da Casa *******************************************************
+	// Material da Casa ********************************************************
 	// Propriedades de reflectividade da Casa
-	Vetor kaCasa = { 1.0, 1.0, 1.0 }; // Prop. ambiente do material da Casa
-	Vetor kdCasa = kaCasa; // Prop. difusa do material da Casa
-	Vetor keCasa = kaCasa; // Prop. especular do material da Casa
+	Vetor kaCasa = { 1.0, 1.0, 1.0 }; // Prop ambiente do material da Casa
+	Vetor kdCasa = kaCasa; // Prop difusa do material da Casa
+	Vetor keCasa = kaCasa; // Prop especular do material da Casa
 	double brilhoCasa = 10; // Fator de brilho especular
 	// Material da Casa
 	Material materialCasa { kaCasa, kdCasa, keCasa, brilhoCasa };
 
 	// Material do Telhado *****************************************************
 	// Propriedades de reflectividade do Telhado
-	Vetor kaTelhado = { 0.7, 0.4, 0.3 }; // Prop. ambiente do material do Telhado
-	Vetor kdTelhado = kaTelhado; // Prop. difusa do material do Telhado
-	Vetor keTelhado = kaTelhado; // Prop. especular do material do Telhado
+	Vetor kaTelhado = { 0.7, 0.4, 0.3 }; // Prop ambiente do material do Telhado
+	Vetor kdTelhado = kaTelhado; // Prop difusa do material do Telhado
+	Vetor keTelhado = kaTelhado; // Prop especular do material do Telhado
 	double brilhoTelhado = 5; // Fator de brilho especular
 	// Material do Telhado
 	Material materialTelhado { kaTelhado, kdTelhado, keTelhado, brilhoTelhado };
 
 	// Material do Poste *******************************************************
 	// Propriedades de reflectividade do Poste
-	Vetor kaPoste = { 0.4, 0.4, 0.4 }; // Prop. ambiente do material do Poste
-	Vetor kdPoste = kaPoste; // Prop. difusa do material do Poste
-	Vetor kePoste = { 0.5, 0.5, 0.5 }; // Prop. especular do material do Poste
+	Vetor kaPoste = { 0.4, 0.4, 0.4 }; // Prop ambiente do material do Poste
+	Vetor kdPoste = kaPoste; // Prop difusa do material do Poste
+	Vetor kePoste = { 0.5, 0.5, 0.5 }; // Prop especular do material do Poste
 	double brilhoPoste = 5; // Fator de brilho especular
 	// Material do Poste
 	Material materialPoste { kaPoste, kdPoste, kePoste, brilhoPoste };
 
-	// Material da Arvore *******************************************************
+	// Material da Arvore ******************************************************
 	// Propriedades de reflectividade da Arvore
-	Vetor kaArvore = { 0.0, 1.0, 0.0 }; // Prop. ambiente do material da Arvore
-	Vetor kdArvore = kaArvore; // Prop. difusa do material da Arvore
-	Vetor keArvore = { 0.0, 0.8, 0.0 }; // Prop. especular do material da Arvore
+	Vetor kaArvore = { 0.0, 1.0, 0.0 }; // Prop ambiente do material da Arvore
+	Vetor kdArvore = kaArvore; // Prop difusa do material da Arvore
+	Vetor keArvore = kaArvore; // Prop especular do material da Arvore
 	double brilhoArvore = 5; // Fator de brilho especular
 	// Material da Arvore
 	Material materialArvore { kaArvore, kdArvore, keArvore, brilhoArvore };
 
-	// Material do Tronco *******************************************************
+	// Material do Tronco ******************************************************
 	// Propriedades de reflectividade do Tronco
-	Vetor kaTronco = { 0.4, 0.3, 0.1 }; // Prop amb. do material do Tronco
+	Vetor kaTronco = { 0.4, 0.3, 0.1 }; // Prop ambiente do material do Tronco
 	Vetor kdTronco = kaTronco; // Prop difusa do material do Tronco
-	Vetor keTronco = kaTronco; // Prop esp. do material do Tronco
+	Vetor keTronco = kaTronco; // Prop especular do material do Tronco
 	double brilhoTronco = 5; // Fator de brilho especular
 	// Material do Tronco
 	Material materialTronco { kaTronco, kdTronco, keTronco, brilhoTronco };
 
 	// *************************************************************************
 	// Objetos da Cena *********************************************************
+	//
 	// Objetos em coordenadas de mundo onde todos objetos estao 
 	// no primeiro octante do sistema de coordenadas. O plano do 
 	// chao é o plano XZ (y = 0) e os planos XY (z = 0) e YZ (x = 0) 
 	// sao delimitantes de fundo para o cenario
-
-	// Informacoes da Esfera ***************************************************
-	// double raioEsfera = 40; // Raio da Esfera em cm
-	// Ponto centroEsfera { 140, raioEsfera, 140 }; // Centro da Esfera
-	// Objeto da Esfera
-	// Esfera Esfera (centroEsfera, raioEsfera, materialEsfera);
-
-	// Informacoes do Cilindro *************************************************
-	// double raioCilindro = 20; // Raio da base do Cilindro em cm
-	// Ponto baseCilindro { 50, 0, 150 }; // Centro da base do Cilindro 
-	// Ponto topoCilindro = { 50, 50, 150 }; // Posicao do topo do Cilindro
-	// Objeto do Cilindro
-	// Cilindro cilindro (baseCilindro, topoCilindro, raioCilindro, materialCilindro);
-
-	// Informacoes do Cone *****************************************************
-	// double raioCone = 40; // Raio da base do Cone em cm
-	// Ponto baseCone { 100, 0, 60 }; // Centro da base do Cone 
-	// Ponto verticeCone { 100, 50, 60 }; // Posicao do Vertice do Cone
-	// Objeto do Cone
-	// Cone cone (baseCone, verticeCone, raioCone, materialCone);
-
-	// Informacoes da Arvore ***************************************************
-	// double raioArvore = 150; // Raio da Arvore em cm
-	// Ponto centroArvore { 0, 0, 0 }; // Centro da Arvore
-	// Objeto da Arvore
-	// Esfera arvore (centroArvore, raioArvore, materialArvore);
-
-	// Informacoes do Tronco ***************************************************
-	// double raioTronco = 75; // Raio da base do Tronco em cm
-	// Ponto baseTronco { 0, 0, 0 }; // Centro da base do Tronco 
-	// Ponto verticeTronco { 0, 300, 0 }; // Posicao do Vertice do Tronco
-	// Objeto do Tronco
-	// Cone tronco (baseTronco, verticeTronco, raioTronco, materialTronco);
-
+	//
 	// Informacoes do Plano do Chao ********************************************
 	Ponto pontoChao { 0, 0, 0 }; // Ponto presente no plano do chao
 	Vetor normalChao { 0, 1, 0 }; // Vetor normal ao plano do chao
 	// Objeto do Plano do Chao
 	Plano chao (pontoChao, normalChao, materialChao);
 
-	// Informacoes do Plano do Fundo 1 *****************************************
-	Ponto pontoFundo1 { 0, 0, 0 }; // Ponto presente no plano do fundo 1
-	Vetor normalFundo1 { 0, 0, 1 }; // Vetor normal ao plano do fundo 1
-	// Objeto do Plano do Fundo 1
-	Plano fundo1 (pontoFundo1, normalFundo1, materialFundo);
+	// Informacoes do Plano do Fundo Esquerdo **********************************
+	Ponto pontoFundoEsq { 0, 0, 0 }; // Ponto do plano do Fundo Esquerdo
+	Vetor normalFundoEsq { 1, 0, 0 }; // Vetor normal ao plano do Fundo Esquerdo
+	// Objeto do Plano do Fundo Esquerdo
+	Plano fundoEsq (pontoFundoEsq, normalFundoEsq, materialFundo);
 
-	// Informacoes do Plano do Fundo 2 *****************************************
-	Ponto pontoFundo2 { 0, 0, 0 }; // Ponto presente no plano do fundo 2
-	Vetor normalFundo2 { 1, 0, 0 }; // Vetor normal ao plano do fundo 2
-	// Objeto do Plano do Fundo 2
-	Plano fundo2 (pontoFundo2, normalFundo2, materialFundo);
+	// Informacoes do Plano do Fundo Direito ***********************************
+	Ponto pontoFundoDir { 0, 0, 0 }; // Ponto presente no plano do fundo Direito
+	Vetor normalFundoDir { 0, 0, 1 }; // Vetor normal ao plano do fundo Direito
+	// Objeto do Plano do Fundo Direito
+	Plano fundoDir (pontoFundoDir, normalFundoDir, materialFundo);
 
-	// Informacoes do Cubo *****************************************************
-	// int verticesCubo = 8; // Numero de vertices do Cubo
-	// int arestasCubo = 18; // Numero de arestas do Cubo
-	// int facesCubo = 12; // Numero de faces do Cubo
-	// Objeto do Cubo
-	// Malha cubo (verticesCubo, arestasCubo, facesCubo, materialCubo);
-
-	// Informacoes do Quadrado *************************************************
-	// int verticesQuad = 4; // Numero de vertices do Quadrado
-	// int arestasQuad = 5; // Numero de vertices do Quadrado
-	// int facesQuad = 2; // Numero de vertices do Quadrado
-	// Objeto do Quadrado
-	// Malha quadrado (verticesQuad, arestasQuad, facesQuad, materialCubo);
-
-	// Informacoes da Piramide *************************************************
-	// int verticesPiram = 5; // Numero de vertices da Piramide
-	// int arestasPiram = 9; // Numero de vertices da Piramide
-	// int facesPiram = 6; // Numero de vertices da Piramide
-	// Objeto da Piramide
-	// Malha piramide (verticesPiram, arestasPiram, facesPiram, materialTelhado);
-
+	// Objeto Complexo da Casa *************************************************
+	// Composto de um cubo e uma piramide
 	Casa casa (materialCasa, materialTelhado);
+	// Objeto Complexo da Arvore ***********************************************
+	// Composto de uma esfera e um cone
 	Arvore arvore (materialArvore, materialTronco);
+	// Objeto Complexo do Poste ************************************************
+	// Composto de dois cilindro
 	Poste poste (materialPoste);
 
-	// Informacoes do Poste ****************************************************
-	// double raioPoste = 12; // Raio da base do Poste em cm
-	// Ponto basePoste { 0, 0, 0 }; // Centro da base do Poste 
-	// Ponto topoPoste = { 0, 500, 0 }; // Posicao do topo do Poste
-	// Objeto do Poste 
-	// Cilindro poste (basePoste, topoPoste, raioPoste, materialPoste);
-
-	// Informacoes da Haste ****************************************************
-	// double raioHaste = 6; // Raio da base da Haste em cm
-	// Ponto baseHaste { 0, 0, 0 }; // Centro da base da Haste 
-	// Ponto topoHaste = { 0, 100, 0 }; // Posicao do topo da Haste
-	// Objeto da Haste 
-	// Cilindro haste (baseHaste, topoHaste, raioHaste, materialPoste);
-
-	void definirMalha() 
-	{
-        // Definindo os vertices da Piramide ***********************************
-        // piramide.setVertice(0, { 0, 0, 10 }); piramide.setVertice(1, { 10, 0, 10 });
-        // piramide.setVertice(2, { 10, 0, 0 }); piramide.setVertice(3, { 0, 0, 0 }); 
-		// piramide.setVertice(4, { 5, 5, 5 });
-		// Definindo as arestas da Piramide
-        // piramide.setAresta(0, 0, 1); piramide.setAresta(1, 1, 2); 
-		// piramide.setAresta(2, 2, 3); piramide.setAresta(3, 3, 0); 
-        // piramide.setAresta(4, 0, 4); piramide.setAresta(5, 1, 4); 
-		// piramide.setAresta(6, 2, 4); piramide.setAresta(7, 3, 4); 
-		// piramide.setAresta(8, 0, 2);
-		// Definindo as faces da Piramide
-		// piramide.setFace(0, 0, 5, 4); piramide.setFace(1, 1, 6, 5); 
-		// piramide.setFace(2, 2, 7, 6); piramide.setFace(3, 3, 4, 7); 
-		// piramide.setFace(4, 1, 0, 8); piramide.setFace(5, 3, 2, 8);
-		
-        // Definindo os vertices do Quadrado ***********************************
-        // quadrado.setVertice(0, { 0, 0.1, 10 }); quadrado.setVertice(1, { 10, 0.1, 10 });
-        // quadrado.setVertice(2, { 10, 0.1, 0 }); quadrado.setVertice(3, { 0, 0.1, 0 }); 
-		// Definindo as arestas do Quadrado
-        // quadrado.setAresta(0, 0, 1); quadrado.setAresta(1, 1, 2); 
-		// quadrado.setAresta(2, 2, 3); quadrado.setAresta(3, 3, 0); 
-		// quadrado.setAresta(4, 0, 2); 
-		// Definindo as faces do Quadrado
-		// quadrado.setFace(0, 0, 1, 4); quadrado.setFace(1, 2, 3, 4); 
-
-        // Definindo os vertices do Cubo ***************************************
-        // cubo.setVertice(0, { 0, 0, 10 }); cubo.setVertice(1, { 10, 0, 10 });
-        // cubo.setVertice(2, { 10, 10, 10 }); cubo.setVertice(3, { 0, 10, 10 }); 
-        // cubo.setVertice(4, { 0, 0, 0 }); cubo.setVertice(5, { 10, 0, 0 }); 
-        // cubo.setVertice(6, { 10, 10, 0 }); cubo.setVertice(7, { 0, 10, 0 }); 
-        // Definindo as arestas do Cubo
-        // cubo.setAresta(0, 0, 1); cubo.setAresta(1, 1, 2); 
-        // cubo.setAresta(2, 2, 3); cubo.setAresta(3, 3, 0); 
-        // cubo.setAresta(4, 0, 4); cubo.setAresta(5, 1, 5); 
-        // cubo.setAresta(6, 2, 6); cubo.setAresta(7, 3, 7); 
-        // cubo.setAresta(8, 4, 5); cubo.setAresta(9, 5, 6); 
-        // cubo.setAresta(10, 6, 7); cubo.setAresta(11, 7, 4); 
-        // cubo.setAresta(12, 1, 3); cubo.setAresta(13, 2, 5); 
-        // cubo.setAresta(14, 4, 6); cubo.setAresta(15, 0, 7); 
-        // cubo.setAresta(16, 3, 6); cubo.setAresta(17, 0, 5); 
-        // Definindo as faces do Cubo
-        // cubo.setFace(0, 3, 0, 12); cubo.setFace(1, 1, 2, 12);
-        // cubo.setFace(2, 1, 5, 13); cubo.setFace(3, 9, 6, 13);
-        // cubo.setFace(4, 9, 8, 14); cubo.setFace(5, 11, 10, 14);
-        // cubo.setFace(6, 4, 3, 15); cubo.setFace(7, 7, 11, 15);
-        // cubo.setFace(8, 2, 6, 16); cubo.setFace(9, 10, 7, 16);
-        // cubo.setFace(10, 4, 8, 17); cubo.setFace(11, 5, 0, 17);
-    }
-
+	// *************************************************************************
 	// Fontes de luz ***********************************************************
 	//
 	// Informacoes da Fonte Pontual ********************************************
@@ -288,14 +132,14 @@ namespace Cena
 	Direcional direcional (intenseDirecional, direcaoDirecional);
 
     // Informacoes da luz Ambiente *********************************************
-    Vetor luzAmbiente { 0.2, 0.2, 0.2 };
+    Vetor luzAmbiente { 0.3, 0.3, 0.3 };
 
 	// Informacoes da Janela ***************************************************
 	double xminJanela = -72; // Valor da parte de cima da janela em cm
 	double xmaxJanela = 72; // Valor da parte de baixo da janela em cm
 	double yminJanela = -40.5; // Valor do lado esquerdo da janela em cm
 	double ymaxJanela = 40.5; // Valor do lado direito da janela em cm
-	double dJanela = 300; // Distancia da janela em cm
+	double dJanela = 200; // Distancia da janela em cm
 	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
@@ -303,16 +147,17 @@ namespace Cena
 	// Vista em Diagonal
 	Ponto eye = { 500, 1000, 2000 };
 	Ponto at = { 500, 0, 0 };
-	Ponto up = { 300, 1000, 0 }; 
+	Ponto up = { 500, 1000, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 
 	// Lista de Objetos da Cena ************************************************
 	Lista<Objeto> cenario;
+
     // Definindo a lista de objetos da cena
-    void definirCena() 
+    void definirObjetos() 
     {
-		// Realizando transformacoes *******************************************
+		// Realizando transformacoes 
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
 		Transformacao::translacao(&casa, { 600, 0, 200 });
@@ -320,24 +165,28 @@ namespace Cena
 		Transformacao::translacao(&arvore, { 400, 0, 400 });
 		// Ajustando objeto do poste
 		Transformacao::translacao(&poste, { 400, 0, 700 });
-		// Ajustando objeto da luz do poste
-		Transformacao::translacao(&spot, { 500, 500-13, 700 });
 
-        // Adicionando os objetos na cena **************************************
+        // Adicionando os objetos na cena 
 		cenario.add(&arvore);
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);
-        cenario.add(&fundo1);
-        cenario.add(&fundo2);
+        cenario.add(&fundoEsq);
+        cenario.add(&fundoDir);
     }
 
 	// Lista de Fontes de luz **************************************************
 	Lista<Fonte> fontes;
+
     // Definindo a lista de fontes da cena
     void definirFontes() 
     {
-        // Adicionando as fontes na lista
+		// Realizando transformacoes 
+		// Ajustando objeto da luz do poste
+		// Posiciona a fonte spot na ponta do poste
+		Transformacao::translacao(&spot, { 500, 500-13, 700 });
+
+        // Adicionando as fontes na lista 
         fontes.add(&spot);
         fontes.add(&pontual);
         // fontes.add(&direcional);

@@ -1,3 +1,6 @@
+#ifndef INTERSECOES_HPP
+#define INTERSECOES_HPP
+
 #include "objetos.hpp"
 #include "basics.hpp"
 
@@ -251,7 +254,7 @@ double Malha::intersecao (Raio raio)
 {
     // variavel que guarda o menor t de todas intersecoes
     double menor_t = -1;
-    // variavel de guarda o valor de t de cada intersecao
+    // variavel que guarda o valor de t de cada intersecao
     double t_int = -1; 
 
     // percorrendo todas as faces da malha
@@ -338,19 +341,19 @@ double Malha::intersecao (Raio raio)
             c1 = escalar(vetorial(s3, s1), normal);
 
             // se negativo entao intersecao invalida
-            if (c1 + 0.01 < 0) t_int = -1;
+            if (c1 < 0) t_int = -1;
             else { // senao calcula proxima coordenada baricentrica
                 c1 = c1 / areatotal;
                 c2 = escalar(vetorial(s1, s2), normal);
 
                 // se negativo entao intersecao invalida
-                if (c2 + 0.01 < 0) t_int = -1;
+                if (c2 < 0) t_int = -1;
                 else { // senao calcula proxima coordenada baricentrica
                     c2 = c2 / areatotal;
                     c3 = 1 - (c1 + c2);
 
                     // se negativo entao intersecao invalida
-                    if (c3 + 0.01 < 0) t_int = -1;
+                    if (c3 < 0) t_int = -1;
                     // senao nao precisa fazer nada pois o t_int já é valido
                 }
             }
@@ -375,3 +378,5 @@ double Malha::intersecao (Raio raio)
     // retornando o valor do menor t calculado
     return menor_t;
 }
+
+#endif

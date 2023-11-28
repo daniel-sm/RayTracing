@@ -10,7 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
-#include <SDL_image.h>
+// #include <SDL_image.h>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
 #include "include/intersecoes.hpp"
@@ -45,11 +45,8 @@ double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
     return menor_t;
 }
 
-void RayCasting (
-	int linhas, int colunas, 
-	int projecao, Vetor dirProjecao, 
-	Cor** colors, Objeto*** hitted
-) {
+void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors, Objeto*** hitted) 
+{
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = Cena::janela.getWidth() / colunas;
 	double Dy = Cena::janela.getHeight() / linhas;
@@ -80,7 +77,7 @@ void RayCasting (
 			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Perspectiva por padrao
 
 			// Gerando raio de acordo com a projecao
-			switch (projecao)
+			switch (proj)
 			{
 			case 1: // Caso seja persperctiva
 				raio = Raio (Ponto{ 0, 0, 0 }, pontoJanela);
@@ -89,7 +86,7 @@ void RayCasting (
 				raio = Raio (pontoJanela, Vetor{0, 0, -1});
 				break;
 			case 3: // Caso seja obliqua
-				raio = Raio (pontoJanela, dirProjecao);
+				raio = Raio (pontoJanela, dirproj);
 				break;
 			default: 
 				break;
@@ -155,19 +152,17 @@ void RayCasting (
 	for (int l = 0; l < linhas; ++l) {
 		for (int c = 0; c < colunas; ++c) {
 			// Arredondando para valor inteiro 
-			colors[l][c].r = round(colors[l][c].r / maiorCor);
-			colors[l][c].g = round(colors[l][c].g / maiorCor);
-			colors[l][c].b = round(colors[l][c].b / maiorCor);
+			colors[l][c].r = floor(colors[l][c].r / maiorCor);
+			colors[l][c].g = floor(colors[l][c].g / maiorCor);
+			colors[l][c].b = floor(colors[l][c].b / maiorCor);
 		}
 	}
 }
 
 int main(int argc, char** argv) 
 {
-	// Funcao que define os vertices, arestas e faces do cubo
-	Cena::definirMalha();
 	// Funcao que define a lista de objetos da cena
-	Cena::definirCena();
+	Cena::definirObjetos();
 	// Funcao que define a lista de fontes da cena
 	Cena::definirFontes();
 
@@ -205,7 +200,6 @@ int main(int argc, char** argv)
 		SDL_Log("Não foi possível inicializar o SDL! SDL_Error: %s", SDL_GetError());
 		return 1;
 	}
-
 
 	// Criando uma janela
 	SDL_Window* window = SDL_CreateWindow(
@@ -262,17 +256,17 @@ int main(int argc, char** argv)
 					{
 					case SDLK_x:
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
-						Transformacao::translacao(clicked, { 10, 0, 0 });
+						Transformacao::translacao(clicked, { 100, 0, 0 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_y:
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
-						Transformacao::translacao(clicked, { 0, 10, 0 });
+						Transformacao::translacao(clicked, { 0, 100, 0 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_z:
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
-						Transformacao::translacao(clicked, { 0, 0, 10 });
+						Transformacao::translacao(clicked, { 0, 0, 100 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					default:

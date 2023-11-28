@@ -219,9 +219,50 @@ public:
 class Textura : public Objeto 
 {
 private:
+    // SDL_Surface* textura;
+    // Plano* plano;
+    // double w_min, w_max, h_min, h_max;
+    // double height, width;
     Malha* plano;
 public:
-    Textura (Ponto p0, Ponto p1, Ponto p2, Ponto p3) 
+/*
+    Textura (SDL_Surface* txt, double x, double X, double y, double Y)
+    : w_min{x}, w_max{X}, h_min{y}, h_max{Y}, textura{txt}
+    {
+        plano = new Plano ({ 0, 0, 0 }, { 0, 1, 0 }, {});
+        width = w_max - w_min;
+        height = h_max - h_min;
+    }
+
+    double intersecao (Raio raio) 
+    {
+        double t_int = plano->intersecao(raio);
+
+        if (t_int > 0)
+        {
+            Ponto p = raio.pontoIntersecao(t_int);
+
+            if ((p.x >= w_min and p.x <= w_max) and (p.z >= h_min and p.z <= h_max))
+            {
+                double fatorw = (p.x - w_min) / width;
+                double fatorh = (p.z - h_min) / height;
+
+                int pixel_x = fatorw * textura->w;
+                int pixel_y = fatorh * textura->h;
+
+                std::cout << "x: " << pixel_x << "y: " << pixel_y << "\n";
+            } 
+            else return -1;
+        }
+        return t_int;
+    }
+
+    Vetor getNormal(Ponto ponto) { return plano->getNormal(ponto); }
+
+    void transformar(Matriz matriz) { plano->transformar(matriz); }
+*/
+// /*
+    Textura (Ponto p0, Ponto p1, Ponto p2, Ponto p3, SDL_Texture* texture) 
     { // Assume ordem antihoraria nos vertices
         // Criando malha da textura
         plano = new Malha(4, 5, 2, {});
@@ -237,14 +278,144 @@ public:
     }
     ~Textura () { delete plano; }
 
-    double intersecao (Raio raio) override 
+    
+    double intersecao (Raio raio) 
     {
-        return plano->intersecao(raio);
+        // variavel que guarda o menor t de todas intersecoes
+        double menor_t = -1;
+        // variavel que guarda o valor de t de cada intersecao
+        double t_int = -1; 
+        // variavel que guarda as coordenadas baricentricas dos pontos
+        Vetor c[2] = {{-1,-1,-1}, {-1,-1,-1}};
+
+        // percorrendo todas as faces da malha
+        for (int i = 0; i < plano->numfaces; ++i)
+        {
+            // obtendo id das arestas da face de id "i"
+            int a1 = plano->faces[i].a1;
+            int a2 = plano->faces[i].a2;
+
+            // id dos vertices 1 e 2 da aresta 1, somando +1 para evitar id = 0
+            int v1_a1 = plano->arestas[a1].v1 + 1; 
+            int v2_a1 = plano->arestas[a1].v2 + 1; 
+
+            // id dos vertices 1 e 2 da aresta 2, somando +1 para evitar id = 0
+            int v1_a2 = plano->arestas[a2].v1 + 1; 
+            int v2_a2 = plano->arestas[a2].v2 + 1; 
+
+            int v1, v2, v3;
+
+            // algoritmo para encontrar id do vertice comum 
+            // e id dos vertices na ordem anti-horaria 
+            float n1 = v1_a1 * v2_a1;
+            float n = n1 / v1_a2;
+
+            if (n == v1_a1 || n == v2_a1)
+            {
+                v1 = v1_a2; 
+                v2 = v2_a2;
+                v3 = n;
+            } else 
+            {
+                v1 = v2_a2;
+                v2 = v1_a2;
+                v3 = n1/v1;
+            } 
+            // reajustando o valor dos ids para o original
+            --v1; --v2; --v3;
+            // apos if e else, v1 tem o id do vertice comum
+            // v2 e v3 tem o id dos vertices vizinhos na ordem anti-horaria
+
+            // definindo p1, p2 e p3 como os pontos dos ids v1, v2 e v3
+            Ponto p1 = plano->vertices[v1]; 
+            Ponto p2 = plano->vertices[v2]; 
+            Ponto p3 = plano->vertices[v3]; 
+
+            // definindo os vetores que partem do vertice comum v1 
+            Vetor r1 = p2 - p1;
+            Vetor r2 = p3 - p1;
+
+            // definindo vetor normal nao normalizado
+            Vetor N = vetorial(r1, r2);
+            double modulo = norma(N);
+
+            // vetor normal unitario 
+            Vetor normal = N / modulo;
+
+            // calculando se tem intersecao plano da face
+            double denominador = escalar(normal, raio.getDirecao());
+
+            // se denominador == 0, raio é paralelo ao plano
+            if (denominador != 0)
+            {
+                Vetor w = raio.getOrigem() - p1;
+                t_int = -1 * (escalar(normal, w) / denominador);
+            }
+            else { t_int = -1; }
+
+            // se houve intersecao com plano, entao checa se pertence a face
+            if (t_int > 0)
+            {
+                // calculando ponto intersectado
+                Ponto p = raio.pontoIntersecao(t_int);
+
+                // definindo a area total do triangulo 
+                double areatotal = modulo;
+
+                // coordenadas baricentricas 
+                double c1, c2, c3;
+
+                Vetor s1 = p1 - p;
+                Vetor s2 = p2 - p;
+                Vetor s3 = p3 - p;
+
+                c1 = escalar(vetorial(s3, s1), normal);
+
+                // se negativo entao intersecao invalida
+                if (c1 < 0) t_int = -1;
+                else { // senao calcula proxima coordenada baricentrica
+                    c1 = c1 / areatotal;
+                    c2 = escalar(vetorial(s1, s2), normal);
+
+                    // se negativo entao intersecao invalida
+                    if (c2 < 0) t_int = -1;
+                    else { // senao calcula proxima coordenada baricentrica
+                        c2 = c2 / areatotal;
+                        c3 = 1 - (c1 + c2);
+
+                        // se negativo entao intersecao invalida
+                        if (c3 < 0) t_int = -1;
+                        // senao nao precisa fazer nada pois o t_int já é valido
+                    }
+                }
+            }
+            // ATUALIZAR O VALOR DE menor_t
+            // apenas interessa se o t_int for positivo
+            if (t_int > 0) {
+                // se menor_t for positivo, verifica qual o menor valor
+                if (menor_t > 0) {
+                    if (t_int < menor_t) 
+                    {
+                        // menor_t recebe t_int se for menor que o valor atual
+                        menor_t = t_int;
+                        // atualiza a face atingida atual
+                        plano->face_atingida = i;
+                    }
+                }
+                // se menor_t for invalido, apenas atualiza o valor
+                else { menor_t = t_int; plano->face_atingida = i; }
+            }
+            // Salvando o valor das coordenadas baricentricas 
+            // CONTINUAR DAQUI #####################################################################
+        }
+        // retornando o valor do menor t calculado
+        return menor_t;
     }
 
     Vetor getNormal (Ponto p) const override { return plano->getNormal(p); }
 
     void transformar (Matriz matriz) override { plano->transformar(matriz); }
+// */
 };
 
 #endif
