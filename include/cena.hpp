@@ -72,18 +72,9 @@ namespace Cena
 	// Material do Cubo
 	Material materialCubo { kaCubo, kdCubo, keCubo, brilhoCubo };
 
-	// Material da Pista *******************************************************
-	// Propriedades de reflectividade da Pista
-	// Vetor kaPista = { 0.2, 0.2, 0.2 }; // Prop. ambiente do material da Pista
-	// Vetor kdPista = kaPista; // Prop. difusa do material da Pista
-	// Vetor kePista = kaPista; // Prop. especular do material da Pista
-	// double brilhoPista = 1; // Fator de brilho especular
-	// Material da Pista
-	// Material materialPista { kaPista, kdPista, kePista, brilhoPista };
-
 	// Material da Casa *******************************************************
 	// Propriedades de reflectividade da Casa
-	Vetor kaCasa = { 0.9, 0.9, 0.9 }; // Prop. ambiente do material da Casa
+	Vetor kaCasa = { 1.0, 1.0, 1.0 }; // Prop. ambiente do material da Casa
 	Vetor kdCasa = kaCasa; // Prop. difusa do material da Casa
 	Vetor keCasa = kaCasa; // Prop. especular do material da Casa
 	double brilhoCasa = 10; // Fator de brilho especular
@@ -92,7 +83,7 @@ namespace Cena
 
 	// Material do Telhado *****************************************************
 	// Propriedades de reflectividade do Telhado
-	Vetor kaTelhado = { 0.6, 0.3, 0.2 }; // Prop. ambiente do material do Telhado
+	Vetor kaTelhado = { 0.7, 0.4, 0.3 }; // Prop. ambiente do material do Telhado
 	Vetor kdTelhado = kaTelhado; // Prop. difusa do material do Telhado
 	Vetor keTelhado = kaTelhado; // Prop. especular do material do Telhado
 	double brilhoTelhado = 5; // Fator de brilho especular
@@ -119,7 +110,7 @@ namespace Cena
 
 	// Material do Tronco *******************************************************
 	// Propriedades de reflectividade do Tronco
-	Vetor kaTronco = { 0.364, 0.270, 0.141 }; // Prop amb. do material do Tronco
+	Vetor kaTronco = { 0.4, 0.3, 0.1 }; // Prop amb. do material do Tronco
 	Vetor kdTronco = kaTronco; // Prop difusa do material do Tronco
 	Vetor keTronco = kaTronco; // Prop esp. do material do Tronco
 	double brilhoTronco = 5; // Fator de brilho especular
@@ -154,17 +145,17 @@ namespace Cena
 	// Cone cone (baseCone, verticeCone, raioCone, materialCone);
 
 	// Informacoes da Arvore ***************************************************
-	double raioArvore = 150; // Raio da Arvore em cm
-	Ponto centroArvore { 0, 0, 0 }; // Centro da Arvore
+	// double raioArvore = 150; // Raio da Arvore em cm
+	// Ponto centroArvore { 0, 0, 0 }; // Centro da Arvore
 	// Objeto da Arvore
-	Esfera arvore (centroArvore, raioArvore, materialArvore);
+	// Esfera arvore (centroArvore, raioArvore, materialArvore);
 
 	// Informacoes do Tronco ***************************************************
-	double raioTronco = 75; // Raio da base do Tronco em cm
-	Ponto baseTronco { 0, 0, 0 }; // Centro da base do Tronco 
-	Ponto verticeTronco { 0, 300, 0 }; // Posicao do Vertice do Tronco
+	// double raioTronco = 75; // Raio da base do Tronco em cm
+	// Ponto baseTronco { 0, 0, 0 }; // Centro da base do Tronco 
+	// Ponto verticeTronco { 0, 300, 0 }; // Posicao do Vertice do Tronco
 	// Objeto do Tronco
-	Cone tronco (baseTronco, verticeTronco, raioTronco, materialTronco);
+	// Cone tronco (baseTronco, verticeTronco, raioTronco, materialTronco);
 
 	// Informacoes do Plano do Chao ********************************************
 	Ponto pontoChao { 0, 0, 0 }; // Ponto presente no plano do chao
@@ -184,18 +175,12 @@ namespace Cena
 	// Objeto do Plano do Fundo 2
 	Plano fundo2 (pontoFundo2, normalFundo2, materialFundo);
 
-	// Informacoes do Plano do Fundo 2 *****************************************
-	// Ponto pontoTeto { 0, 500, 0 }; // Ponto presente no plano do fundo 2
-	// Vetor normalTeto { 0, -1, 0 }; // Vetor normal ao plano do fundo 2
-	// Objeto do Plano do Fundo 2
-	// Plano teto (pontoTeto, normalTeto, materialTeto);
-
 	// Informacoes do Cubo *****************************************************
-	int verticesCubo = 8; // Numero de vertices do Cubo
-	int arestasCubo = 18; // Numero de arestas do Cubo
-	int facesCubo = 12; // Numero de faces do Cubo
+	// int verticesCubo = 8; // Numero de vertices do Cubo
+	// int arestasCubo = 18; // Numero de arestas do Cubo
+	// int facesCubo = 12; // Numero de faces do Cubo
 	// Objeto do Cubo
-	Malha cubo (verticesCubo, arestasCubo, facesCubo, materialCubo);
+	// Malha cubo (verticesCubo, arestasCubo, facesCubo, materialCubo);
 
 	// Informacoes do Quadrado *************************************************
 	// int verticesQuad = 4; // Numero de vertices do Quadrado
@@ -205,101 +190,46 @@ namespace Cena
 	// Malha quadrado (verticesQuad, arestasQuad, facesQuad, materialCubo);
 
 	// Informacoes da Piramide *************************************************
-	int verticesPiram = 5; // Numero de vertices da Piramide
-	int arestasPiram = 9; // Numero de vertices da Piramide
-	int facesPiram = 6; // Numero de vertices da Piramide
+	// int verticesPiram = 5; // Numero de vertices da Piramide
+	// int arestasPiram = 9; // Numero de vertices da Piramide
+	// int facesPiram = 6; // Numero de vertices da Piramide
 	// Objeto da Piramide
-	Malha piramide (verticesPiram, arestasPiram, facesPiram, materialTelhado);
+	// Malha piramide (verticesPiram, arestasPiram, facesPiram, materialTelhado);
 
 	Casa casa (materialCasa, materialTelhado);
-	Arvore arv (materialArvore, materialTronco);
-
-	// Objeto da Casa 1
-	Malha casa1 (verticesCubo, arestasCubo, facesCubo, materialCasa);
-	// Objeto da Casa 2
-	// Malha casa2 (verticesCubo, arestasCubo, facesCubo, materialCasa);
-	// Objeto da Casa 3
-	// Malha casa3 (verticesCubo, arestasCubo, facesCubo, materialCasa);
-	// Objeto da Casa 4
-	// Malha casa4 (verticesCubo, arestasCubo, facesCubo, materialCasa);
-
-	// Objeto do Telhado 1
-	Malha telhado1 (verticesPiram, arestasPiram, facesPiram, materialTelhado);
-	// Objeto do Telhado 2
-	// Malha telhado2 (verticesPiram, arestasPiram, facesPiram, materialTelhado);
-	// Objeto do Telhado 3
-	// Malha telhado3 (verticesPiram, arestasPiram, facesPiram, materialTelhado);
-	// Objeto do Telhado 4
-	// Malha telhado4 (verticesPiram, arestasPiram, facesPiram, materialTelhado);
-
-	// Objeto da Pista 1
-	// Malha pista1 (verticesQuad, arestasQuad, facesQuad, materialPista);
-	// Objeto da Pista 2
-	// Malha pista2 (verticesQuad, arestasQuad, facesQuad, materialPista);
-	// Objeto da Pista 3
-	// Malha pista3 (verticesQuad, arestasQuad, facesQuad, materialPista);
-	// Objeto da Pista 4
-	// Malha pista4 (verticesQuad, arestasQuad, facesQuad, materialPista);
-	// Objeto da Pista 5
-	// Malha pista5 (verticesQuad, arestasQuad, facesQuad, materialPista);
-	// Objeto da Pista 6
-	// Malha pista6 (verticesQuad, arestasQuad, facesQuad, materialPista);
+	Arvore arvore (materialArvore, materialTronco);
+	Poste poste (materialPoste);
 
 	// Informacoes do Poste ****************************************************
-	double raioPoste = 12; // Raio da base do Poste em cm
-	Ponto basePoste { 0, 0, 0 }; // Centro da base do Poste 
-	Ponto topoPoste = { 0, 500, 0 }; // Posicao do topo do Poste
-	// Objeto do Poste 1
-	Cilindro poste1 (basePoste, topoPoste, raioPoste, materialPoste);
-	// Objeto do Poste 2
-	// Cilindro poste2 (basePoste, topoPoste, raioPoste, materialPoste);
-	// Objeto do Poste 3
-	// Cilindro poste3 (basePoste, topoPoste, raioPoste, materialPoste);
-	// Objeto do Poste 4
-	// Cilindro poste4 (basePoste, topoPoste, raioPoste, materialPoste);
+	// double raioPoste = 12; // Raio da base do Poste em cm
+	// Ponto basePoste { 0, 0, 0 }; // Centro da base do Poste 
+	// Ponto topoPoste = { 0, 500, 0 }; // Posicao do topo do Poste
+	// Objeto do Poste 
+	// Cilindro poste (basePoste, topoPoste, raioPoste, materialPoste);
 
 	// Informacoes da Haste ****************************************************
-	double raioHaste = 6; // Raio da base da Haste em cm
-	Ponto baseHaste { 0, 0, 0 }; // Centro da base da Haste 
-	Ponto topoHaste = { 0, 100, 0 }; // Posicao do topo da Haste
-	// Objeto da Haste 1
-	Cilindro haste1 (baseHaste, topoHaste, raioHaste, materialPoste);
-	// Objeto da Haste 2
-	// Cilindro haste2 (baseHaste, topoHaste, raioHaste, materialPoste);
-	// Objeto da Haste 3
-	// Cilindro haste3 (baseHaste, topoHaste, raioHaste, materialPoste);
-	// Objeto da Haste 4
-	// Cilindro haste4 (baseHaste, topoHaste, raioHaste, materialPoste);
-
-	// Informacoes do Suporte ****************************************************
-	double raioSuporte = 0.5; // Raio da base do Suporte em cm
-	Ponto baseSuporte { 0, 0, 0 }; // Centro da base do Suporte 
-	Ponto verticeSuporte = { 0, 1, 0 }; // Posicao do topo do Suporte
-	// Objeto do Suporte 1
-	Cone suporte1 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
-	// Objeto do Suporte 2
-	// Cone suporte2 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
-	// Objeto do Suporte 3
-	// Cone suporte3 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
-	// Objeto do Suporte 4
-	// Cone suporte4 (baseSuporte, verticeSuporte, raioSuporte, materialPoste);
+	// double raioHaste = 6; // Raio da base da Haste em cm
+	// Ponto baseHaste { 0, 0, 0 }; // Centro da base da Haste 
+	// Ponto topoHaste = { 0, 100, 0 }; // Posicao do topo da Haste
+	// Objeto da Haste 
+	// Cilindro haste (baseHaste, topoHaste, raioHaste, materialPoste);
 
 	void definirMalha() 
 	{
         // Definindo os vertices da Piramide ***********************************
-        piramide.setVertice(0, { 0, 0, 10 }); piramide.setVertice(1, { 10, 0, 10 });
-        piramide.setVertice(2, { 10, 0, 0 }); piramide.setVertice(3, { 0, 0, 0 }); 
-		piramide.setVertice(4, { 5, 5, 5 });
+        // piramide.setVertice(0, { 0, 0, 10 }); piramide.setVertice(1, { 10, 0, 10 });
+        // piramide.setVertice(2, { 10, 0, 0 }); piramide.setVertice(3, { 0, 0, 0 }); 
+		// piramide.setVertice(4, { 5, 5, 5 });
 		// Definindo as arestas da Piramide
-        piramide.setAresta(0, 0, 1); piramide.setAresta(1, 1, 2); 
-		piramide.setAresta(2, 2, 3); piramide.setAresta(3, 3, 0); 
-        piramide.setAresta(4, 0, 4); piramide.setAresta(5, 1, 4); 
-		piramide.setAresta(6, 2, 4); piramide.setAresta(7, 3, 4); 
-		piramide.setAresta(8, 0, 2);
+        // piramide.setAresta(0, 0, 1); piramide.setAresta(1, 1, 2); 
+		// piramide.setAresta(2, 2, 3); piramide.setAresta(3, 3, 0); 
+        // piramide.setAresta(4, 0, 4); piramide.setAresta(5, 1, 4); 
+		// piramide.setAresta(6, 2, 4); piramide.setAresta(7, 3, 4); 
+		// piramide.setAresta(8, 0, 2);
 		// Definindo as faces da Piramide
-		piramide.setFace(0, 0, 5, 4); piramide.setFace(1, 1, 6, 5); 
-		piramide.setFace(2, 2, 7, 6); piramide.setFace(3, 3, 4, 7); 
-		piramide.setFace(4, 1, 0, 8); piramide.setFace(5, 3, 2, 8);
+		// piramide.setFace(0, 0, 5, 4); piramide.setFace(1, 1, 6, 5); 
+		// piramide.setFace(2, 2, 7, 6); piramide.setFace(3, 3, 4, 7); 
+		// piramide.setFace(4, 1, 0, 8); piramide.setFace(5, 3, 2, 8);
 		
         // Definindo os vertices do Quadrado ***********************************
         // quadrado.setVertice(0, { 0, 0.1, 10 }); quadrado.setVertice(1, { 10, 0.1, 10 });
@@ -312,27 +242,27 @@ namespace Cena
 		// quadrado.setFace(0, 0, 1, 4); quadrado.setFace(1, 2, 3, 4); 
 
         // Definindo os vertices do Cubo ***************************************
-        cubo.setVertice(0, { 0, 0, 10 }); cubo.setVertice(1, { 10, 0, 10 });
-        cubo.setVertice(2, { 10, 10, 10 }); cubo.setVertice(3, { 0, 10, 10 }); 
-        cubo.setVertice(4, { 0, 0, 0 }); cubo.setVertice(5, { 10, 0, 0 }); 
-        cubo.setVertice(6, { 10, 10, 0 }); cubo.setVertice(7, { 0, 10, 0 }); 
+        // cubo.setVertice(0, { 0, 0, 10 }); cubo.setVertice(1, { 10, 0, 10 });
+        // cubo.setVertice(2, { 10, 10, 10 }); cubo.setVertice(3, { 0, 10, 10 }); 
+        // cubo.setVertice(4, { 0, 0, 0 }); cubo.setVertice(5, { 10, 0, 0 }); 
+        // cubo.setVertice(6, { 10, 10, 0 }); cubo.setVertice(7, { 0, 10, 0 }); 
         // Definindo as arestas do Cubo
-        cubo.setAresta(0, 0, 1); cubo.setAresta(1, 1, 2); 
-        cubo.setAresta(2, 2, 3); cubo.setAresta(3, 3, 0); 
-        cubo.setAresta(4, 0, 4); cubo.setAresta(5, 1, 5); 
-        cubo.setAresta(6, 2, 6); cubo.setAresta(7, 3, 7); 
-        cubo.setAresta(8, 4, 5); cubo.setAresta(9, 5, 6); 
-        cubo.setAresta(10, 6, 7); cubo.setAresta(11, 7, 4); 
-        cubo.setAresta(12, 1, 3); cubo.setAresta(13, 2, 5); 
-        cubo.setAresta(14, 4, 6); cubo.setAresta(15, 0, 7); 
-        cubo.setAresta(16, 3, 6); cubo.setAresta(17, 0, 5); 
+        // cubo.setAresta(0, 0, 1); cubo.setAresta(1, 1, 2); 
+        // cubo.setAresta(2, 2, 3); cubo.setAresta(3, 3, 0); 
+        // cubo.setAresta(4, 0, 4); cubo.setAresta(5, 1, 5); 
+        // cubo.setAresta(6, 2, 6); cubo.setAresta(7, 3, 7); 
+        // cubo.setAresta(8, 4, 5); cubo.setAresta(9, 5, 6); 
+        // cubo.setAresta(10, 6, 7); cubo.setAresta(11, 7, 4); 
+        // cubo.setAresta(12, 1, 3); cubo.setAresta(13, 2, 5); 
+        // cubo.setAresta(14, 4, 6); cubo.setAresta(15, 0, 7); 
+        // cubo.setAresta(16, 3, 6); cubo.setAresta(17, 0, 5); 
         // Definindo as faces do Cubo
-        cubo.setFace(0, 3, 0, 12); cubo.setFace(1, 1, 2, 12);
-        cubo.setFace(2, 1, 5, 13); cubo.setFace(3, 9, 6, 13);
-        cubo.setFace(4, 9, 8, 14); cubo.setFace(5, 11, 10, 14);
-        cubo.setFace(6, 4, 3, 15); cubo.setFace(7, 7, 11, 15);
-        cubo.setFace(8, 2, 6, 16); cubo.setFace(9, 10, 7, 16);
-        cubo.setFace(10, 4, 8, 17); cubo.setFace(11, 5, 0, 17);
+        // cubo.setFace(0, 3, 0, 12); cubo.setFace(1, 1, 2, 12);
+        // cubo.setFace(2, 1, 5, 13); cubo.setFace(3, 9, 6, 13);
+        // cubo.setFace(4, 9, 8, 14); cubo.setFace(5, 11, 10, 14);
+        // cubo.setFace(6, 4, 3, 15); cubo.setFace(7, 7, 11, 15);
+        // cubo.setFace(8, 2, 6, 16); cubo.setFace(9, 10, 7, 16);
+        // cubo.setFace(10, 4, 8, 17); cubo.setFace(11, 5, 0, 17);
     }
 
 	// Fontes de luz ***********************************************************
@@ -344,22 +274,16 @@ namespace Cena
 	Pontual pontual (intensePontual, posicaoPontual);
 
 	// Informacoes da Fonte Spot ***********************************************
-	Vetor intenseSpot = { 0.3, 0.3, 0.3 }; 
+	Vetor intenseSpot = { 0.5, 0.5, 0.5 }; 
 	Ponto posicaoSpot = { 0, 0, 0 };
 	Vetor direcaoSpot = { 0, -1, 0 };
-	double anguloSpot = PI / 3;
+	double anguloSpot = (3 * PI) / 8;
 	// Objeto da fonte de luz Spot
-	Spot spot1 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
-	// Objeto da fonte de luz Spot
-	// Spot spot2 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
-	// Objeto da fonte de luz Spot
-	// Spot spot3 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
-	// Objeto da fonte de luz Spot
-	// Spot spot4 (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
+	Spot spot (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 
 	// Informacoes da Fonte Direcional *****************************************
 	Vetor intenseDirecional = { 0.5, 0.5, 0.5 };
-	Vetor direcaoDirecional = { -1, -1, -2 };
+	Vetor direcaoDirecional = { 0, -1, 0 };
 	// Objeto da fonte de luz Direcional
 	Direcional direcional (intenseDirecional, direcaoDirecional);
 
@@ -367,13 +291,21 @@ namespace Cena
     Vetor luzAmbiente { 0.2, 0.2, 0.2 };
 
 	// Informacoes da Janela ***************************************************
-	double xminJanela = -30; // Valor do lado esquerdo da janela em cm
-	double xmaxJanela = 30; // Valor do lado direito da janela em cm
-	double yminJanela = -30; // Valor da parte de cima da janela em cm
-	double ymaxJanela = 30; // Valor da parte de baixo da janela em cm
-	double dJanela = 80; // Distancia da janela em cm
+	double xminJanela = -72; // Valor da parte de cima da janela em cm
+	double xmaxJanela = 72; // Valor da parte de baixo da janela em cm
+	double yminJanela = -40.5; // Valor do lado esquerdo da janela em cm
+	double ymaxJanela = 40.5; // Valor do lado direito da janela em cm
+	double dJanela = 300; // Distancia da janela em cm
 	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
+
+	// Informacoes da Camera ***************************************************
+	// Vista em Diagonal
+	Ponto eye = { 500, 1000, 2000 };
+	Ponto at = { 500, 0, 0 };
+	Ponto up = { 300, 1000, 0 }; 
+	// Objeto da Camera 
+	Camera camera (eye, at, up);
 
 	// Lista de Objetos da Cena ************************************************
 	Lista<Objeto> cenario;
@@ -381,119 +313,23 @@ namespace Cena
     void definirCena() 
     {
 		// Realizando transformacoes *******************************************
-		//
-		// Ajustando tamanho e local da pista 1
-		// quadrado.copiar(&pista1);
-		// Transformacao::escala(&pista1, { 10, 1, 1 });
-		// Transformacao::translacao(&pista1, { 0, 0, 20 });
-		// Ajustando tamanho e local da pista 2
-		// pista1.copiar(&pista2);
-		// Transformacao::translacao(&pista2, { 0, 0, 20 });
-		// Ajustando tamanho e local da pista 3
-		// pista2.copiar(&pista3);
-		// Transformacao::translacao(&pista3, { 0, 0, 20 });
-		// Ajustando tamanho e local da pista 4
-		// quadrado.copiar(&pista4);
-		// Transformacao::escala(&pista4, { 1, 1, 10 });
-		// Transformacao::translacao(&pista4, { 20, 0, 0 });
-		// Ajustando tamanho e local da pista 5
-		// pista4.copiar(&pista5);
-		// Transformacao::translacao(&pista5, { 20, 0, 0 });
-		// Ajustando tamanho e local da pista 6
-		// pista5.copiar(&pista6);
-		// Transformacao::translacao(&pista6, { 20, 0, 0 });
-
-		// Ajustando local das casas
-		cubo.copiar(&casa1); 
-		// cubo.copiar(&casa2); 
-		// cubo.copiar(&casa3); cubo.copiar(&casa4);
-		Transformacao::escala(&casa1, { 50, 30, 30 });
-		Transformacao::translacao(&casa1, { 700, 0, 300 });
-		// Transformacao::translacao(&casa2, { 50, 0, 30 });
-		// Transformacao::translacao(&casa3, { 30, 0, 50 });
-		// Transformacao::translacao(&casa4, { 50, 0, 50 });
-		// Ajustando local dos telhados
-		piramide.copiar(&telhado1); 
-		// piramide.copiar(&telhado2);
-		// piramide.copiar(&telhado3); piramide.copiar(&telhado4);  
-		Transformacao::escala(&telhado1, { 50, 30, 30 });
-		Transformacao::translacao(&telhado1, { 700, 300, 300 });
-		// Transformacao::translacao(&telhado2, { 50, 10, 30 });
-		// Transformacao::translacao(&telhado3, { 30, 10, 50 });
-		// Transformacao::translacao(&telhado4, { 50, 10, 50 });
-		// Ajustando local dos postes
-		Transformacao::translacao(&poste1, { 400, 0, 700 });
-		// Transformacao::translacao(&poste2, { 70, 0, 20 });
-		// Transformacao::translacao(&poste3, { 20, 0, 70 });
-		// Transformacao::translacao(&poste4, { 70, 0, 70 });
-		// Ajustando direcao e local das hastes
-		Transformacao::rotacaoZ(&haste1, -PI / 2);
-		Transformacao::translacao(&haste1, { 400, 500-6, 700 });
-		// Transformacao::rotacaoY(&haste2, -(3 * PI) / 4);
-		// Transformacao::translacao(&haste2, { 70, 24.75, 20 });
-		// Transformacao::rotacaoY(&haste3, PI / 4);
-		// Transformacao::translacao(&haste3, { 20, 24.75, 70 });
-		// Transformacao::rotacaoY(&haste4, (3 * PI) / 4);
-		// Transformacao::translacao(&haste4, { 70, 24.75, 70 });
-
-		// Transformacao::translacao(&suporte1, { 23.5, 23.5, 23.5 });
-		// Transformacao::translacao(&suporte2, { 66.5, 23.5, 23.5 });
-		// Transformacao::translacao(&suporte3, { 23.5, 23.5, 66.5 });
-		// Transformacao::translacao(&suporte4, { 66.5, 23.5, 66.5 });
-
-		Transformacao::translacao(&spot1, { 500, 500-13, 700 });
-		// Transformacao::translacao(&spot2, { 66.5, 23, 23.5 });
-		// Transformacao::translacao(&spot3, { 23.5, 23, 66.5 });
-		// Transformacao::translacao(&spot4, { 66.5, 23, 66.5 });
-
-		Transformacao::translacao(&arv, { 400, 0, 400 });
-		Transformacao::translacao(&arvore, { 400, 300, 400 });
-		Transformacao::translacao(&tronco, { 400, 0, 400 });
+		// Ajustando objeto da casa
+		Transformacao::escala(&casa, { 500, 300, 400 });
+		Transformacao::translacao(&casa, { 600, 0, 200 });
+		// Ajustando objeto da arvore
+		Transformacao::translacao(&arvore, { 400, 0, 400 });
+		// Ajustando objeto do poste
+		Transformacao::translacao(&poste, { 400, 0, 700 });
+		// Ajustando objeto da luz do poste
+		Transformacao::translacao(&spot, { 500, 500-13, 700 });
 
         // Adicionando os objetos na cena **************************************
-        // cenario.add(&esfera);
-        // cenario.add(&cilindro);
-        // cenario.add(&cone);
-        // cenario.add(&cubo);
-		// cenario.add(&quadrado);
-		// cenario.add(&piramide);
-
-		cenario.add(&arv);
-		cenario.add(&casa);
-		// cenario.add(&arvore);
-		// cenario.add(&tronco);
-
-		// Adicionando objetos das pistas
-		// cenario.add(&pista1); cenario.add(&pista2); // cenario.add(&pista3);
-		// cenario.add(&pista4); cenario.add(&pista5); // cenario.add(&pista6);
-		// Adicionando objetos das casas
-		cenario.add(&casa1); 
-		// cenario.add(&casa2); 
-		// cenario.add(&casa3); cenario.add(&casa4);
-		// Adicionando objetos dos telhados
-		cenario.add(&telhado1); 
-		// cenario.add(&telhado2); 
-		// cenario.add(&telhado3); cenario.add(&telhado4);
-		// Adicionando objetos dos postes
-		cenario.add(&poste1);
-		// cenario.add(&poste2);
-		// cenario.add(&poste3);
-		// cenario.add(&poste4);
-		// Adicionando objetos das hastes
-		cenario.add(&haste1);
-		// cenario.add(&haste2);
-		// cenario.add(&haste3);
-		// cenario.add(&haste4);
-		// Adicionando objetos dos suportes
-		// cenario.add(&suporte1);
-		// cenario.add(&suporte2);
-		// cenario.add(&suporte3);
-		// cenario.add(&suporte4);
-		// Adicionando planos limitantes
+		cenario.add(&arvore);
+		cenario.add(&poste);
+		cenario.add(&casa); 
         cenario.add(&chao);
         cenario.add(&fundo1);
         cenario.add(&fundo2);
-		// cenario.add(&teto);
     }
 
 	// Lista de Fontes de luz **************************************************
@@ -502,11 +338,8 @@ namespace Cena
     void definirFontes() 
     {
         // Adicionando as fontes na lista
-        fontes.add(&spot1);
-        // fontes.add(&spot2);
-        // fontes.add(&spot3);
-        // fontes.add(&spot4);
-        // fontes.add(&pontual);
+        fontes.add(&spot);
+        fontes.add(&pontual);
         // fontes.add(&direcional);
     }
 } // namespace Cena

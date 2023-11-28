@@ -126,7 +126,6 @@ private:
     double raio;
 
 public:
-    Esfera () {}
     Esfera(Ponto c, double r, Material m) : centro{c}, raio{r} { material = m; }
 
     double intersecao (Raio r) override;
@@ -254,7 +253,6 @@ class Cone : public Objeto
     double altura; // altura do cone 
 
 public:
-    Cone () {}
     Cone (Ponto b, Ponto v, double r, Material m) : base{b}, vertice{v}, raio{r}
     {
         direcao = (v - b); 
@@ -333,7 +331,6 @@ private:
     int face_atingida = -1;
 
 public:
-
     Malha(int v, int a, int f, Material m) : numvertices{v}, numarestas{a}, numfaces{f}
     {
         vertices = new Ponto[v];
@@ -446,20 +443,6 @@ public:
         }
     }
 }; // fim class Malha
-
-class Textura : public Objeto 
-{
-private:
-    double xmin, xmax, ymin, ymax; // limitantes da textura
-    Plano plano; // plano que contem a textura
-
-public:
-    double intersecao (Raio raio) override;
-
-    Vetor getNormal (Ponto p) const override { return plano.getNormal(p); }
-
-    void transformar (Matriz matriz) override { plano.transformar(matriz); }
-};
 //
 // Fim da Hierarquia de classes Objeto 
 

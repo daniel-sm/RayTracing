@@ -15,10 +15,10 @@ public:
         telhado = new Malha (5, 9, 6, mt);
 
         // Definindo os vertices da Parede *************************************
-        parede->setVertice(0, { 0, 0, 10 }); parede->setVertice(1, { 10, 0, 10 });
-        parede->setVertice(2, { 10, 10, 10 }); parede->setVertice(3, { 0, 10, 10 }); 
-        parede->setVertice(4, { 0, 0, 0 }); parede->setVertice(5, { 10, 0, 0 }); 
-        parede->setVertice(6, { 10, 10, 0 }); parede->setVertice(7, { 0, 10, 0 }); 
+        parede->setVertice(0, { 0, 0, 1 }); parede->setVertice(1, { 1, 0, 1 });
+        parede->setVertice(2, { 1, 1, 1 }); parede->setVertice(3, { 0, 1, 1 }); 
+        parede->setVertice(4, { 0, 0, 0 }); parede->setVertice(5, { 1, 0, 0 }); 
+        parede->setVertice(6, { 1, 1, 0 }); parede->setVertice(7, { 0, 1, 0 }); 
         // Definindo as arestas da Parede
         parede->setAresta(0, 0, 1); parede->setAresta(1, 1, 2); 
         parede->setAresta(2, 2, 3); parede->setAresta(3, 3, 0); 
@@ -38,9 +38,9 @@ public:
         parede->setFace(10, 4, 8, 17); parede->setFace(11, 5, 0, 17);
 
         // Definindo os vertices do telhado ************************************
-        telhado->setVertice(0, { 0, 0, 10 }); telhado->setVertice(1, { 10, 0, 10 });
-        telhado->setVertice(2, { 10, 0, 0 }); telhado->setVertice(3, { 0, 0, 0 }); 
-		telhado->setVertice(4, { 5, 5, 5 });
+        telhado->setVertice(0, { 0, 1, 1 }); telhado->setVertice(1, { 1, 1, 1 });
+        telhado->setVertice(2, { 1, 1, 0 }); telhado->setVertice(3, { 0, 1, 0 }); 
+		telhado->setVertice(4, { 0.5, 1.5, 0.5 });
 		// Definindo as arestas do telhado
         telhado->setAresta(0, 0, 1); telhado->setAresta(1, 1, 2); 
 		telhado->setAresta(2, 2, 3); telhado->setAresta(3, 3, 0); 
@@ -111,7 +111,7 @@ public:
         folha = new Esfera ({ 0, 300, 0 }, 150, mf);
         tronco = new Cone({ 0, 0, 0 }, { 0, 300, 0 }, 75, mt);
     }
-    // ~Arvore () { delete folha; delete tronco; }
+    ~Arvore () { delete folha; delete tronco; }
 
     double intersecao (Raio raio) override
     {
@@ -156,6 +156,95 @@ public:
         folha->transformar(matriz);
         tronco->transformar(matriz);
     }
+};
+
+class Poste : public Objeto
+{
+private:
+    Cilindro *horizontal, *vertical;
+    Objeto* atingido;
+public:
+    Poste (Material mp) 
+    {
+        vertical = new Cilindro(Ponto{ 0, 0, 0 }, Vetor{0, 1, 0}, 12, 500, mp);
+        horizontal = new Cilindro(Ponto{ 0, 500-6, 0}, Vetor{ 1, 0, 0 }, 6, 100, mp);
+    }
+    ~Poste () { delete horizontal; delete vertical; };
+
+    double intersecao (Raio raio)
+    {
+        double t_ver = horizontal->intersecao(raio);
+        double t_hor = vertical->intersecao(raio);
+
+        if (t_ver <= 0) 
+        {
+            atingido = vertical;
+            material = vertical->material;
+            return t_hor;
+        } 
+        else if (t_hor <= 0) 
+        {
+            atingido = horizontal;
+            material = horizontal->material;
+            return t_ver;
+        }
+        else if (t_ver < t_hor)
+        {
+            atingido = horizontal;
+            material = horizontal->material;
+            return t_ver;
+        }
+        else {
+            atingido = vertical;
+            material = vertical->material;
+            return t_hor;
+        }
+    }
+    
+    Vetor getNormal (Ponto ponto) const override
+    {
+        if (atingido == horizontal)
+            return horizontal->getNormal(ponto);
+        else 
+            return vertical->getNormal(ponto);
+    }
+
+    void transformar (Matriz matriz) override
+    {
+        horizontal->transformar(matriz);
+        vertical->transformar(matriz);
+    }
+};
+
+class Textura : public Objeto 
+{
+private:
+    Malha* plano;
+public:
+    Textura (Ponto p0, Ponto p1, Ponto p2, Ponto p3) 
+    { // Assume ordem antihoraria nos vertices
+        // Criando malha da textura
+        plano = new Malha(4, 5, 2, {});
+        // Definindo os vertices da malha na ordem que foi assumida
+        plano->setVertice(0, p0); plano->setVertice(1, p1); 
+        plano->setVertice(2, p2); plano->setVertice(3, p3); 
+        // Definindo as arestas da malha na ordem assumida
+        plano->setAresta(0, 0, 1); plano->setAresta(1, 1, 2); 
+        plano->setAresta(2, 2, 3); plano->setAresta(3, 3, 0);
+        plano->setAresta(4, 0, 2);
+        // Definindo as faces da malha na ordem antihoraria
+        plano->setFace(0, 0, 1, 4); plano->setFace(1, 2, 3, 4);
+    }
+    ~Textura () { delete plano; }
+
+    double intersecao (Raio raio) override 
+    {
+        return plano->intersecao(raio);
+    }
+
+    Vetor getNormal (Ponto p) const override { return plano->getNormal(p); }
+
+    void transformar (Matriz matriz) override { plano->transformar(matriz); }
 };
 
 #endif

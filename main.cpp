@@ -10,7 +10,7 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
-// #include <SDL_image.h>
+#include <SDL_image.h>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
 #include "include/intersecoes.hpp"
@@ -176,21 +176,11 @@ int main(int argc, char** argv)
 	Vetor dirProjecao = { 0.2, 0, -1 };
 
 	// Informacoes do Canvas ***************************************************
-	int linhas = 700; // Numero de linhas da grade do canvas
-	int colunas = 700; // Numero de colunas da grade do canvas
+	int linhas = 495 /*700*/; // Numero de linhas da grade do canvas
+	int colunas = 880 /*1244*/; // Numero de colunas da grade do canvas
 
-	// Informacoes da Camera ***************************************************
-	// Vista em Diagonal
-	Ponto eye = { 500, 1000, 2000 };
-	Ponto at = { 500, 0, 0 };
-	Ponto up = { 500, 1000, 0 }; 
-	// Objeto da Camera 
-	Camera camera (eye, at, up);
 	// Transformando de Mundo para Camera
-	camera.toCamera(Cena::cenario, Cena::fontes);
-
-	// Arvore arv (Cena::materialArvore, Cena::materialTronco);
-	// Cena::cenario.add(&arv);
+	Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 
 	// Matriz de cores *********************************************************
 	Cor** colors = new Cor*[linhas];
@@ -215,7 +205,8 @@ int main(int argc, char** argv)
 		SDL_Log("Não foi possível inicializar o SDL! SDL_Error: %s", SDL_GetError());
 		return 1;
 	}
-  
+
+
 	// Criando uma janela
 	SDL_Window* window = SDL_CreateWindow(
 		"Computação Gráfica",   // Título da Janela
@@ -270,19 +261,19 @@ int main(int argc, char** argv)
 					switch (event.key.keysym.sym)
 					{
 					case SDLK_x:
-						camera.toWorld(Cena::cenario, Cena::fontes);
+						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 10, 0, 0 });
-						camera.toCamera(Cena::cenario, Cena::fontes);
+						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_y:
-						camera.toWorld(Cena::cenario, Cena::fontes);
+						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 0, 10, 0 });
-						camera.toCamera(Cena::cenario, Cena::fontes);
+						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_z:
-						camera.toWorld(Cena::cenario, Cena::fontes);
+						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 0, 0, 10 });
-						camera.toCamera(Cena::cenario, Cena::fontes);
+						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					default:
 						break;
