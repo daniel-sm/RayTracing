@@ -152,9 +152,9 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 	for (int l = 0; l < linhas; ++l) {
 		for (int c = 0; c < colunas; ++c) {
 			// Arredondando para valor inteiro 
-			colors[l][c].r = floor(colors[l][c].r / maiorCor);
-			colors[l][c].g = floor(colors[l][c].g / maiorCor);
-			colors[l][c].b = floor(colors[l][c].b / maiorCor);
+			colors[l][c].r = (int) (colors[l][c].r / maiorCor);
+			colors[l][c].g = (int) (colors[l][c].g / maiorCor);
+			colors[l][c].b = (int) (colors[l][c].b / maiorCor);
 		}
 	}
 }

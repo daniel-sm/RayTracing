@@ -312,7 +312,7 @@ public:
 
 class Malha : public Objeto
 {
-friend Textura;
+friend class Textura;
 private:
     // estrutura de Aresta para a lista de arestas da malha
     struct Aresta { int v1, v2; };
