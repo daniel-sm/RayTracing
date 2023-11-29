@@ -219,7 +219,7 @@ public:
 class Textura : public Objeto 
 {
 private:
-    // SDL_Surface* textura;
+    SDL_Surface* textura;
     // Plano* plano;
     // double w_min, w_max, h_min, h_max;
     // double height, width;
@@ -263,7 +263,7 @@ public:
 */
 // /*
     Textura (Ponto p0, Ponto p1, Ponto p2, Ponto p3, SDL_Texture* texture) 
-    { // Assume ordem antihoraria nos vertices
+    { // Assume ordem antihoraria com p0 sendo o vertice inferior esquerdo
         // Criando malha da textura
         plano = new Malha(4, 5, 2, {});
         // Definindo os vertices da malha na ordem que foi assumida
@@ -278,7 +278,6 @@ public:
     }
     ~Textura () { delete plano; }
 
-    
     double intersecao (Raio raio) 
     {
         // variavel que guarda o menor t de todas intersecoes
@@ -286,7 +285,7 @@ public:
         // variavel que guarda o valor de t de cada intersecao
         double t_int = -1; 
         // variavel que guarda as coordenadas baricentricas dos pontos
-        Vetor c[2] = {{-1,-1,-1}, {-1,-1,-1}};
+        double c[][3] = {{ -1, -1, -1 }, { -1, -1, -1 }};
 
         // percorrendo todas as faces da malha
         for (int i = 0; i < plano->numfaces; ++i)
@@ -385,7 +384,12 @@ public:
 
                         // se negativo entao intersecao invalida
                         if (c3 < 0) t_int = -1;
-                        // senao nao precisa fazer nada pois o t_int já é valido
+                        else // senao o t_int já é valido 
+                        { // salve as coordenadas baricentricas
+                            c[i][0] = c1; 
+                            c[i][1] = c2; 
+                            c[i][2] = c3; 
+                        }
                     }
                 }
             }
@@ -405,8 +409,26 @@ public:
                 // se menor_t for invalido, apenas atualiza o valor
                 else { menor_t = t_int; plano->face_atingida = i; }
             }
-            // Salvando o valor das coordenadas baricentricas 
-            // CONTINUAR DAQUI #####################################################################
+        }
+        int face = plano->face_atingida;
+        // Salvando o material da coordenada atingida 
+        if (face != -1)
+        {
+            double u, v;
+
+            if (face == 0) 
+            {
+                u = (c[face][1] * 1) + (c[face][2] * 1);
+                v = (c[face][2] * 1);
+            } else 
+            {
+                u = (c[face][0] * 1); 
+                v = (c[face][0] * 1) + (c[face][1] * 1); 
+            }
+
+            int pixel_x = floor((u * textura->w + 0.5));
+            int pixel_y = floor((v * textura->h + 0.5));
+
         }
         // retornando o valor do menor t calculado
         return menor_t;
