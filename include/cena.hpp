@@ -135,7 +135,7 @@ namespace Cena
 
 	// Informacoes da Fonte Direcional *****************************************
 	Vetor intenseDirecional = { 0.5, 0.5, 0.5 };
-	Vetor direcaoDirecional = { 0, -1, 0 };
+	Vetor direcaoDirecional = { -1, -1, -1 };
 	// Objeto da fonte de luz Direcional
 	Direcional direcional (intenseDirecional, direcaoDirecional);
 
@@ -182,9 +182,9 @@ namespace Cena
 		else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
-		cenario.add(&arvore);
+		// cenario.add(&arvore);
 		cenario.add(&poste);
-		cenario.add(&casa); 
+		// cenario.add(&casa); 
         cenario.add(&chao);
         cenario.add(&fundoesq);
         cenario.add(&fundodir);

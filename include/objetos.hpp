@@ -207,10 +207,9 @@ public:
         Vetor vetorPonto = (p - base);
         double escalarPonto = escalar(vetorPonto, direcao);
 
-        if (escalarPonto - 0.1 <= 0) return (-1) * direcao;
-        else if (escalarPonto + 0.1 >= altura) return direcao;
-        else
-        {
+        if (escalarPonto <= 0) return (-1) * direcao;
+        else if (escalarPonto >= altura) return direcao;
+        else {
             Vetor N = vetorPonto - (escalarPonto * direcao);
             return (N / raio);
         }
@@ -611,7 +610,7 @@ class Direcional : public Fonte
 private:
     Vetor direcao;
 public:
-    Direcional(Vetor i, Vetor d) : direcao{unitario(d)} { intensidade = i; }
+    Direcional(Vetor i, Vetor d) { intensidade = i; direcao = unitario(d); }
 
     bool sombra (Ponto p_int, Lista<Objeto> &cena, CR* CastRay) const override
     {
@@ -635,23 +634,42 @@ public:
     Vetor iluminacao (Vetor normal, Ponto p_int, Vetor dirRaio, Material material)
     const override
     {
-        // Vetor em direcao a fonte de luz  (unitario)
+        // Vetor unitario em direcao a fonte de luz
         Vetor luz = (-1) * direcao;
-        // Vetor em direcao a origem do raio (unitario)
+        // Vetor unitario em direcao a origem do raio
         Vetor visao = (-1) * dirRaio;
-        // Vetor em direcao ao raio refletido (unitario)
+        // Vetor unitario em direcao ao raio refletido
         Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
+
+        // std::cout << "int r: " << intensidade.x << " ";
+        // std::cout << "int g: " << intensidade.y << " ";
+        // std::cout << "int b: " << intensidade.z << std::endl;
+
+        // std::cout << "kd r: " << material.kd.x << " ";
+        // std::cout << "kd g: " << material.kd.y << " ";
+        // std::cout << "kd b: " << material.kd.z << std::endl;
 
         // Fator de Difusao
         double fatorDif = maior(0.0, escalar(luz, normal));
+        
+        // std::cout << "fator dif: " << fatorDif << std::endl;
+        
         // Calculo da intensidade da Luz Difusa
         Vetor Id = (material.kd * intensidade) * fatorDif; 
+
+        // std::cout << "Id r: " << Id.x << " ";
+        // std::cout << "Id g: " << Id.y << " ";
+        // std::cout << "Id b: " << Id.z << std::endl;
 
         // Fator Especular
         double fatorEsp = maior(0.0, escalar(reflexo, visao));
         fatorEsp = pow(fatorEsp, material.brilho);
         // Calculo da intensidade da Luz Especular 
         Vetor Ie = (material.ke * intensidade) * fatorEsp; 
+
+        // std::cout << "Ie r: " << Ie.x << " ";
+        // std::cout << "Ie g: " << Ie.y << " ";
+        // std::cout << "Ie b: " << Ie.z << std::endl;
 
         // Retorna a soma das duas intensidades
         return (Id + Ie);

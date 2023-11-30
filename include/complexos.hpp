@@ -111,8 +111,7 @@ public:
             material = parede->material;
             return t_parede;
         }
-        else
-        {
+        else {
             atingido = telhado;
             material = telhado->material;
             return t_telhado;
@@ -176,8 +175,7 @@ public:
             material = folha->material;
             return t_folha;
         }
-        else
-        {
+        else {
             atingido = tronco;
             material = tronco->material;
             return t_tronco;
@@ -220,24 +218,30 @@ public:
 
     double intersecao(Raio raio)
     {
-        double t_ver = horizontal->intersecao(raio);
-        double t_hor = vertical->intersecao(raio);
+        double t_h = horizontal->intersecao(raio);
+        // std::cout << "t_h: " << t_h << std::endl;
+        double t_v = vertical->intersecao(raio);
+        // std::cout << "t_v: " << t_v << std::endl;
 
-        if (t_ver <= 0) {
+        if (t_v <= 0) {
+            // std::cout << "v negativo" << std::endl;
+            atingido = horizontal;
+            return t_h;
+        }
+        else if (t_h <= 0) {
+            // std::cout << "h negativo" << std::endl;
             atingido = vertical;
-            return t_hor;
+            return t_v;
         }
-        else if (t_hor <= 0) {
-            atingido = horizontal;
-            return t_ver;
-        }
-        else if (t_ver < t_hor) {
-            atingido = horizontal;
-            return t_ver;
+        else if (t_v < t_h) {
+            // std::cout << "v < h" << std::endl;
+            atingido = vertical;
+            return t_v;
         }
         else {
-            atingido = vertical;
-            return t_hor;
+            // std::cout << "h <= v" << std::endl;
+            atingido = horizontal;
+            return t_h;
         }
     }
 
