@@ -188,6 +188,11 @@ namespace Cena
         cenario.add(&chao);
         cenario.add(&fundoesq);
         cenario.add(&fundodir);
+
+		std::cout << "poste: " << &poste << "\n";
+		std::cout << "chao: " << &chao << "\n";
+		std::cout << "fundoesq: " << &fundoesq << "\n";
+		std::cout << "fundodir: " << &fundodir << "\n";
     }
 
 	// Lista de Fontes de luz **************************************************
