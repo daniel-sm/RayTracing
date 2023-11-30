@@ -90,13 +90,13 @@ namespace Cena
 	Ponto pontoFundoEsq { 0, 0, 0 }; // Ponto do plano do Fundo Esquerdo
 	Vetor normalFundoEsq { 1, 0, 0 }; // Vetor normal ao plano do Fundo Esquerdo
 	// Objeto do Plano do Fundo Esquerdo
-	Plano fundoEsq (pontoFundoEsq, normalFundoEsq, materialFundo);
+	Plano fundoesq (pontoFundoEsq, normalFundoEsq, materialFundo);
 
 	// Informacoes do Plano do Fundo Direito ***********************************
 	Ponto pontoFundoDir { 0, 0, 0 }; // Ponto presente no plano do fundo Direito
 	Vetor normalFundoDir { 0, 0, 1 }; // Vetor normal ao plano do fundo Direito
 	// Objeto do Plano do Fundo Direito
-	Plano fundoDir (pontoFundoDir, normalFundoDir, materialFundo);
+	Plano fundodir (pontoFundoDir, normalFundoDir, materialFundo);
 
 	// Objeto Complexo da Casa *************************************************
 	// Composto de um cubo e uma piramide
@@ -107,6 +107,14 @@ namespace Cena
 	// Objeto Complexo do Poste ************************************************
 	// Composto de dois cilindro
 	Poste poste (materialPoste);
+
+	// Textura *****************************************************************
+	SDL_Surface *imagem = SDL_LoadBMP("../sample.bmp"); // Carrega a imagem 
+	Ponto esq_inf { 0, 0, 0 }; // Define o ponto inferior esquerdo 
+	Ponto dir_inf { 1, 0, 0 }; // Define o ponto inferior direito 
+	Ponto dir_sup { 1, 1, 0 }; // Define o ponto superior direito 
+	Ponto esq_sup { 0, 1, 0 }; // Define o ponto superior esquerdo 
+	Textura textura (esq_inf, dir_inf, dir_sup, esq_sup, imagem);
 
 	// *************************************************************************
 	// Fontes de luz ***********************************************************
@@ -158,6 +166,9 @@ namespace Cena
     void definirObjetos() 
     {
 		// Realizando transformacoes 
+		// Ajustando objeto da textura
+		Transformacao::escala(&textura, { 640, 426, 0 });
+		Transformacao::translacao(&textura, { 0, 0, 650 });
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
 		Transformacao::translacao(&casa, { 600, 0, 200 });
@@ -171,8 +182,9 @@ namespace Cena
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);
-        cenario.add(&fundoEsq);
-        cenario.add(&fundoDir);
+        cenario.add(&fundoesq);
+        cenario.add(&fundodir);
+		cenario.add(&textura);
     }
 
 	// Lista de Fontes de luz **************************************************

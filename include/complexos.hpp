@@ -269,15 +269,16 @@ private:
     SDL_Surface *textura;
     Malha *plano;
 
+    // Funcao que obtem a cor de um determinado pixel de uma textura
     Cor get_pixel_color(SDL_Surface *txt, int x, int y)
     {
         // obtendo o valor de bytes por pixel
         Uint8 bytesPixel = txt->format->BytesPerPixel;
 
         // Obtendo o endereco de um pixel especifico
-        // txt->pixels	= array contendo os pixels da textura 
-        // txt->pitch	= tamanho de uma linha de pixels (em bytes) 
-        // x and y		= posicao do pixel a ser obtido da textura
+        // txt->pixels = array contendo os pixels da textura 
+        // txt->pitch  = tamanho de uma linha de pixels em bytes 
+        // x, y	       = posicao do pixel a ser obtido da textura
         //                (0, 0) canto superior esquerdo da imagem
         Uint8 *pixel = (Uint8*) txt->pixels + y * txt->pitch + x * bytesPixel;
         Uint32 dados_pixel = *(Uint32*) pixel;
@@ -290,56 +291,8 @@ private:
         return { color.r, color.g, color.b };
     }
 
-    // int main(int argc, char *argv[])
-    // {
-    // 	SDL_Surface* pSurface = IMG_Load("Image.png");
-
-    // 	// Offset (4, 4) in the image/surface
-    // 	const SDL_Color Color = GetPixelColor(pSurface, 4, 4);
-
-    // 	if((Color.r == 255) && (Color.g == 0) && (Color.b == 0))
-    // 		std::cout << "The pixel is fully red" << std::endl;
-
-    // 	return 0;
-    // }
 
 public:
-    /*
-        Textura (SDL_Surface* txt, double x, double X, double y, double Y)
-        : w_min{x}, w_max{X}, h_min{y}, h_max{Y}, textura{txt}
-        {
-            plano = new Plano ({ 0, 0, 0 }, { 0, 1, 0 }, {});
-            width = w_max - w_min;
-            height = h_max - h_min;
-        }
-
-        double intersecao (Raio raio)
-        {
-            double t_int = plano->intersecao(raio);
-
-            if (t_int > 0)
-            {
-                Ponto p = raio.pontoIntersecao(t_int);
-
-                if ((p.x >= w_min and p.x <= w_max) and (p.z >= h_min and p.z <= h_max))
-                {
-                    double fatorw = (p.x - w_min) / width;
-                    double fatorh = (p.z - h_min) / height;
-
-                    int pixel_x = fatorw * textura->w;
-                    int pixel_y = fatorh * textura->h;
-
-                    std::cout << "x: " << pixel_x << "y: " << pixel_y << "\n";
-                }
-                else return -1;
-            }
-            return t_int;
-        }
-
-        Vetor getNormal(Ponto ponto) { return plano->getNormal(ponto); }
-
-        void transformar(Matriz matriz) { plano->transformar(matriz); }
-    */
     // /*
     Textura(Ponto p0, Ponto p1, Ponto p2, Ponto p3, SDL_Surface *txt)
     { // Assume ordem antihoraria com p0 sendo o vertice inferior esquerdo
@@ -523,44 +476,54 @@ public:
 
         int face = plano->face_atingida;
         // Salvando o material da coordenada atingida
-        if (face != -1)
+        if (menor_t > 0)
         {
             double u, v;
-            std::cout << "face: " << face << std::endl;
+            // std::cout << "face: " << face << std::endl;
+            // std::cout << "c1: " << c[face][0] << " ";
+            // std::cout << "c2: " << c[face][1] << " ";
+            // std::cout << "c3: " << c[face][2] << std::endl;
 
             if (face == 0)
-            {
-                u = (c[face][1] * 1) + (c[face][2] * 1);
-                v = (c[face][2] * 1);
+            {   // Face 0: (ordem antihoraria)
+                // Vertice 1 -> c[face][1] - (u: 0, v: 0)
+                // Vertice 2 -> c[face][2] - (u: 1, v: 0)
+                // Vertice 3 -> c[face][0] - (u: 1, v: 1)
+                u = (c[face][2] * 1) + (c[face][0] * 1); // v1: 0, v2: 1, v3: 1
+                v = (c[face][0] * 1);                    // v1: 0, v2: 0, v3: 1
             }
             else if (face == 1)
-            {
-                u = (c[face][0] * 1);
-                v = (c[face][0] * 1) + (c[face][1] * 1);
+            {   // Face 1: (ordem antihoraria)
+                // Vertice 3 -> c[face][1] - (u: 1, v: 1)
+                // Vertice 4 -> c[face][2] - (u: 0, v: 1)
+                // Vertice 1 -> c[face][0] - (u: 0, v: 0)
+                u = (c[face][0] * 1);                    // v3: 1, v4: 0, v1: 0
+                v = (c[face][1] * 1) + (c[face][2] * 1); // v3: 1, v4: 1, v1: 0
             }
 
             // std::cout << "calculando pixels..." << std::endl;
-            std::cout << "u: " << u << " v: " << v << std::endl;
+            // std::cout << "u: " << u << " v: " << v << std::endl;
             // std::cout << textura << std::endl;
-            std::cout << "w: " << textura->w << std::endl;
-            std::cout << "h: " << textura->h << std::endl;
+            // std::cout << "w: " << textura->w << std::endl;
+            // std::cout << "h: " << textura->h << std::endl;
 
-            int x_pixel = floor((u * textura->w + 0.5));
-            int y_pixel = floor((v * textura->h + 0.5));
+            int x_pixel = floor((u * (textura->w - 1) + 0.5));
+            int y_pixel = floor((v * (textura->h - 1) + 0.5));
+            y_pixel = textura->h - y_pixel - 1;
             // std::cout << "...ok pixels" << std::endl;
 
-            std::cout << "x: " << x_pixel << " y: " << y_pixel << std::endl;
+            // std::cout << "x: " << x_pixel << " y: " << y_pixel << std::endl;
             // std::cout << "pixels: " << textura->pixels << std::endl;
 
             Cor cor_pixel = get_pixel_color(textura, x_pixel, y_pixel);
 
-            std::cout << "cor: " << cor_pixel.r << " " << cor_pixel.g << " " << cor_pixel.b << std::endl;
+            // std::cout << "cor: " << cor_pixel.r << " " << cor_pixel.g << " " << cor_pixel.b << std::endl;
 
             Vetor ka = { cor_pixel.r / 255.0, cor_pixel.g / 255.0, cor_pixel.b / 255.0 };
             Vetor kd = ka;
             Vetor ke = ka; 
 
-            std::cout << "coef: " << ka.x << " " << ka.y << " " << ka.z << std::endl;
+            // std::cout << "coef: " << ka.x << " " << ka.y << " " << ka.z << std::endl;
 
             material = { ka, kd, ke, 1 };
         }
