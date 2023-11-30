@@ -210,6 +210,7 @@ public:
     {
         vertical = new Cilindro(Ponto{0, 0, 0}, Vetor{0, 1, 0}, 12, 500, mp);
         horizontal = new Cilindro(Ponto{0, 500 - 6, 0}, Vetor{1, 0, 0}, 6, 100, mp);
+        material = mp;
     }
     ~Poste()
     {
@@ -222,28 +223,20 @@ public:
         double t_ver = horizontal->intersecao(raio);
         double t_hor = vertical->intersecao(raio);
 
-        if (t_ver <= 0)
-        {
+        if (t_ver <= 0) {
             atingido = vertical;
-            material = vertical->material;
             return t_hor;
         }
-        else if (t_hor <= 0)
-        {
+        else if (t_hor <= 0) {
             atingido = horizontal;
-            material = horizontal->material;
             return t_ver;
         }
-        else if (t_ver < t_hor)
-        {
+        else if (t_ver < t_hor) {
             atingido = horizontal;
-            material = horizontal->material;
             return t_ver;
         }
-        else
-        {
+        else {
             atingido = vertical;
-            material = vertical->material;
             return t_hor;
         }
     }
@@ -291,9 +284,7 @@ private:
         return { color.r, color.g, color.b };
     }
 
-
 public:
-    // /*
     Textura(Ponto p0, Ponto p1, Ponto p2, Ponto p3, SDL_Surface *txt)
     { // Assume ordem antihoraria com p0 sendo o vertice inferior esquerdo
         // Salvando ponteiro para a textura
@@ -323,7 +314,6 @@ public:
 
     double intersecao(Raio raio) override
     {
-        // std::cout << "entrou: intersecao() \n";
         // variavel que guarda o menor t de todas intersecoes
         double menor_t = -1;
         // variavel que guarda o valor de t de cada intersecao
@@ -334,7 +324,6 @@ public:
         // percorrendo todas as faces da malha
         for (int i = 0; i < plano->numfaces; ++i)
         {
-            // std::cout << "inicio loop: " << i << std::endl;
             // obtendo id das arestas da face de id "i"
             int a1 = plano->faces[i].a1;
             int a2 = plano->faces[i].a2;
@@ -471,7 +460,6 @@ public:
                     plano->face_atingida = i;
                 }
             }
-            // std::cout << "fim loop: " << i << std::endl;
         }
 
         int face = plano->face_atingida;
@@ -479,10 +467,6 @@ public:
         if (menor_t > 0)
         {
             double u, v;
-            // std::cout << "face: " << face << std::endl;
-            // std::cout << "c1: " << c[face][0] << " ";
-            // std::cout << "c2: " << c[face][1] << " ";
-            // std::cout << "c3: " << c[face][2] << std::endl;
 
             if (face == 0)
             {   // Face 0: (ordem antihoraria)
@@ -501,33 +485,23 @@ public:
                 v = (c[face][1] * 1) + (c[face][2] * 1); // v3: 1, v4: 1, v1: 0
             }
 
-            // std::cout << "calculando pixels..." << std::endl;
-            // std::cout << "u: " << u << " v: " << v << std::endl;
-            // std::cout << textura << std::endl;
-            // std::cout << "w: " << textura->w << std::endl;
-            // std::cout << "h: " << textura->h << std::endl;
-
+            // posicao do pixel nas colunas
             int x_pixel = floor((u * (textura->w - 1) + 0.5));
+            // posicao do pixel nas linhas
             int y_pixel = floor((v * (textura->h - 1) + 0.5));
-            y_pixel = textura->h - y_pixel - 1;
-            // std::cout << "...ok pixels" << std::endl;
 
-            // std::cout << "x: " << x_pixel << " y: " << y_pixel << std::endl;
-            // std::cout << "pixels: " << textura->pixels << std::endl;
+            // como na imagem o y cresce do topo a base, deve inverter o valor 
+            // y do pixel da seguinte forma 
+            y_pixel = textura->h - y_pixel - 1; 
 
             Cor cor_pixel = get_pixel_color(textura, x_pixel, y_pixel);
-
-            // std::cout << "cor: " << cor_pixel.r << " " << cor_pixel.g << " " << cor_pixel.b << std::endl;
 
             Vetor ka = { cor_pixel.r / 255.0, cor_pixel.g / 255.0, cor_pixel.b / 255.0 };
             Vetor kd = ka;
             Vetor ke = ka; 
 
-            // std::cout << "coef: " << ka.x << " " << ka.y << " " << ka.z << std::endl;
-
             material = { ka, kd, ke, 1 };
         }
-        // std::cout << "saiu: intersecao() \n";
         // retornando o valor do menor t calculado
         return menor_t;
     }
@@ -535,7 +509,6 @@ public:
     Vetor getNormal(Ponto p) const override { return plano->getNormal(p); }
 
     void transformar(Matriz matriz) override { plano->transformar(matriz); }
-    // */
 };
 
 #endif

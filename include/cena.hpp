@@ -109,7 +109,7 @@ namespace Cena
 	Poste poste (materialPoste);
 
 	// Textura *****************************************************************
-	SDL_Surface *imagem = SDL_LoadBMP("../sample.bmp"); // Carrega a imagem 
+	SDL_Surface *imagem = SDL_LoadBMP("door_1348x1500.bmp"); // Carrega a imagem 
 	Ponto esq_inf { 0, 0, 0 }; // Define o ponto inferior esquerdo 
 	Ponto dir_inf { 1, 0, 0 }; // Define o ponto inferior direito 
 	Ponto dir_sup { 1, 1, 0 }; // Define o ponto superior direito 
@@ -147,15 +147,15 @@ namespace Cena
 	double xmaxJanela = 72; // Valor da parte de baixo da janela em cm
 	double yminJanela = -40.5; // Valor do lado esquerdo da janela em cm
 	double ymaxJanela = 40.5; // Valor do lado direito da janela em cm
-	double dJanela = 200; // Distancia da janela em cm
+	double dJanela = 150; // Distancia da janela em cm
 	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 500, 1000, 2000 };
-	Ponto at = { 500, 0, 0 };
-	Ponto up = { 500, 1000, 0 }; 
+	Ponto eye = { 600, 1000, 2000 };
+	Ponto at = { 600, 0, 0 };
+	Ponto up = { 600, 400, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 
@@ -166,16 +166,20 @@ namespace Cena
     void definirObjetos() 
     {
 		// Realizando transformacoes 
-		// Ajustando objeto da textura
-		Transformacao::escala(&textura, { 640, 426, 0 });
-		Transformacao::translacao(&textura, { 0, 0, 650 });
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
 		Transformacao::translacao(&casa, { 600, 0, 200 });
 		// Ajustando objeto da arvore
 		Transformacao::translacao(&arvore, { 400, 0, 400 });
 		// Ajustando objeto do poste
-		Transformacao::translacao(&poste, { 400, 0, 700 });
+		Transformacao::translacao(&poste, { 400, 0, 800 });
+		// Ajustando objeto da textura
+		if (imagem) {
+			Transformacao::escala(&textura, { 200, 222.551928701, 0 });
+			Transformacao::translacao(&textura, { 750, 0, 601 });
+			cenario.add(&textura);
+		}
+		else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
 		cenario.add(&arvore);
@@ -184,7 +188,6 @@ namespace Cena
         cenario.add(&chao);
         cenario.add(&fundoesq);
         cenario.add(&fundodir);
-		cenario.add(&textura);
     }
 
 	// Lista de Fontes de luz **************************************************
@@ -196,7 +199,8 @@ namespace Cena
 		// Realizando transformacoes 
 		// Ajustando objeto da luz do poste
 		// Posiciona a fonte spot na ponta do poste
-		Transformacao::translacao(&spot, { 500, 500-13, 700 });
+		Transformacao::translacao(&spot, { 500, 500-13, 800 });
+		// Transformacao::rotacaoZ(&spot, PI / 4);
 
         // Adicionando as fontes na lista 
         fontes.add(&spot);
