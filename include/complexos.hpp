@@ -492,12 +492,12 @@ public:
                 u = (c[face][2] * 1) + (c[face][0] * 1); // v1: 0, v2: 1, v3: 1
                 v = (c[face][0] * 1);                    // v1: 0, v2: 0, v3: 1
             }
-            else if (face == 1)
+            else 
             {   // Face 1: (ordem antihoraria)
                 // Vertice 3 -> c[face][1] - (u: 1, v: 1)
                 // Vertice 4 -> c[face][2] - (u: 0, v: 1)
                 // Vertice 1 -> c[face][0] - (u: 0, v: 0)
-                u = (c[face][0] * 1);                    // v3: 1, v4: 0, v1: 0
+                u = (c[face][1] * 1);                    // v3: 1, v4: 0, v1: 0
                 v = (c[face][1] * 1) + (c[face][2] * 1); // v3: 1, v4: 1, v1: 0
             }
 
