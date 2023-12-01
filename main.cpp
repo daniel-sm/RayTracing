@@ -133,8 +133,11 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : Cena::fontes)
 				{
+					std::cout << "\t" << "entrando em sombra..." << "\n";
+					bool sombra = fonte->sombra(p_int, Cena::cenario, CastRay);
+					std::cout << "\t" << "...saindo de sombra" << "\n";
 					// Checando se o ponto esta na sombra
-					if (fonte->sombra(p_int, Cena::cenario, CastRay)) 
+					if (sombra) 
 					{
 						// Armazena a intensidade no ponto para a fonte atual
 						std::cout << "\t" << "entrando em iluminacao..." << "\n";
@@ -145,15 +148,26 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 							atingido->material
 						);
 						std::cout << "\t" << "...saindo de iluminacao" << "\n";
+
+						std::cout << "\t" << "ilum - ";
+						std::cout << "x: " << atual.x << " ";
+						std::cout << "y: " << atual.y << " ";
+						std::cout << "z: " << atual.z << "\n";
 						// Soma a intensidade de cada fonte
 						I = I + atual;
 					}
+					std::cout << "\t" << "I - ";
+					std::cout << "x: " << I.x << " ";
+					std::cout << "y: " << I.y << " ";
+					std::cout << "z: " << I.z << "\n";
 				}
 				std::cout << "\t" << "...saindo loop fontes" << "\n";
 				// Computando a maior intensidade de cor
 				if (I.x > maiorCor) maiorCor = I.x;
 				if (I.y > maiorCor) maiorCor = I.y;
 				if (I.z > maiorCor) maiorCor = I.z;
+
+				std::cout << "maior: " << maior << "\n";
 
 				Cor cor { 255, 255, 255 };
 
@@ -162,6 +176,11 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 				cor.g = (cor.g * I.y);
 				cor.b = (cor.b * I.z);
 
+				std::cout << "\t" << "cor - ";
+				std::cout << "r: " << cor.r << " ";
+				std::cout << "g: " << cor.g << " ";
+				std::cout << "b: " << cor.b << "\n";
+				
 				colors[l][c] = cor;
 				hitted[l][c] = atingido;
 			} else { 

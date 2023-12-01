@@ -208,9 +208,9 @@ namespace Cena
 		// Transformacao::rotacaoZ(&spot, PI / 4);
 
         // Adicionando as fontes na lista 
-        fontes.add(&spot);
-        fontes.add(&pontual);
-        // fontes.add(&direcional);
+        // fontes.add(&spot);
+        // fontes.add(&pontual);
+        fontes.add(&direcional);
     }
 } // namespace Cena
 
