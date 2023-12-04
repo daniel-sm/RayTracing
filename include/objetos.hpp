@@ -25,8 +25,8 @@ private:
 	Ponto origem; // ponto de origem do raio
 	Vetor direcao; // vetor unitario da direcao do raio 
 public:
-	Raio(Ponto i, Ponto f) : origem{i}, direcao{unitario(f - i)} {}
-	Raio(Ponto i, Vetor d) : origem{i}, direcao{unitario(d)} {}
+	Raio(Ponto i, Ponto f) : origem{i} { direcao = unitario(f - i); }
+	Raio(Ponto i, Vetor d) : origem{i} { direcao = unitario(d); }
 
 	Vetor getDirecao() { return direcao; }
 	Ponto getOrigem() { return origem; }
@@ -149,7 +149,11 @@ class Plano : public Objeto
     Ponto ponto; // ponto pertencente ao plano
     Vetor normal; // vetor normal ao plano
 public:
-    Plano(Ponto p, Vetor n, Material m) : ponto{p}, normal{unitario(n)} { material = m; }
+    Plano(Ponto p, Vetor n, Material m) : ponto{p} 
+    { 
+        normal = unitario(n); 
+        material = m; 
+    }
 
     double intersecao (Raio raio) override;
 
@@ -194,8 +198,9 @@ public:
     }
 
     Cilindro (Ponto b, Vetor d, double r, double h, Material m) 
-    : base{b}, direcao{unitario(d)}, raio{r}, altura{h}
+    : base{b}, raio{r}, altura{h}
     {
+        direcao = unitario(d);
         topo = b + (h * direcao);
         material = m;
     } 
@@ -207,12 +212,15 @@ public:
         Vetor vetorPonto = (p - base);
         double escalarPonto = escalar(vetorPonto, direcao);
 
+        // Se ponto esta na base, a normal torna-se a direcao contraria
         if (escalarPonto <= 0) return (-1) * direcao;
-        else if (escalarPonto >= altura) return direcao;
-        else {
-            Vetor N = vetorPonto - (escalarPonto * direcao);
-            return (N / raio);
-        }
+        // Se ponto esta no topo, a direcao torna-se a normal
+        if (escalarPonto >= altura) return direcao;
+
+        // Se ponto esta na superficie cilindrica calcula-se a normal 
+        Vetor N = vetorPonto - (escalarPonto * direcao);
+        // retorna a normal obtida
+        return unitario(N);
     }
 
     void transformar (Matriz matriz) override
@@ -261,8 +269,9 @@ public:
     }
 
     Cone (Ponto b, Vetor d, double r, double h, Material m) 
-    : base{b}, direcao{unitario(d)}, raio{r}, altura{h} 
+    : base{b}, raio{r}, altura{h} 
     {
+        direcao = unitario(d);
         vertice = b + (h * direcao); 
         material = m;
     }
@@ -516,11 +525,11 @@ private:
     Vetor direcao; // direcao da fonte de luz
     double angulo; // angulo de abertura da fonte de luz
 public:
-    Spot(Vetor i, Ponto p, Vetor d, double a) : 
-        posicao{p}, 
-        direcao{unitario(d)}, 
-        angulo{a} 
-        { intensidade = i; }
+    Spot(Vetor i, Ponto p, Vetor d, double a) : posicao{p}, angulo{a} 
+    {
+        direcao = unitario(d); 
+        intensidade = i; 
+    }
 
     bool sombra (Ponto p_int, Lista<Objeto> &cena, CR* CastRay) const override
     {

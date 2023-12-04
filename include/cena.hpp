@@ -177,7 +177,7 @@ namespace Cena
 		if (imagem) {
 			Transformacao::escala(&textura, { 200, 222.551928701, 0 });
 			Transformacao::translacao(&textura, { 750, 0, 601 });
-			cenario.add(&textura);
+			// cenario.add(&textura);
 		}
 		else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
@@ -189,10 +189,10 @@ namespace Cena
         cenario.add(&fundoesq);
         cenario.add(&fundodir);
 
-		std::cout << "poste: " << &poste << "\n";
-		std::cout << "chao: " << &chao << "\n";
-		std::cout << "fundoesq: " << &fundoesq << "\n";
-		std::cout << "fundodir: " << &fundodir << "\n";
+		// std::cout << "poste: " << &poste << "\n";
+		// std::cout << "chao: " << &chao << "\n";
+		// std::cout << "fundoesq: " << &fundoesq << "\n";
+		// std::cout << "fundodir: " << &fundodir << "\n";
     }
 
 	// Lista de Fontes de luz **************************************************
