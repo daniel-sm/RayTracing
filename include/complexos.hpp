@@ -120,10 +120,7 @@ public:
 
     Vetor getNormal(Ponto ponto) const override
     {
-        if (atingido == telhado)
-            return telhado->getNormal(ponto);
-        else
-            return parede->getNormal(ponto);
+        return atingido->getNormal(ponto);
     }
 
     void transformar(Matriz matriz) override
@@ -182,13 +179,7 @@ public:
         }
     }
 
-    Vetor getNormal(Ponto ponto) const override
-    {
-        if (atingido == folha)
-            return folha->getNormal(ponto);
-        else
-            return tronco->getNormal(ponto);
-    }
+    Vetor getNormal(Ponto ponto) const override { return atingido->getNormal(ponto); }
 
     void transformar(Matriz matriz) override
     {
@@ -247,6 +238,7 @@ public:
 
     Vetor getNormal(Ponto ponto) const override
     {
+        return atingido->getNormal(ponto);
         if (atingido == horizontal)
             return horizontal->getNormal(ponto);
         else

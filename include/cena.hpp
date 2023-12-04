@@ -182,9 +182,9 @@ namespace Cena
 		else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
-		// cenario.add(&arvore);
+		cenario.add(&arvore);
 		cenario.add(&poste);
-		// cenario.add(&casa); 
+		cenario.add(&casa); 
         cenario.add(&chao);
         cenario.add(&fundoesq);
         cenario.add(&fundodir);

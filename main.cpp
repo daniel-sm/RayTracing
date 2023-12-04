@@ -140,6 +140,8 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 					if (sombra) 
 					{
 						Vetor normal = atingido->getNormal(p_int);
+
+						if (l == 463 and c == 322) p_int.z *= -1;
 						// Armazena a intensidade no ponto para a fonte atual
 						// std::cout << "\t" << "entrando em iluminacao..." << "\n";
 						Vetor atual = fonte->iluminacao(
@@ -151,31 +153,75 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 						// std::cout << "\t" << "...saindo de iluminacao" << "\n";
 						// Soma a intensidade de cada fonte
 						I = I + atual;
+
+						if (l == 463 and c == 322) 
+						{
+							// Vetor unitario em direcao a fonte de luz
+							Vetor luz = (-1) * unitario({-1,-1,-1});
+							// Vetor unitario em direcao a origem do raio
+							Vetor visao = (-1) * raio.getDirecao();
+							// Vetor unitario em direcao ao raio refletido
+							Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
+
+							// Fator de Difusao
+							double fatorDif = maior(0.0, escalar(luz, normal));
+							
+							std::cout << "f_dif: " << fatorDif << std::endl;
+							
+							// Calculo da intensidade da Luz Difusa
+							Vetor Id = (atingido->material.kd * Vetor{0.5,0.5,0.5}) * fatorDif; 
+
+							std::cout << "Id: ";
+							std::cout << "x: " << Id.x << " ";
+							std::cout << "y: " << Id.y << " ";
+							std::cout << "z: " << Id.z << "\n";
+
+							// Fator Especular
+							double fatorEsp = maior(0.0, escalar(reflexo, visao));
+							fatorEsp = pow(fatorEsp, atingido->material.brilho);
+
+							std::cout << "f_esp: " << fatorEsp << std::endl;
+							
+							// Calculo da intensidade da Luz Especular 
+							Vetor Ie = (atingido->material.ke * Vetor{0.5,0.5,0.5}) * fatorEsp; 
+
+							std::cout << "Ie: ";
+							std::cout << "x: " << Ie.x << " ";
+							std::cout << "y: " << Ie.y << " ";
+							std::cout << "z: " << Ie.z << "\n";
+
+							// Retorna a soma das duas intensidades
+							std::cout << "I: ";
+							std::cout << "x: " << (Id + Ie).x << " ";
+							std::cout << "y: " << (Id + Ie).y << " ";
+							std::cout << "z: " << (Id + Ie).z << "\n";
+
+							// std::cout << "R: ";
+							// std::cout << "x: " << raio.getDirecao().x << " ";
+							// std::cout << "y: " << raio.getDirecao().y << " ";
+							// std::cout << "z: " << raio.getDirecao().z << "\n";
+							
+							// std::cout << "P: ";
+							// std::cout << "x: " << p_int.x << " ";
+							// std::cout << "y: " << p_int.y << " ";
+							// std::cout << "z: " << p_int.z << "\n";
+
+							// std::cout << "N: ";
+							// std::cout << "x: " << normal.x << " ";
+							// std::cout << "y: " << normal.y << " ";
+							// std::cout << "z: " << normal.z << "\n";
+
+							// std::cout << "I: ";
+							// std::cout << "x: " << atual.x << " ";
+							// std::cout << "y: " << atual.y << " ";
+							// std::cout << "z: " << atual.z << "\n";
+						}
 					}
 					// std::cout << "\t" << "I - ";
 					// std::cout << "x: " << I.x << " ";
 					// std::cout << "y: " << I.y << " ";
 					// std::cout << "z: " << I.z << "\n";
 				}
-
-				if (l == 463 and c == 326) 
-				{
-					// std::cout << "P: ";
-					// std::cout << "x: " << p_int.x << " ";
-					// std::cout << "y: " << p_int.y << " ";
-					// std::cout << "z: " << p_int.z << "\n";
-
-					// std::cout << "N: ";
-					// std::cout << "x: " << normal.x << " ";
-					// std::cout << "y: " << normal.y << " ";
-					// std::cout << "z: " << normal.z << "\n";
-
-					std::cout << "I: ";
-					std::cout << "x: " << I.x << " ";
-					std::cout << "y: " << I.y << " ";
-					std::cout << "z: " << I.z << "\n";
-				}
-
 				// std::cout << maiorCor << " ";
 				// std::cout << "\t" << "...saindo loop fontes" << "\n";
 				// Computando a maior intensidade de cor
@@ -191,6 +237,8 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 				cor.r = (cor.r * I.x);
 				cor.g = (cor.g * I.y);
 				cor.b = (cor.b * I.z);
+
+				if (l == 463 and c == 322) cor = {255,0,0};
 
 				// std::cout << "\t" << "cor - ";
 				// std::cout << "r: " << cor.r << " ";
