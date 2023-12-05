@@ -153,9 +153,9 @@ namespace Cena
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 600, 1000, 2000 };
-	Ponto at = { 600, 0, 0 };
-	Ponto up = { 600, 400, 0 }; 
+	Ponto eye = { 400, 100, 850 };
+	Ponto at = { 400, 100, 0 };
+	Ponto up = { 400, 200, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 
@@ -178,13 +178,12 @@ namespace Cena
 			Transformacao::escala(&textura, { 200, 222.551928701, 0 });
 			Transformacao::translacao(&textura, { 750, 0, 601 });
 			// cenario.add(&textura);
-		}
-		else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
+		} else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
-		cenario.add(&arvore);
+		// cenario.add(&arvore);
 		cenario.add(&poste);
-		cenario.add(&casa); 
+		// cenario.add(&casa); 
         cenario.add(&chao);
         cenario.add(&fundoesq);
         cenario.add(&fundodir);

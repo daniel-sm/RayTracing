@@ -664,6 +664,13 @@ public:
 
         if (p_int.z > 0)
         {
+            p_int.z *= -1;
+
+            std::cout << "n: ";
+            std::cout << "x: " << normal.x << " ";
+            std::cout << "y: " << normal.y << " ";
+            std::cout << "z: " << normal.z << "\n";
+            
             std::cout << "l: ";
             std::cout << "x: " << luz.x << " ";
             std::cout << "y: " << luz.y << " ";
@@ -699,7 +706,7 @@ public:
 
             std::cout << "l.n: " << escalar(luz, normal) << "\n";
             std::cout << "r.v: " << escalar(reflexo, visao) << "\n";
-        }
+        } 
         // Retorna a soma das duas intensidades
         return (Id + Ie);
     }

@@ -145,7 +145,7 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 						// Armazena a intensidade no ponto para a fonte atual
 						// std::cout << "\t" << "entrando em iluminacao..." << "\n";
 						Vetor atual = fonte->iluminacao(
-							atingido->getNormal(p_int),
+							normal,
 							p_int,
 							raio.getDirecao(),
 							atingido->material
@@ -153,7 +153,7 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 						// std::cout << "\t" << "...saindo de iluminacao" << "\n";
 						// Soma a intensidade de cada fonte
 						I = I + atual;
-
+/*
 						if (l == 463 and c == 322) 
 						{
 							// Vetor unitario em direcao a fonte de luz
@@ -215,7 +215,7 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 							// std::cout << "x: " << atual.x << " ";
 							// std::cout << "y: " << atual.y << " ";
 							// std::cout << "z: " << atual.z << "\n";
-						}
+						} */
 					}
 					// std::cout << "\t" << "I - ";
 					// std::cout << "x: " << I.x << " ";
