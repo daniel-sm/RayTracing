@@ -103,7 +103,8 @@ namespace Cena
 	Casa casa (materialCasa, materialTelhado);
 	// Objeto Complexo da Arvore ***********************************************
 	// Composto de uma esfera e um cone
-	Arvore arvore (materialArvore, materialTronco);
+	Arvore arvore1 (materialArvore, materialTronco);
+	Arvore arvore2 (materialArvore, materialTronco);
 	// Objeto Complexo do Poste ************************************************
 	// Composto de dois cilindro
 	Poste poste (materialPoste);
@@ -129,7 +130,7 @@ namespace Cena
 	Vetor intenseSpot = { 0.5, 0.5, 0.5 }; 
 	Ponto posicaoSpot = { 0, 0, 0 };
 	Vetor direcaoSpot = { 0, -1, 0 };
-	double anguloSpot = (3 * PI) / 8;
+	double anguloSpot = (3 * PI) / 8.0;
 	// Objeto da fonte de luz Spot
 	Spot spot (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 
@@ -153,9 +154,9 @@ namespace Cena
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 600, 1000, 2000 };
-	Ponto at = { 600, 0, 0 };
-	Ponto up = { 600, 500, 0 }; 
+	Ponto eye = { 2600, 1000, 6000 };
+	Ponto at = { 2600, 0, 0 };
+	Ponto up = { 2600, 500, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 
@@ -168,20 +169,24 @@ namespace Cena
 		// Realizando transformacoes 
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
-		Transformacao::translacao(&casa, { 600, 0, 200 });
+		Transformacao::translacao(&casa, { 2600, 0, 2200 });
 		// Ajustando objeto da arvore
-		Transformacao::translacao(&arvore, { 400, 0, 400 });
+		Transformacao::escala(&arvore1, { 2, 1, 1 });
+		Transformacao::translacao(&arvore1, { 2400, 0, 2400 });
+		Transformacao::translacao(&arvore2, { 2400, 0, 2400 });
+		Transformacao::espelhoArbitrario(&arvore2,  { 2850, 0, 2200 }, { -1, 0, 0 });
 		// Ajustando objeto do poste
-		Transformacao::translacao(&poste, { 400, 0, 800 });
+		Transformacao::translacao(&poste, { 2400, 0, 2800 });
 		// Ajustando objeto da textura
 		if (imagem) {
 			Transformacao::escala(&textura, { 200, 222.551928701, 0 });
-			Transformacao::translacao(&textura, { 750, 0, 601 });
-			// cenario.add(&textura);
+			Transformacao::translacao(&textura, { 2750, 0, 2601 });
+			cenario.add(&textura);
 		} else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
-		cenario.add(&arvore);
+		cenario.add(&arvore1);
+		cenario.add(&arvore2);
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);
@@ -198,7 +203,7 @@ namespace Cena
 		// Realizando transformacoes 
 		// Ajustando objeto da luz do poste
 		// Posiciona a fonte spot na ponta do poste
-		Transformacao::translacao(&spot, { 500, 500-13, 800 });
+		Transformacao::translacao(&spot, { 2500, 500-13, 2800 });
 		// Transformacao::rotacaoZ(&spot, PI / 4);
 
         // Adicionando as fontes na lista 
