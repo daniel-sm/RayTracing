@@ -92,36 +92,35 @@ public:
     {
         double t_parede = parede->intersecao(raio);
         double t_telhado = telhado->intersecao(raio);
+        
+        double t = -1;
 
-        if (t_parede <= 0)
-        {
-            atingido = telhado;
-            material = telhado->material;
-            return t_telhado;
-        }
-        else if (t_telhado <= 0)
-        {
+        if (t_parede > 0 and t_telhado > 0) {
+            if (t_telhado < t_parede) {
+                atingido = telhado;
+                material = telhado->material;
+                t = t_telhado;
+            } else {
+                atingido = parede;
+                material = parede->material;
+                t = t_parede;
+            }
+        } else if (t_parede > 0) {
             atingido = parede;
             material = parede->material;
-            return t_parede;
-        }
-        else if (t_parede < t_telhado)
-        {
-            atingido = parede;
-            material = parede->material;
-            return t_parede;
-        }
-        else {
+            t = t_parede;
+        } else if (t_telhado > 0) {
             atingido = telhado;
             material = telhado->material;
-            return t_telhado;
-        }
+            t = t_telhado;
+        } 
+        else { t = -1; }
+
+        // retornando o valor de t que foi calculado
+        return t;
     }
 
-    Vetor getNormal(Ponto ponto) const override
-    {
-        return atingido->getNormal(ponto);
-    }
+    Vetor getNormal(Ponto ponto) const override { return atingido->getNormal(ponto); }
 
     void transformar(Matriz matriz) override
     {
@@ -135,7 +134,7 @@ class Arvore : public Objeto
 private:
     Cone *tronco;
     Esfera *folha;
-    Objeto *atingido;
+    Objeto *atingido = nullptr;
 
 public:
     Arvore(Material mf, Material mt)
@@ -154,29 +153,31 @@ public:
         double t_folha = folha->intersecao(raio);
         double t_tronco = tronco->intersecao(raio);
 
-        if (t_folha <= 0)
-        {
-            atingido = tronco;
-            material = tronco->material;
-            return t_tronco;
-        }
-        else if (t_tronco <= 0)
-        {
-            atingido = folha;
+        double t = -1;
+
+        if (t_folha > 0 and t_tronco > 0) {
+            if (t_tronco < t_folha) {
+                material = tronco->material;
+                atingido = tronco;
+                t = t_tronco;
+            } else {
+                material = folha->material;
+                atingido = folha;
+                t = t_folha;
+            }
+        } else if (t_folha > 0) {
             material = folha->material;
-            return t_folha;
-        }
-        else if (t_folha < t_tronco)
-        {
             atingido = folha;
-            material = folha->material;
-            return t_folha;
-        }
-        else {
-            atingido = tronco;
+            t = t_folha;
+        } else if (t_tronco > 0) {
             material = tronco->material;
-            return t_tronco;
-        }
+            atingido = tronco;
+            t = t_tronco;
+        } 
+        else { t = -1; }
+        
+        // retornando o valor de t que foi calculado
+        return t;
     }
 
     Vetor getNormal(Ponto ponto) const override { return atingido->getNormal(ponto); }
@@ -195,55 +196,45 @@ private:
     Objeto *atingido;
 
 public:
-    Poste(Material mp)
-    {
+    Poste(Material mp) {
         vertical = new Cilindro(Ponto{0, 0, 0}, Vetor{0, 1, 0}, 12, 500, mp);
         horizontal = new Cilindro(Ponto{0, 500 - 6, 0}, Vetor{1, 0, 0}, 6, 100, mp);
         material = mp;
     }
-    ~Poste()
-    {
+    ~Poste() {
         delete horizontal;
         delete vertical;
     };
 
-    double intersecao(Raio raio)
+    double intersecao (Raio raio)
     {
         double t_h = horizontal->intersecao(raio);
-        // std::cout << "t_h: " << t_h << std::endl;
         double t_v = vertical->intersecao(raio);
-        // std::cout << "t_v: " << t_v << std::endl;
 
-        if (t_v <= 0) {
-            // std::cout << "v negativo" << std::endl;
+        double t = -1;
+
+        if (t_h > 0 and t_v > 0) {
+            if (t_v < t_h) {
+                atingido = vertical;
+                t = t_v;
+            } else {
+                atingido = horizontal;
+                t = t_h;
+            }
+        } else if (t_h > 0) {
             atingido = horizontal;
-            return t_h;
-        }
-        else if (t_h <= 0) {
-            // std::cout << "h negativo" << std::endl;
+            t = t_h;
+        } else if (t_v > 0) {
             atingido = vertical;
-            return t_v;
-        }
-        else if (t_v < t_h) {
-            // std::cout << "v < h" << std::endl;
-            atingido = vertical;
-            return t_v;
-        }
-        else {
-            // std::cout << "h <= v" << std::endl;
-            atingido = horizontal;
-            return t_h;
-        }
+            t = t_v;
+        } 
+        else { t = -1; }
+
+        // retornando o valor de t que foi calculado
+        return t;
     }
 
-    Vetor getNormal(Ponto ponto) const override
-    {
-        return atingido->getNormal(ponto);
-        if (atingido == horizontal)
-            return horizontal->getNormal(ponto);
-        else
-            return vertical->getNormal(ponto);
-    }
+    Vetor getNormal(Ponto ponto) const override { return atingido->getNormal(ponto); }
 
     void transformar(Matriz matriz) override
     {

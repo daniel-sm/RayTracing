@@ -153,9 +153,9 @@ namespace Cena
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 400, 100, 850 };
-	Ponto at = { 400, 100, 0 };
-	Ponto up = { 400, 200, 0 }; 
+	Ponto eye = { 600, 1000, 2000 };
+	Ponto at = { 600, 0, 0 };
+	Ponto up = { 600, 500, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 
@@ -181,17 +181,12 @@ namespace Cena
 		} else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
-		// cenario.add(&arvore);
+		cenario.add(&arvore);
 		cenario.add(&poste);
-		// cenario.add(&casa); 
+		cenario.add(&casa); 
         cenario.add(&chao);
         cenario.add(&fundoesq);
         cenario.add(&fundodir);
-
-		// std::cout << "poste: " << &poste << "\n";
-		// std::cout << "chao: " << &chao << "\n";
-		// std::cout << "fundoesq: " << &fundoesq << "\n";
-		// std::cout << "fundodir: " << &fundodir << "\n";
     }
 
 	// Lista de Fontes de luz **************************************************
@@ -207,9 +202,9 @@ namespace Cena
 		// Transformacao::rotacaoZ(&spot, PI / 4);
 
         // Adicionando as fontes na lista 
-        // fontes.add(&spot);
-        // fontes.add(&pontual);
-        fontes.add(&direcional);
+        fontes.add(&spot);
+        fontes.add(&pontual);
+        fontes.add(&direcional); 
     }
 } // namespace Cena
 

@@ -22,11 +22,9 @@ double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
 	// Vai guardar o menor valor de t 
 	double menor_t = -1;
 
-	// std::cout << "\t\t" << "entrando no loop objetos..." << "\n";
 	// Percorrendo os objetos da cena
 	for (auto obj : cenario)
 	{
-		// std::cout << "\t\t" << "obj: " << obj << "\n";
         // Guardando o retorno da intersecao para comparar com menor_t
         double t_int = obj->intersecao(raio);
 
@@ -44,7 +42,7 @@ double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
             else { menor_t = t_int; atingido = obj; }
         }
     }
-	// std::cout << "\t\t" << "...saindo do loop objetos" << "\n";
+	// retornando o menor valor de t encontrado
     return menor_t;
 }
 
@@ -62,10 +60,8 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 	// Lancando raios para cada quadrado na grade do canvas
 	//
 	// Percorre as linhas da grade do canvas
-	// std::cout << "\t" << "entrando no loop" << "\n";
 	for (int l = 0; l < linhas; ++l) 
 	{
-		// std::cout << "\t" << "> l: " << l << "\n";
 
 		// Coordenada Y do centro do quadriculo na Janela
 		double y = Cena::janela.getYMax() - (Dy / 2) - (l * Dy);
@@ -73,17 +69,11 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 		// Percorre as colunas da grade do canvas
 		for (int c = 0; c < colunas; ++c) 
 		{
-			// std::cout << "\t" << "> c: " << c << "\n";
 			// Coordenada X do centro do quadriculo na Janela
 			double x = Cena::janela.getXMin() + (Dx / 2) + (c * Dx);
 
 			// Ponto do centro do quadrado da Janela
 			Ponto pontoJanela { x, y, -Cena::janela.getDistance() };
-
-			// std::cout << "\t" << "ponto janela - ";
-			// std::cout << "x: " << pontoJanela.x << " ";
-			// std::cout << "y: " << pontoJanela.y << " ";
-			// std::cout << "z: " << pontoJanela.z << "\n";
 
 			// Raio que vai ser lancado pela Janela
 			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Perspectiva por padrao
@@ -107,129 +97,41 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 			// Armazena o objeto intersectado mais proximo 
 			Objeto* atingido = nullptr; 
 			// Armazena o valor de t que intersecta o objeto mais proximo
-			// std::cout << "\t" << "entrando em CastRay..." << "\n";
 			double t_int = CastRay(Cena::cenario, raio, atingido);
-			// std::cout << "\t" << "...saindo de CastRay" << "\n";
-
-			// std::cout << "\t" << "t: " << t_int << "\n";
 
 			// Verificando de atingiu algum objeto
 			if (t_int > 0) 
 			{
 				// Obtendo o ponto de intersecao a partir do t encontrado
                 Ponto p_int = raio.pontoIntersecao(t_int);
-				
-				// std::cout << "\t" << "p_int - ";
-				// std::cout << "x: " << p_int.x << " ";
-				// std::cout << "y: " << p_int.y << " ";
-				// std::cout << "z: " << p_int.z << "\n";
 
 				// Vetor de intensidade da luz no ponto intersectado
 				Vetor I { 0.0, 0.0, 0.0 };
+
 				// Adicionando a luz ambiente
 				I = I + (Cena::luzAmbiente * (atingido->material.ka));
 
-				// std::cout << "\t" << "entrando no loop fontes..." << "\n";
 				// Percorrendo as fontes de luz da cena
 				for (auto fonte : Cena::fontes)
 				{
-					// std::cout << "\t" << "entrando em sombra..." << "\n";
 					bool sombra = fonte->sombra(p_int, Cena::cenario, CastRay);
-					// std::cout << "\t" << "...saindo de sombra" << "\n";
 					// Checando se o ponto esta na sombra
-					if (sombra) 
-					{
-						Vetor normal = atingido->getNormal(p_int);
-
-						if (l == 463 and c == 322) p_int.z *= -1;
+					if (sombra) {
 						// Armazena a intensidade no ponto para a fonte atual
-						// std::cout << "\t" << "entrando em iluminacao..." << "\n";
 						Vetor atual = fonte->iluminacao(
-							normal,
+							atingido->getNormal(p_int),
 							p_int,
 							raio.getDirecao(),
 							atingido->material
 						);
-						// std::cout << "\t" << "...saindo de iluminacao" << "\n";
 						// Soma a intensidade de cada fonte
 						I = I + atual;
-/*
-						if (l == 463 and c == 322) 
-						{
-							// Vetor unitario em direcao a fonte de luz
-							Vetor luz = (-1) * unitario({-1,-1,-1});
-							// Vetor unitario em direcao a origem do raio
-							Vetor visao = (-1) * raio.getDirecao();
-							// Vetor unitario em direcao ao raio refletido
-							Vetor reflexo = (2 * escalar(luz, normal) * normal) - luz;
-
-							// Fator de Difusao
-							double fatorDif = maior(0.0, escalar(luz, normal));
-							
-							std::cout << "f_dif: " << fatorDif << std::endl;
-							
-							// Calculo da intensidade da Luz Difusa
-							Vetor Id = (atingido->material.kd * Vetor{0.5,0.5,0.5}) * fatorDif; 
-
-							std::cout << "Id: ";
-							std::cout << "x: " << Id.x << " ";
-							std::cout << "y: " << Id.y << " ";
-							std::cout << "z: " << Id.z << "\n";
-
-							// Fator Especular
-							double fatorEsp = maior(0.0, escalar(reflexo, visao));
-							fatorEsp = pow(fatorEsp, atingido->material.brilho);
-
-							std::cout << "f_esp: " << fatorEsp << std::endl;
-							
-							// Calculo da intensidade da Luz Especular 
-							Vetor Ie = (atingido->material.ke * Vetor{0.5,0.5,0.5}) * fatorEsp; 
-
-							std::cout << "Ie: ";
-							std::cout << "x: " << Ie.x << " ";
-							std::cout << "y: " << Ie.y << " ";
-							std::cout << "z: " << Ie.z << "\n";
-
-							// Retorna a soma das duas intensidades
-							std::cout << "I: ";
-							std::cout << "x: " << (Id + Ie).x << " ";
-							std::cout << "y: " << (Id + Ie).y << " ";
-							std::cout << "z: " << (Id + Ie).z << "\n";
-
-							// std::cout << "R: ";
-							// std::cout << "x: " << raio.getDirecao().x << " ";
-							// std::cout << "y: " << raio.getDirecao().y << " ";
-							// std::cout << "z: " << raio.getDirecao().z << "\n";
-							
-							// std::cout << "P: ";
-							// std::cout << "x: " << p_int.x << " ";
-							// std::cout << "y: " << p_int.y << " ";
-							// std::cout << "z: " << p_int.z << "\n";
-
-							// std::cout << "N: ";
-							// std::cout << "x: " << normal.x << " ";
-							// std::cout << "y: " << normal.y << " ";
-							// std::cout << "z: " << normal.z << "\n";
-
-							// std::cout << "I: ";
-							// std::cout << "x: " << atual.x << " ";
-							// std::cout << "y: " << atual.y << " ";
-							// std::cout << "z: " << atual.z << "\n";
-						} */
 					}
-					// std::cout << "\t" << "I - ";
-					// std::cout << "x: " << I.x << " ";
-					// std::cout << "y: " << I.y << " ";
-					// std::cout << "z: " << I.z << "\n";
 				}
-				// std::cout << maiorCor << " ";
-				// std::cout << "\t" << "...saindo loop fontes" << "\n";
 				// Computando a maior intensidade de cor
-				if (I.x > maiorCor) { maiorCor = I.x; /*std::cout << "(l,c): (" << l << "," << c << ")" << maiorCor << " ";*/ }
-				if (I.y > maiorCor) { maiorCor = I.y; /*std::cout << "(l,c): (" << l << "," << c << ")" << maiorCor << " ";*/ }
-				if (I.z > maiorCor) { maiorCor = I.z; /*std::cout << "(l,c): (" << l << "," << c << ")" << maiorCor << " ";*/ }
-
-				// std::cout << "maior: " << maior << "\n";
+				if (I.x > maiorCor) maiorCor = I.x;
+				if (I.y > maiorCor) maiorCor = I.y;
+				if (I.z > maiorCor) maiorCor = I.z;
 
 				Cor cor { 255, 255, 255 };
 
@@ -237,25 +139,15 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 				cor.r = (cor.r * I.x);
 				cor.g = (cor.g * I.y);
 				cor.b = (cor.b * I.z);
-
-				if (l == 463 and c == 322) cor = {255,0,0};
-
-				// std::cout << "\t" << "cor - ";
-				// std::cout << "r: " << cor.r << " ";
-				// std::cout << "g: " << cor.g << " ";
-				// std::cout << "b: " << cor.b << "\n";
 				
 				colors[l][c] = cor;
 				hitted[l][c] = atingido;
 			} else { 
-				// std::cout << "\t" << "background!" << "\n";
 				colors[l][c] = { 0, 0, 0 };
 				hitted[l][c] = nullptr;
 			}
 		}
 	}
-	std::cout << "maiorCor: " << maiorCor << "\n";
-
 	// Reprocessar as cores com base na maior intensidade de cor
 	for (int l = 0; l < linhas; ++l) {
 		for (int c = 0; c < colunas; ++c) {
@@ -298,10 +190,8 @@ int main(int argc, char** argv)
 
 	// Realizando o RayCasting *************************************************
 	// Chama funcao que percorre o canvas e lanca os raios pela janela
-	// std::cout << "entrando em RayCasting..." << "\n";
 	RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
-	// std::cout << "...saindo de RayCasting" << "\n";
-// /*
+
 	// *************************************************************************
     // Utilizando SDL **********************************************************
 	//
@@ -414,7 +304,7 @@ int main(int argc, char** argv)
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-// */
+
 	// Desalocando cada linha da matriz de cores
 	for (int i = 0; i < linhas; ++i) { delete colors[i]; }
 	delete[] colors; // Desaloca a matriz por completo

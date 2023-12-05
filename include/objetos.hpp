@@ -213,9 +213,9 @@ public:
         double escalarPonto = escalar(vetorPonto, direcao);
 
         // Se ponto esta na base, a normal torna-se a direcao contraria
-        if (escalarPonto <= 0) return (-1) * direcao;
+        if (escalarPonto <= 0) { return (-1) * direcao; }
         // Se ponto esta no topo, a direcao torna-se a normal
-        if (escalarPonto >= altura) return direcao;
+        if (escalarPonto >= altura) { return direcao; }
 
         // Se ponto esta na superficie cilindrica calcula-se a normal 
         Vetor N = vetorPonto - (escalarPonto * direcao);
@@ -652,7 +652,6 @@ public:
 
         // Fator de Difusao
         double fatorDif = maior(0.0, escalar(luz, normal));
-        
         // Calculo da intensidade da Luz Difusa
         Vetor Id = (material.kd * intensidade) * fatorDif; 
 
@@ -661,52 +660,7 @@ public:
         fatorEsp = pow(fatorEsp, material.brilho);
         // Calculo da intensidade da Luz Especular 
         Vetor Ie = (material.ke * intensidade) * fatorEsp; 
-
-        if (p_int.z > 0)
-        {
-            p_int.z *= -1;
-
-            std::cout << "n: ";
-            std::cout << "x: " << normal.x << " ";
-            std::cout << "y: " << normal.y << " ";
-            std::cout << "z: " << normal.z << "\n";
-            
-            std::cout << "l: ";
-            std::cout << "x: " << luz.x << " ";
-            std::cout << "y: " << luz.y << " ";
-            std::cout << "z: " << luz.z << "\n";
-
-            std::cout << "v: ";
-            std::cout << "x: " << visao.x << " ";
-            std::cout << "y: " << visao.y << " ";
-            std::cout << "z: " << visao.z << "\n";
-
-            std::cout << "r: ";
-            std::cout << "x: " << reflexo.x << " ";
-            std::cout << "y: " << reflexo.y << " ";
-            std::cout << "z: " << reflexo.z << "\n";
-
-            std::cout << "Id: ";
-            std::cout << "x: " << Id.x << " ";
-            std::cout << "y: " << Id.y << " ";
-            std::cout << "z: " << Id.z << "\n";
-
-            std::cout << "Ie: ";
-            std::cout << "x: " << Ie.x << " ";
-            std::cout << "y: " << Ie.y << " ";
-            std::cout << "z: " << Ie.z << "\n";
-
-            std::cout << "I: ";
-            std::cout << "x: " << (Id + Ie).x << " ";
-            std::cout << "y: " << (Id + Ie).y << " ";
-            std::cout << "z: " << (Id + Ie).z << "\n";
-
-            std::cout << "f_dif: " << fatorDif << "\n";
-            std::cout << "f_esp: " << fatorEsp << "\n";
-
-            std::cout << "l.n: " << escalar(luz, normal) << "\n";
-            std::cout << "r.v: " << escalar(reflexo, visao) << "\n";
-        } 
+        
         // Retorna a soma das duas intensidades
         return (Id + Ie);
     }
