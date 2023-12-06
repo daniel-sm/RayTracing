@@ -269,10 +269,13 @@ int main(int argc, char** argv)
 						Transformacao::translacao(clicked, { 0, 0, 100 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
+					case SDLK_SPACE:
+						RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+						break;
 					default:
 						break;
 					}
-					RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+					
 				}
 				break;
 

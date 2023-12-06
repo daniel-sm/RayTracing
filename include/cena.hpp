@@ -4,6 +4,7 @@
 #include "objetos.hpp"
 #include "complexos.hpp"
 #include "transformacoes.hpp"
+// #include <SDL_image.h>
 
 namespace Cena
 {
@@ -110,12 +111,18 @@ namespace Cena
 	Poste poste (materialPoste);
 
 	// Textura *****************************************************************
-	SDL_Surface *imagem = SDL_LoadBMP("door_1348x1500.bmp"); // Carrega a imagem 
+	// Carregando a imagens das texturas 
+	SDL_Surface* img_door = SDL_LoadBMP("door_1348x1500.bmp"); 
+	// SDL_Surface* img_sky = SDL_LoadBMP("sky_1490x700.bmp");
+	SDL_Surface* img_sky = SDL_LoadBMP("sky_5960x2800.bmp");
 	Ponto esq_inf { 0, 0, 0 }; // Define o ponto inferior esquerdo 
 	Ponto dir_inf { 1, 0, 0 }; // Define o ponto inferior direito 
 	Ponto dir_sup { 1, 1, 0 }; // Define o ponto superior direito 
 	Ponto esq_sup { 0, 1, 0 }; // Define o ponto superior esquerdo 
-	Textura textura (esq_inf, dir_inf, dir_sup, esq_sup, imagem);
+	// Definindo textura da porta
+	Textura txt_door (esq_inf, dir_inf, dir_sup, esq_sup, img_door);
+	// Definindo textura do ceu
+	Textura txt_sky (esq_inf, dir_inf, dir_sup, esq_sup, img_sky);
 
 	// *************************************************************************
 	// Fontes de luz ***********************************************************
@@ -154,7 +161,7 @@ namespace Cena
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 2600, 1000, 6000 };
+	Ponto eye = { 2600, 1000, 10000 };
 	Ponto at = { 2600, 0, 0 };
 	Ponto up = { 2600, 500, 0 }; 
 	// Objeto da Camera 
@@ -178,11 +185,16 @@ namespace Cena
 		// Ajustando objeto do poste
 		Transformacao::translacao(&poste, { 2400, 0, 2800 });
 		// Ajustando objeto da textura
-		if (imagem) {
-			Transformacao::escala(&textura, { 200, 222.551928701, 0 });
-			Transformacao::translacao(&textura, { 2750, 0, 2601 });
-			cenario.add(&textura);
-		} else SDL_Log("Erro ao abrir imagem da textura! SDL_Error: %s", SDL_GetError());
+		if (img_door) {
+			Transformacao::escala(&txt_door, { 200, 222.5, 0 });
+			Transformacao::translacao(&txt_door, { 2750, 0, 2601 });
+			cenario.add(&txt_door);
+		} else SDL_Log("Erro ao abrir imagem da porta da textura! SDL_Error: %s", SDL_GetError());
+
+		if (img_sky) {
+			Transformacao::escala(&txt_sky, { 14900, 7000, 0 });
+			cenario.add(&txt_sky);
+		} else SDL_Log("Erro ao abrir imagem do ceu da textura! SDL_Error: %s", SDL_GetError());
 
         // Adicionando os objetos na cena 
 		cenario.add(&arvore1);
@@ -190,8 +202,8 @@ namespace Cena
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);
-        cenario.add(&fundoesq);
-        cenario.add(&fundodir);
+        // cenario.add(&fundoesq);
+        // cenario.add(&fundodir);
     }
 
 	// Lista de Fontes de luz **************************************************

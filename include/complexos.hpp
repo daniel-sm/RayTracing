@@ -259,7 +259,7 @@ private:
         // txt->pixels = array contendo os pixels da textura 
         // txt->pitch  = tamanho de uma linha de pixels em bytes 
         // x, y	       = posicao do pixel a ser obtido da textura
-        //                (0, 0) canto superior esquerdo da imagem
+        //               (0, 0) canto superior esquerdo da imagem
         Uint8 *pixel = (Uint8*) txt->pixels + y * txt->pitch + x * bytesPixel;
         Uint32 dados_pixel = *(Uint32*) pixel;
 
