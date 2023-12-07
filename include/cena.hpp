@@ -1,6 +1,7 @@
 #ifndef CENA_HPP
 #define CENA_HPP
 
+#include "basics.hpp"
 #include "objetos.hpp"
 #include "complexos.hpp"
 #include "transformacoes.hpp"
@@ -63,7 +64,7 @@ namespace Cena
 	Vetor keArvore = kaArvore; // Prop especular do material da Arvore
 	double brilhoArvore = 5; // Fator de brilho especular
 	// Material da Arvore
-	Material materialArvore { kaArvore, kdArvore, keArvore, brilhoArvore };
+	Material materialArv { kaArvore, kdArvore, keArvore, brilhoArvore };
 
 	// Material do Tronco ******************************************************
 	// Propriedades de reflectividade do Tronco
@@ -104,12 +105,19 @@ namespace Cena
 	// Composto de um cubo e uma piramide
 	Casa casa (materialCasa, materialTelhado);
 	// Objeto Complexo da Arvore ***********************************************
+	double alturaArv = 500;
+	double raioFolha = 200;
+	double raioTronco = 100;
 	// Composto de uma esfera e um cone
-	Arvore arvore1 (materialArvore, materialTronco);
-	Arvore arvore2 (materialArvore, materialTronco);
+	Arvore arvore1 (alturaArv, raioFolha, raioTronco, materialArv, materialTronco);
+	Arvore arvore2 (alturaArv, raioFolha, raioTronco, materialArv, materialTronco);
 	// Objeto Complexo do Poste ************************************************
+	double alturaVer = 500;
+	double alturaHor = 100;
+	double raioVer = 12;
+	double raioHor = 6;
 	// Composto de dois cilindro
-	Poste poste (materialPoste);
+	Poste poste (alturaVer, alturaHor, raioVer, raioHor, materialPoste);
 
 	// Textura *****************************************************************
 	// Carregando a imagens das texturas 
@@ -176,13 +184,6 @@ namespace Cena
     // Definindo a lista de objetos da cena
     void definirObjetos() 
     {
-		std::cout << "eye " << eye.x << " " << eye.y << " " << eye.z << '\n';
-        std::cout << "at " << at.x << " " << at.y << " " << at.z << '\n';
-        std::cout << "up " << up.x << " " << up.y << " " << up.z << '\n';
-
-        std::cout << "xmin " << xminJanela << " xmax " << xmaxJanela << '\n';
-        std::cout << "ymin " << yminJanela << " ymax " << ymaxJanela << '\n';
-        std::cout << "d: " << dJanela << '\n';
 		// Realizando transformacoes 
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
@@ -193,6 +194,7 @@ namespace Cena
 		Transformacao::translacao(&arvore2, { 2400, 0, 2400 });
 		Transformacao::espelhoArbitrario(&arvore2,  { 2850, 0, 2200 }, { -1, 0, 0 });
 		// Ajustando objeto do poste
+		Transformacao::rotacaoY(&poste, PI / 4);
 		Transformacao::translacao(&poste, { 2400, 0, 2800 });
 		// Ajustando objeto da textura
 		if (img_door) {
@@ -212,7 +214,7 @@ namespace Cena
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);
-        // cenario.add(&fundoesq);
+        cenario.add(&fundoesq);
         // cenario.add(&fundodir);
     }
 
@@ -225,8 +227,8 @@ namespace Cena
 		// Realizando transformacoes 
 		// Ajustando objeto da luz do poste
 		// Posiciona a fonte spot na ponta do poste
-		Transformacao::translacao(&spot, { 2500, 500-13, 2800 });
-		// Transformacao::rotacaoZ(&spot, PI / 4);
+		// Transformacao::translacao(&spot, { 2500, 500-13, 2800 });
+		Transformacao::translacao(&spot, { 2500, 500-13, 2700 });
 
         // Adicionando as fontes na lista 
         fontes.add(&spot);

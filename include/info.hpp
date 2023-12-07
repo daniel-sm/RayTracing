@@ -93,8 +93,8 @@ public:
         // std::cout << "ymin " << ymin << " ymax " << ymax << '\n';
         // std::cout << "d: " << distance;
 
-        std::cout << "proj " << projecao << '\n';
-        std::cout << "dir " << dir_projecao.x << " " << dir_projecao.y << " " << dir_projecao.z << '\n';
+        // std::cout << "proj " << projecao << '\n';
+        // std::cout << "dir " << dir_projecao.x << " " << dir_projecao.y << " " << dir_projecao.z << '\n';
     }
     ~Info() {}
 };
