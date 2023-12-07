@@ -4,6 +4,7 @@
 #include "objetos.hpp"
 #include "complexos.hpp"
 #include "transformacoes.hpp"
+#include "info.hpp"
 // #include <SDL_image.h>
 
 namespace Cena
@@ -113,8 +114,7 @@ namespace Cena
 	// Textura *****************************************************************
 	// Carregando a imagens das texturas 
 	SDL_Surface* img_door = SDL_LoadBMP("door_1348x1500.bmp"); 
-	// SDL_Surface* img_sky = SDL_LoadBMP("sky_1490x700.bmp");
-	SDL_Surface* img_sky = SDL_LoadBMP("sky_5960x2800.bmp");
+	SDL_Surface* img_sky = SDL_LoadBMP("sky_5960x2800.bmp"); 
 	Ponto esq_inf { 0, 0, 0 }; // Define o ponto inferior esquerdo 
 	Ponto dir_inf { 1, 0, 0 }; // Define o ponto inferior direito 
 	Ponto dir_sup { 1, 1, 0 }; // Define o ponto superior direito 
@@ -150,20 +150,23 @@ namespace Cena
     // Informacoes da luz Ambiente *********************************************
     Vetor luzAmbiente { 0.3, 0.3, 0.3 };
 
+	// Abrindo arquivo para obter as informacoes
+	Info info ("info.txt");
+
 	// Informacoes da Janela ***************************************************
-	double xminJanela = -72; // Valor da parte de cima da janela em cm
-	double xmaxJanela = 72; // Valor da parte de baixo da janela em cm
-	double yminJanela = -40.5; // Valor do lado esquerdo da janela em cm
-	double ymaxJanela = 40.5; // Valor do lado direito da janela em cm
-	double dJanela = 150; // Distancia da janela em cm
+	double xminJanela = info.success ? info.xmin : -72; // Valor da parte de cima da janela em cm
+	double xmaxJanela = info.success ? info.xmax : 72; // Valor da parte de baixo da janela em cm
+	double yminJanela = info.success ? info.ymin : -40.5; // Valor do lado esquerdo da janela em cm
+	double ymaxJanela = info.success ? info.ymax : 40.5; // Valor do lado direito da janela em cm
+	double dJanela = info.success ? info.distance : 150; // Distancia da janela em cm
 	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
 	// Informacoes da Camera ***************************************************
 	// Vista em Diagonal
-	Ponto eye = { 2600, 1000, 10000 };
-	Ponto at = { 2600, 0, 0 };
-	Ponto up = { 2600, 500, 0 }; 
+	Ponto eye = info.success ? info.eye : Ponto{ 2600, 1000, 10000 };
+	Ponto at = info.success ? info.at : Ponto{ 2600, 0, 0 };
+	Ponto up = info.success ? info.up : Ponto{ 2600, 500, 0 }; 
 	// Objeto da Camera 
 	Camera camera (eye, at, up);
 
@@ -173,6 +176,13 @@ namespace Cena
     // Definindo a lista de objetos da cena
     void definirObjetos() 
     {
+		std::cout << "eye " << eye.x << " " << eye.y << " " << eye.z << '\n';
+        std::cout << "at " << at.x << " " << at.y << " " << at.z << '\n';
+        std::cout << "up " << up.x << " " << up.y << " " << up.z << '\n';
+
+        std::cout << "xmin " << xminJanela << " xmax " << xmaxJanela << '\n';
+        std::cout << "ymin " << yminJanela << " ymax " << ymaxJanela << '\n';
+        std::cout << "d: " << dJanela << '\n';
 		// Realizando transformacoes 
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });

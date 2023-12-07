@@ -1,7 +1,10 @@
 camera
-eye 0 0 0
-at 0 0 0
-up 0 0 0
+eye 2600 1000 10000
+at 2600 0 0
+up 2600 500 0
 janela
-x 0 0
-y 0 0
+x -576 576
+y -324 324
+d 150
+projecao
+obl 0.1 -0.1 -1

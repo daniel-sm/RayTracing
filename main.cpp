@@ -46,7 +46,7 @@ double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
     return menor_t;
 }
 
-void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors, Objeto*** hitted) 
+void RayCasting (int linhas, int colunas, int projecao, Vetor dir_proj, Cor** colors, Objeto*** hitted) 
 {
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = Cena::janela.getWidth() / colunas;
@@ -79,7 +79,7 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Perspectiva por padrao
 
 			// Gerando raio de acordo com a projecao
-			switch (proj)
+			switch (projecao)
 			{
 			case 1: // Caso seja persperctiva
 				raio = Raio (Ponto{ 0, 0, 0 }, pontoJanela);
@@ -88,7 +88,7 @@ void RayCasting (int linhas, int colunas, int proj, Vetor dirproj, Cor** colors,
 				raio = Raio (pontoJanela, Vetor{0, 0, -1});
 				break;
 			case 3: // Caso seja obliqua
-				raio = Raio (pontoJanela, dirproj);
+				raio = Raio (pontoJanela, dir_proj);
 				break;
 			default: 
 				break;
@@ -167,8 +167,8 @@ int main(int argc, char** argv)
 	Cena::definirFontes();
 
 	// Projecao (1 - perspectiva), (2 - ortografica), (3 - obliqua) 
-	int projecao = 1;
-	Vetor dirProjecao = { 0.2, 0, -1 };
+	int projecao = Cena::info.success ? Cena::info.projecao : 1;
+	Vetor dir_projecao = Cena::info.success ? Cena::info.dir_projecao : Vetor{ 0, 0, 0 };
 
 	// Informacoes do Canvas ***************************************************
 	int linhas = 495; // 700; // Numero de linhas da grade do canvas
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 
 	// Realizando o RayCasting *************************************************
 	// Chama funcao que percorre o canvas e lanca os raios pela janela
-	RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+	RayCasting(linhas, colunas, projecao, dir_projecao, colors, hitted);
 
 	// *************************************************************************
     // Utilizando SDL **********************************************************
@@ -270,7 +270,7 @@ int main(int argc, char** argv)
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_SPACE:
-						RayCasting(linhas, colunas, projecao, dirProjecao, colors, hitted);
+						RayCasting(linhas, colunas, projecao, dir_projecao, colors, hitted);
 						break;
 					default:
 						break;
