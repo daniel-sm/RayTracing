@@ -1,0 +1,7 @@
+camera
+eye 0 0 0
+at 0 0 0
+up 0 0 0
+janela
+x 0 0
+y 0 0
