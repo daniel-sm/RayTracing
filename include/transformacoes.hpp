@@ -63,9 +63,12 @@ namespace Transformacao
 
     void rotacaoArbitrario (Objeto *obj, Ponto p1, Ponto p2, double angulo) 
     {
-        Vetor k = unitario(p2 - p1);
-        Vetor i = vetorial({ 0, 1, 0 }, k);
-        Vetor j = vetorial(k, i);
+        Vetor k = unitario(p2 - p1); 
+
+        Vetor v = vetorial({0, 1, 0}, k);
+        Vetor i = (v.x == 0 and v.y == 0 and v.z == 0) ? Vetor{1, 0, 0} : v;
+
+        Vetor j = vetorial(k, i); 
 
         // Definindo da matriz 4x4 do mundo para coordenadas do ponto
         Matriz w2c (4, 4);

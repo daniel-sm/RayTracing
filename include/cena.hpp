@@ -122,8 +122,8 @@ namespace Cena
 
 	// Textura *****************************************************************
 	// Carregando a imagens das texturas 
-	SDL_Surface* img_door = SDL_LoadBMP("door_1348x1500.bmp"); 
-	SDL_Surface* img_sky = SDL_LoadBMP("sky_5960x2800.bmp"); 
+	SDL_Surface* img_door = SDL_LoadBMP("img/door_800x1600.bmp"); 
+	SDL_Surface* img_sky = SDL_LoadBMP("img/sky_5960x2734.bmp"); 
 	Ponto esq_inf { 0, 0, 0 }; // Define o ponto inferior esquerdo 
 	Ponto dir_inf { 1, 0, 0 }; // Define o ponto inferior direito 
 	Ponto dir_sup { 1, 1, 0 }; // Define o ponto superior direito 
@@ -131,7 +131,9 @@ namespace Cena
 	// Definindo textura da porta
 	Textura txt_door (esq_inf, dir_inf, dir_sup, esq_sup, img_door);
 	// Definindo textura do ceu
-	Textura txt_sky (esq_inf, dir_inf, dir_sup, esq_sup, img_sky);
+	Textura txt_sky1 (esq_inf, dir_inf, dir_sup, esq_sup, img_sky);
+	// Definindo textura do ceu
+	Textura txt_sky2 (esq_inf, dir_inf, dir_sup, esq_sup, img_sky);
 
 	// #########################################################################
 	// Fontes de luz ###########################################################
@@ -160,7 +162,7 @@ namespace Cena
     Vetor luzAmbiente { 0.3, 0.3, 0.3 };
 
 	// Abrindo arquivo para obter as informacoes
-	Info info ("info.txt");
+	Info info ("info/info.txt");
 
 	// Informacoes da Janela ***************************************************
 	double xminJanela = info.success ? info.xmin : -72; // Valor da parte de cima da janela em cm
@@ -199,22 +201,31 @@ namespace Cena
 		Transformacao::rotacaoY(&poste, PI / 2);
 		Transformacao::translacao(&poste, { 2500, 0, 2800 });
 
+		Ponto p1 { 2500, 0, 2800 }, p2 { 2500, 100, 2800 };
+		Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 2);
+
 		// Ajustando objeto da textura
 		if (img_door) {
 			double largura, altura;
 			altura = img_door->h;
 			largura = img_door->w;
 
-			Transformacao::escala(&txt_door, { 300, 300 * (largura / altura), 0 });
-			Transformacao::translacao(&txt_door, { 2615, 0, 2400 + 1 });
+			Transformacao::escala(&txt_door, { 150, 150 / (largura / altura), 0 });
+			Transformacao::translacao(&txt_door, { 2500 + 165, 0, 2400 + 1 });
 			
 			cenario.add(&txt_door);
 		} 
 		else SDL_Log("Erro ao abrir imagem da porta da textura! SDL_Error: %s", SDL_GetError());
 
 		if (img_sky) {
-			Transformacao::escala(&txt_sky, { 14900, 7000, 0 });
-			cenario.add(&txt_sky);
+			Transformacao::escala(&txt_sky1, { 14900, 7000, 0 });
+
+			Transformacao::escala(&txt_sky2, { 14900, 7000, 0 });
+			Transformacao::rotacaoY(&txt_sky2, PI / 2);
+			Transformacao::translacao(&txt_sky2, { 0, 0, 14900 });
+
+			cenario.add(&txt_sky1);
+			cenario.add(&txt_sky2);
 		} 
 		else SDL_Log("Erro ao abrir imagem do ceu da textura! SDL_Error: %s", SDL_GetError());
 
@@ -224,7 +235,7 @@ namespace Cena
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);
-        cenario.add(&fundoesq);
+        // cenario.add(&fundoesq);
         // cenario.add(&fundodir);
     }
 
@@ -237,11 +248,12 @@ namespace Cena
 		// Realizando transformacoes 
 		// Ajustando objeto da luz do poste
 		// Posiciona a fonte spot na ponta do poste
-		Transformacao::translacao(&spot, { 2500, alturaVer - raioHor, 2800 });
+		Vetor aux = { 2500 + alturaHor, alturaVer - (2 * raioHor) - 1, 2800 };
+		Transformacao::translacao(&spot, aux);
 
         // Adicionando as fontes na lista 
         fontes.add(&spot);
-        fontes.add(&pontual);
+        // fontes.add(&pontual);
         fontes.add(&direcional); 
     }
 } // namespace Cena
