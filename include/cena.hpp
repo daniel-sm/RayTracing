@@ -10,7 +10,8 @@
 
 namespace Cena
 {
-	// Materiais dos objetos 
+	// #########################################################################
+	// Materiais dos objetos ###################################################
 	//
 	// Material do Plano do Chao ***********************************************
 	// Propriedades de reflectividade do plano do chao
@@ -75,8 +76,8 @@ namespace Cena
 	// Material do Tronco
 	Material materialTronco { kaTronco, kdTronco, keTronco, brilhoTronco };
 
-	// *************************************************************************
-	// Objetos da Cena *********************************************************
+	// #########################################################################
+	// Objetos da Cena #########################################################
 	//
 	// Objetos em coordenadas de mundo onde todos objetos estao 
 	// no primeiro octante do sistema de coordenadas. O plano do 
@@ -132,8 +133,8 @@ namespace Cena
 	// Definindo textura do ceu
 	Textura txt_sky (esq_inf, dir_inf, dir_sup, esq_sup, img_sky);
 
-	// *************************************************************************
-	// Fontes de luz ***********************************************************
+	// #########################################################################
+	// Fontes de luz ###########################################################
 	//
 	// Informacoes da Fonte Pontual ********************************************
 	Vetor intensePontual = { 1.0, 1.0, 1.0 }; // Intensidade da fonte pontual
@@ -184,31 +185,40 @@ namespace Cena
     // Definindo a lista de objetos da cena
     void definirObjetos() 
     {
-		// Realizando transformacoes 
+		// Realizando transformacoes *******************************************
 		// Ajustando objeto da casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
-		Transformacao::translacao(&casa, { 2600, 0, 2200 });
+		Transformacao::translacao(&casa, { 2500, 0, 2000 });
+
 		// Ajustando objeto da arvore
 		Transformacao::escala(&arvore1, { 2, 1, 1 });
-		Transformacao::translacao(&arvore1, { 2400, 0, 2400 });
-		Transformacao::translacao(&arvore2, { 2400, 0, 2400 });
-		Transformacao::espelhoArbitrario(&arvore2,  { 2850, 0, 2200 }, { -1, 0, 0 });
+		Transformacao::translacao(&arvore1, { 2200, 0, 2200 });
+		Transformacao::translacao(&arvore2, { 3300, 0, 2200 });
+		
 		// Ajustando objeto do poste
-		Transformacao::rotacaoY(&poste, PI / 4);
-		Transformacao::translacao(&poste, { 2400, 0, 2800 });
+		Transformacao::rotacaoY(&poste, PI / 2);
+		Transformacao::translacao(&poste, { 2500, 0, 2800 });
+
 		// Ajustando objeto da textura
 		if (img_door) {
-			Transformacao::escala(&txt_door, { 200, 222.5, 0 });
-			Transformacao::translacao(&txt_door, { 2750, 0, 2601 });
+			double largura, altura;
+			altura = img_door->h;
+			largura = img_door->w;
+
+			Transformacao::escala(&txt_door, { 300, 300 * (largura / altura), 0 });
+			Transformacao::translacao(&txt_door, { 2615, 0, 2400 + 1 });
+			
 			cenario.add(&txt_door);
-		} else SDL_Log("Erro ao abrir imagem da porta da textura! SDL_Error: %s", SDL_GetError());
+		} 
+		else SDL_Log("Erro ao abrir imagem da porta da textura! SDL_Error: %s", SDL_GetError());
 
 		if (img_sky) {
 			Transformacao::escala(&txt_sky, { 14900, 7000, 0 });
 			cenario.add(&txt_sky);
-		} else SDL_Log("Erro ao abrir imagem do ceu da textura! SDL_Error: %s", SDL_GetError());
+		} 
+		else SDL_Log("Erro ao abrir imagem do ceu da textura! SDL_Error: %s", SDL_GetError());
 
-        // Adicionando os objetos na cena 
+        // Adicionando os objetos na cena **************************************
 		cenario.add(&arvore1);
 		cenario.add(&arvore2);
 		cenario.add(&poste);
@@ -227,8 +237,7 @@ namespace Cena
 		// Realizando transformacoes 
 		// Ajustando objeto da luz do poste
 		// Posiciona a fonte spot na ponta do poste
-		// Transformacao::translacao(&spot, { 2500, 500-13, 2800 });
-		Transformacao::translacao(&spot, { 2500, 500-13, 2700 });
+		Transformacao::translacao(&spot, { 2500, alturaVer - raioHor, 2800 });
 
         // Adicionando as fontes na lista 
         fontes.add(&spot);
