@@ -186,7 +186,7 @@ class Arvore : public Objeto
 private:
     Cone *tronco;
     Esfera *folha;
-    Objeto *atingido = nullptr;
+    Objeto *atingido;
 
 public:
     Arvore(double altura, double raioFolha, double raioTronco, Material mf, Material mt)
@@ -199,6 +199,73 @@ public:
         tronco = new Cone(baseTronco, vertTronco, raioTronco, mt);
     }
     ~Arvore()
+    {
+        delete folha;
+        delete tronco;
+    }
+
+    double intersecao(Raio raio) override
+    {
+        double t_folha = folha->intersecao(raio);
+        double t_tronco = tronco->intersecao(raio);
+
+        double t = -1;
+
+        if (t_folha > 0 and t_tronco > 0) {
+            if (t_tronco < t_folha) {
+                material = tronco->material;
+                atingido = tronco;
+                t = t_tronco;
+            } else {
+                material = folha->material;
+                atingido = folha;
+                t = t_folha;
+            }
+        } else if (t_folha > 0) {
+            material = folha->material;
+            atingido = folha;
+            t = t_folha;
+        } else if (t_tronco > 0) {
+            material = tronco->material;
+            atingido = tronco;
+            t = t_tronco;
+        } 
+        else { t = -1; }
+        
+        // retornando o valor de t que foi calculado
+        return t;
+    }
+
+    Vetor getNormal(Ponto ponto) const override { return atingido->getNormal(ponto); }
+
+    void transformar(Matriz matriz) override
+    {
+        folha->transformar(matriz);
+        tronco->transformar(matriz);
+    }
+};
+
+class Pinheiro : public Objeto
+{
+private:
+    Cone *folha;
+    Cilindro *tronco;
+    Objeto *atingido;
+
+public:
+    Pinheiro(double hFolha, double rFolha, double hTronco, double rTronco, Material mf, Material mt)
+    {
+        Ponto baseFolha = {0, 0, 0};
+        Ponto vertFolha = {0, hFolha, 0};
+        folha = new Cone(baseFolha, vertFolha, rFolha, mf);
+
+        Ponto baseTronco = {0, 0, 0};
+        Ponto topoTronco = {0, hTronco, 0};
+        tronco = new Cilindro(baseTronco, topoTronco, rTronco, mt);
+
+        Transformacao::translacao(folha, { 0, hTronco, 0 });
+    }
+    ~Pinheiro() 
     {
         delete folha;
         delete tronco;

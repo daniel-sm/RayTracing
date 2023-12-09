@@ -20,7 +20,7 @@ namespace Cena
 	Vetor keChao { 0.0, 0.0, 0.0 }; // Prop especular do material do chao 
 	double brilhoChao = 1; // Fator de brilho espescular
 	// Material do plano do chao
-	Material materialChao { kaChao, kdChao, keChao, brilhoChao };
+	Material mtChao { kaChao, kdChao, keChao, brilhoChao };
 
 	// Material do Plano de Fundo **********************************************
 	// Propriedades de reflectividade do plano de fundo
@@ -29,7 +29,7 @@ namespace Cena
 	Vetor keFundo { 0.0, 0.0, 0.0 }; // Prop especular do material do fundo 
 	double brilhoFundo = 1; // Fator de brilho especular
 	// Material do plano de fundo
-	Material materialFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
+	Material mtFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
 
 	// Material da Casa ********************************************************
 	// Propriedades de reflectividade da Casa
@@ -38,7 +38,7 @@ namespace Cena
 	Vetor keCasa = kaCasa; // Prop especular do material da Casa
 	double brilhoCasa = 10; // Fator de brilho especular
 	// Material da Casa
-	Material materialCasa { kaCasa, kdCasa, keCasa, brilhoCasa };
+	Material mtCasa { kaCasa, kdCasa, keCasa, brilhoCasa };
 
 	// Material do Telhado *****************************************************
 	// Propriedades de reflectividade do Telhado
@@ -47,7 +47,7 @@ namespace Cena
 	Vetor keTelhado = kaTelhado; // Prop especular do material do Telhado
 	double brilhoTelhado = 5; // Fator de brilho especular
 	// Material do Telhado
-	Material materialTelhado { kaTelhado, kdTelhado, keTelhado, brilhoTelhado };
+	Material mtTelhado { kaTelhado, kdTelhado, keTelhado, brilhoTelhado };
 
 	// Material do Poste *******************************************************
 	// Propriedades de reflectividade do Poste
@@ -56,16 +56,16 @@ namespace Cena
 	Vetor kePoste = { 0.5, 0.5, 0.5 }; // Prop especular do material do Poste
 	double brilhoPoste = 5; // Fator de brilho especular
 	// Material do Poste
-	Material materialPoste { kaPoste, kdPoste, kePoste, brilhoPoste };
+	Material mtPoste { kaPoste, kdPoste, kePoste, brilhoPoste };
 
-	// Material da Arvore ******************************************************
-	// Propriedades de reflectividade da Arvore
-	Vetor kaArvore = { 0.0, 1.0, 0.0 }; // Prop ambiente do material da Arvore
-	Vetor kdArvore = kaArvore; // Prop difusa do material da Arvore
-	Vetor keArvore = kaArvore; // Prop especular do material da Arvore
-	double brilhoArvore = 5; // Fator de brilho especular
-	// Material da Arvore
-	Material materialArv { kaArvore, kdArvore, keArvore, brilhoArvore };
+	// Material da Folha *******************************************************
+	// Propriedades de reflectividade da Folha
+	Vetor kaFolha = { 0.0, 1.0, 0.0 }; // Prop ambiente do material da Folha
+	Vetor kdFolha = kaFolha; // Prop difusa do material da Folha
+	Vetor keFolha = kaFolha; // Prop especular do material da Folha
+	double brilhoFolha = 5; // Fator de brilho especular
+	// Material da Folha
+	Material mtFolha { kaFolha, kdFolha, keFolha, brilhoFolha };
 
 	// Material do Tronco ******************************************************
 	// Propriedades de reflectividade do Tronco
@@ -74,7 +74,7 @@ namespace Cena
 	Vetor keTronco = kaTronco; // Prop especular do material do Tronco
 	double brilhoTronco = 5; // Fator de brilho especular
 	// Material do Tronco
-	Material materialTronco { kaTronco, kdTronco, keTronco, brilhoTronco };
+	Material mtTronco { kaTronco, kdTronco, keTronco, brilhoTronco };
 
 	// #########################################################################
 	// Objetos da Cena #########################################################
@@ -88,37 +88,45 @@ namespace Cena
 	Ponto pontoChao { 0, 0, 0 }; // Ponto presente no plano do chao
 	Vetor normalChao { 0, 1, 0 }; // Vetor normal ao plano do chao
 	// Objeto do Plano do Chao
-	Plano chao (pontoChao, normalChao, materialChao);
+	Plano chao (pontoChao, normalChao, mtChao);
 
 	// Informacoes do Plano do Fundo Esquerdo **********************************
 	Ponto pontoFundoEsq { 0, 0, 0 }; // Ponto do plano do Fundo Esquerdo
 	Vetor normalFundoEsq { 1, 0, 0 }; // Vetor normal ao plano do Fundo Esquerdo
 	// Objeto do Plano do Fundo Esquerdo
-	Plano fundoesq (pontoFundoEsq, normalFundoEsq, materialFundo);
+	Plano fundoesq (pontoFundoEsq, normalFundoEsq, mtFundo);
 
 	// Informacoes do Plano do Fundo Direito ***********************************
 	Ponto pontoFundoDir { 0, 0, 0 }; // Ponto presente no plano do fundo Direito
 	Vetor normalFundoDir { 0, 0, 1 }; // Vetor normal ao plano do fundo Direito
 	// Objeto do Plano do Fundo Direito
-	Plano fundodir (pontoFundoDir, normalFundoDir, materialFundo);
+	Plano fundodir (pontoFundoDir, normalFundoDir, mtFundo);
 
 	// Objeto Complexo da Casa *************************************************
 	// Composto de um cubo e uma piramide
-	Casa casa (materialCasa, materialTelhado);
+	Casa casa (mtCasa, mtTelhado);
 	// Objeto Complexo da Arvore ***********************************************
 	double alturaArv = 500;
 	double raioFolha = 200;
 	double raioTronco = 100;
 	// Composto de uma esfera e um cone
-	Arvore arvore1 (alturaArv, raioFolha, raioTronco, materialArv, materialTronco);
-	Arvore arvore2 (alturaArv, raioFolha, raioTronco, materialArv, materialTronco);
+	Arvore arvore (alturaArv, raioFolha, raioTronco, mtFolha, mtTronco);
+
+	// Objeto Complexo de Pinheiro *********************************************
+	double hFolhaPin = 400;
+	double hTroncoPin = 200;
+	double rFolhaPin = 200;
+	double rTroncoPin = 40;
+	// Composto de uma esfera e um cone
+	Pinheiro pinheiro (hFolhaPin, rFolhaPin, hTroncoPin, rTroncoPin, mtFolha, mtTronco);
+
 	// Objeto Complexo do Poste ************************************************
-	double alturaVer = 500;
+	double alturaVer = 600;
 	double alturaHor = 100;
 	double raioVer = 12;
 	double raioHor = 6;
 	// Composto de dois cilindro
-	Poste poste (alturaVer, alturaHor, raioVer, raioHor, materialPoste);
+	Poste poste (alturaVer, alturaHor, raioVer, raioHor, mtPoste);
 
 	// Textura *****************************************************************
 	// Carregando a imagens das texturas 
@@ -193,19 +201,17 @@ namespace Cena
 		Transformacao::translacao(&casa, { 2500, 0, 2000 });
 
 		// Ajustando objeto da arvore
-		Transformacao::escala(&arvore1, { 2, 1, 1 });
-		Transformacao::translacao(&arvore1, { 2200, 0, 2200 });
-		Transformacao::translacao(&arvore2, { 3300, 0, 2200 });
+		Transformacao::escala(&arvore, { 2, 1, 1 });
+		Transformacao::translacao(&arvore, { 2200, 0, 2200 });
+		Transformacao::translacao(&pinheiro, { 3300, 0, 2200 });
 		
 		// Ajustando objeto do poste
 		Transformacao::rotacaoY(&poste, PI / 2);
 		Transformacao::translacao(&poste, { 2500, 0, 2800 });
 
-		Ponto p1 { 2500, 0, 2800 }, p2 { 2500, 100, 2800 };
-		Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 2);
-
 		// Ajustando objeto da textura
-		if (img_door) {
+		if (img_door) 
+		{
 			double largura, altura;
 			altura = img_door->h;
 			largura = img_door->w;
@@ -217,7 +223,8 @@ namespace Cena
 		} 
 		else SDL_Log("Erro ao abrir imagem da porta da textura! SDL_Error: %s", SDL_GetError());
 
-		if (img_sky) {
+		if (img_sky) 
+		{
 			Transformacao::escala(&txt_sky1, { 14900, 7000, 0 });
 
 			Transformacao::escala(&txt_sky2, { 14900, 7000, 0 });
@@ -229,9 +236,17 @@ namespace Cena
 		} 
 		else SDL_Log("Erro ao abrir imagem do ceu da textura! SDL_Error: %s", SDL_GetError());
 
+		Ponto p1 { 2500, 100, 2800 }, p2 { 2500, 0, 2800 };
+		
+		Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 4);
+		Transformacao::rotacaoArbitrario(&arvore, p1, p2, PI / 4);
+		Transformacao::rotacaoArbitrario(&pinheiro, p1, p2, PI / 4);
+		if (img_door) Transformacao::rotacaoArbitrario(&txt_door, p1, p2, PI / 4);
+
+
         // Adicionando os objetos na cena **************************************
-		cenario.add(&arvore1);
-		cenario.add(&arvore2);
+		cenario.add(&arvore);
+		cenario.add(&pinheiro);
 		cenario.add(&poste);
 		cenario.add(&casa); 
         cenario.add(&chao);

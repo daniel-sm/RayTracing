@@ -18,7 +18,7 @@ up 3000 0 1000
 
 ----- Vista de frente:
 camera
-eye 2600 500 5000
+eye 3000 500 5000
 at 2600 500 0
 up 2600 1000 0
 
