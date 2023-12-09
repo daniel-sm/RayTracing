@@ -111,6 +111,25 @@ public:
 		primeiro = n;
         return { n };
 	}
+
+    T* remove(T* info)
+    {
+        Node* x = primeiro;
+        Node* anterior = nullptr;
+
+        while (x != nullptr)
+        {
+            if (x->info == info)
+                if (anterior == nullptr) primeiro = x->prox;
+                else anterior->prox = x->prox;
+
+                T* aux = x->info;
+
+                delete x;
+                return aux;
+        }
+        return nullptr;
+    }
 }; // fim class Lista
 
 // Classe de Matriz para operacoes matematicas *********************************

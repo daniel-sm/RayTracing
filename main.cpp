@@ -46,7 +46,7 @@ double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
     return menor_t;
 }
 
-void RayCasting (int linhas, int colunas, int projecao, Vetor dir_proj, Cor** colors, Objeto*** hitted) 
+void RayCasting (int linhas, int colunas, Cor** colors, Objeto*** hitted) 
 {
 	// Delta X e Y dos quadrados da grade do canvas ****************************
 	double Dx = Cena::janela.getWidth() / colunas;
@@ -78,6 +78,10 @@ void RayCasting (int linhas, int colunas, int projecao, Vetor dir_proj, Cor** co
 			// Raio que vai ser lancado pela Janela
 			Raio raio = Raio({ 0, 0, 0 }, pontoJanela); // Perspectiva por padrao
 
+			// Projecao (1 - perspectiva), (2 - ortografica), (3 - obliqua) 
+			int projecao = Cena::info.success ? Cena::info.projecao : 1;
+			Vetor dir_projecao = Cena::info.success ? Cena::info.dir_projecao : Vetor{ 0, 0, 0 };
+
 			// Gerando raio de acordo com a projecao
 			switch (projecao)
 			{
@@ -88,7 +92,7 @@ void RayCasting (int linhas, int colunas, int projecao, Vetor dir_proj, Cor** co
 				raio = Raio (pontoJanela, Vetor{0, 0, -1});
 				break;
 			case 3: // Caso seja obliqua
-				raio = Raio (pontoJanela, dir_proj);
+				raio = Raio (pontoJanela, dir_projecao);
 				break;
 			default: 
 				break;
@@ -166,10 +170,6 @@ int main(int argc, char** argv)
 	// Funcao que define a lista de fontes da cena
 	Cena::definirFontes();
 
-	// Projecao (1 - perspectiva), (2 - ortografica), (3 - obliqua) 
-	int projecao = Cena::info.success ? Cena::info.projecao : 1;
-	Vetor dir_projecao = Cena::info.success ? Cena::info.dir_projecao : Vetor{ 0, 0, 0 };
-
 	// Informacoes do Canvas ***************************************************
 	int linhas = 495; // 700; // Numero de linhas da grade do canvas
 	int colunas = 880; // 1244; // Numero de colunas da grade do canvas
@@ -190,7 +190,7 @@ int main(int argc, char** argv)
 
 	// Realizando o RayCasting *************************************************
 	// Chama funcao que percorre o canvas e lanca os raios pela janela
-	RayCasting(linhas, colunas, projecao, dir_projecao, colors, hitted);
+	RayCasting(linhas, colunas, colors, hitted);
 
 	// *************************************************************************
     // Utilizando SDL **********************************************************
@@ -247,6 +247,7 @@ int main(int argc, char** argv)
 
 			case SDL_MOUSEBUTTONDOWN:
 				clicked = hitted[event.button.y][event.button.x];
+				std::cout << "Objeto: " << clicked << "\n";
 				break;
 
 			case SDL_KEYDOWN:
@@ -255,30 +256,57 @@ int main(int argc, char** argv)
 					switch (event.key.keysym.sym)
 					{
 					case SDLK_x:
+						std::cout << "Movendo " << clicked << " no eixo X...\n";
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 100, 0, 0 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_y:
+						std::cout << "Movendo " << clicked << " no eixo Y...\n";
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 0, 100, 0 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_z:
+						std::cout << "Movendo " << clicked << " no eixo Z...\n";
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 0, 0, 100 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
 						break;
 					case SDLK_SPACE:
-						RayCasting(linhas, colunas, projecao, dir_projecao, colors, hitted);
+						std::cout << "Realizando RayCasting...\n";
+						std::cout << "Concluido!\n";
+						clicked = nullptr;
+						RayCasting(linhas, colunas, colors, hitted);
 						break;
 					default:
 						break;
 					}
-					
+				} else 
+				{
+					switch (event.key.keysym.sym)
+					{
+					case SDLK_s:
+						std::cout << "Removendo Spot...\n";
+						Cena::fontes.remove(&(Cena::spot));
+						break;
+					case SDLK_d:
+						std::cout << "Removendo Direcional...\n";
+						Cena::fontes.remove(&(Cena::direcional)); 
+						break;
+					case SDLK_p:
+						std::cout << "Removendo Pontual...\n";
+						break;
+					case SDLK_SPACE:
+						std::cout << "Realizando RayCasting...\n";
+						RayCasting(linhas, colunas, colors, hitted);
+						std::cout << "Concluido!\n";
+						break;
+					default:
+						break;
+					}
 				}
 				break;
-
 			default:
 				break;
 			}
