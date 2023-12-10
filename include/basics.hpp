@@ -120,13 +120,17 @@ public:
         while (x != nullptr)
         {
             if (x->info == info)
+            {
                 if (anterior == nullptr) primeiro = x->prox;
                 else anterior->prox = x->prox;
 
-                T* aux = x->info;
+                T* resultado = x->info;
 
                 delete x;
-                return aux;
+                return resultado;
+            }
+            anterior = x;
+            x = x->prox;
         }
         return nullptr;
     }

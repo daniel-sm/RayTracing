@@ -179,7 +179,7 @@ public:
         telhado_esq->transformar(matriz);
         telhado_dir->transformar(matriz);
     }
-};
+}; // fim class Casa
 
 class Arvore : public Objeto
 {
@@ -243,7 +243,7 @@ public:
         folha->transformar(matriz);
         tronco->transformar(matriz);
     }
-};
+}; // fim class Arvore
 
 class Pinheiro : public Objeto
 {
@@ -310,7 +310,7 @@ public:
         folha->transformar(matriz);
         tronco->transformar(matriz);
     }
-};
+}; // fim class Pinheiro
 
 class Poste : public Objeto
 {
@@ -370,7 +370,70 @@ public:
         horizontal->transformar(matriz);
         vertical->transformar(matriz);
     }
-};
+}; // fim class Poste
+
+class Lampada : public Objeto
+{
+private:
+    Cilindro *suporte;
+    Esfera *luz;
+    Objeto *atingido;
+public:
+    Lampada (double raioLuz, double raioSup, double alturaSup, Material ml, Material ms) 
+    {
+        Ponto centroLuz = { 0, alturaSup + raioLuz, 0 };
+        luz = new Esfera(centroLuz, raioLuz, ml);
+
+        Ponto baseSuporte = { 0, 0, 0 };
+        Ponto topoSuporte = { 0, alturaSup + raioLuz, 0 };
+        suporte = new Cilindro(baseSuporte, topoSuporte, raioSup, ms);
+    }
+    ~Lampada () 
+    {
+        delete suporte;
+        delete luz;
+    }
+
+    double intersecao (Raio raio) override 
+    {
+        double t_luz = luz->intersecao(raio);
+        double t_suporte = suporte->intersecao(raio);
+
+        double t = -1;
+
+        if (t_luz > 0 and t_suporte > 0) {
+            if (t_suporte < t_luz) {
+                material = suporte->material;
+                atingido = suporte;
+                t = t_suporte;
+            } else {
+                material = luz->material;
+                atingido = luz;
+                t = t_luz;
+            }
+        } else if (t_luz > 0) {
+            material = luz->material;
+            atingido = luz;
+            t = t_luz;
+        } else if (t_suporte > 0) {
+            material = suporte->material;
+            atingido = suporte;
+            t = t_suporte;
+        } 
+        else { t = -1; }
+        
+        // retornando o valor de t que foi calculado
+        return t;
+    }
+
+    Vetor getNormal (Ponto ponto) const override { return atingido->getNormal(ponto); }
+
+    void transformar (Matriz matriz) override 
+    {
+        luz->transformar(matriz);
+        suporte->transformar(matriz);
+    }
+}; // fim class Lampada
 
 class Textura : public Objeto
 {
@@ -401,8 +464,9 @@ private:
     }
 
 public:
+    // Assume ordem antihoraria com p0 sendo o vertice inferior esquerdo
     Textura(Ponto p0, Ponto p1, Ponto p2, Ponto p3, SDL_Surface *txt)
-    { // Assume ordem antihoraria com p0 sendo o vertice inferior esquerdo
+    {
         // Salvando ponteiro para a textura
         textura = txt;
 
@@ -625,6 +689,6 @@ public:
     Vetor getNormal(Ponto p) const override { return plano->getNormal(p); }
 
     void transformar(Matriz matriz) override { plano->transformar(matriz); }
-};
+}; // fim class Textura
 
 #endif

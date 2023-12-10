@@ -45,7 +45,7 @@ namespace Cena
 	Vetor kaTelhado = { 0.7, 0.4, 0.3 }; // Prop ambiente do material do Telhado
 	Vetor kdTelhado = kaTelhado; // Prop difusa do material do Telhado
 	Vetor keTelhado = kaTelhado; // Prop especular do material do Telhado
-	double brilhoTelhado = 5; // Fator de brilho especular
+	double brilhoTelhado = 10; // Fator de brilho especular
 	// Material do Telhado
 	Material mtTelhado { kaTelhado, kdTelhado, keTelhado, brilhoTelhado };
 
@@ -75,6 +75,24 @@ namespace Cena
 	double brilhoTronco = 5; // Fator de brilho especular
 	// Material do Tronco
 	Material mtTronco { kaTronco, kdTronco, keTronco, brilhoTronco };
+
+	// Material da Lampada ******************************************************
+	// Propriedades de reflectividade da Lampada
+	Vetor kaLampada = { 1.0, 1.0, 1.0 }; // Prop ambiente do material da Lampada
+	Vetor kdLampada = kaLampada; // Prop difusa do material da Lampada
+	Vetor keLampada = kaLampada; // Prop especular do material da Lampada
+	double brilhoLampada = 20; // Fator de brilho especular
+	// Material da Lampada
+	Material mtLampada { kaLampada, kdLampada, keLampada, brilhoLampada };
+
+	// Material do Suporte ******************************************************
+	// Propriedades de reflectividade do Suporte
+	Vetor kaSuporte = { 0.1, 0.1, 0.1 }; // Prop ambiente do material do Suporte
+	Vetor kdSuporte = kaSuporte; // Prop difusa do material do Suporte
+	Vetor keSuporte = kaSuporte; // Prop especular do material do Suporte
+	double brilhoSuporte = 15; // Fator de brilho especular
+	// Material do Suporte
+	Material mtSuporte { kaSuporte, kdSuporte, keSuporte, brilhoSuporte };
 
 	// #########################################################################
 	// Objetos da Cena #########################################################
@@ -128,6 +146,13 @@ namespace Cena
 	// Composto de dois cilindro
 	Poste poste (alturaVer, alturaHor, raioVer, raioHor, mtPoste);
 
+	// Objeto Complexo da Lampada **********************************************
+	double raioLampada = 10;
+	double raioSuporte = 5;
+	double alturaSuporte = 105;
+	// Composto de uma esfera e um cilindro
+	Lampada lampada (raioLampada, raioSuporte, alturaSuporte, mtLampada, mtSuporte);
+
 	// Textura *****************************************************************
 	// Carregando a imagens das texturas 
 	SDL_Surface* img_door = SDL_LoadBMP("img/door_800x1600.bmp"); 
@@ -147,13 +172,13 @@ namespace Cena
 	// Fontes de luz ###########################################################
 	//
 	// Informacoes da Fonte Pontual ********************************************
-	Vetor intensePontual = { 1.0, 1.0, 1.0 }; // Intensidade da fonte pontual
-	Ponto posicaoPontual = { 1000, 500, 1000 }; // Posicao da fonte pontual
+	Vetor intensePontual = { 0.4, 0.4, 0.4 }; // Intensidade da fonte pontual
+	Ponto posicaoPontual = { 0, 0, 0 }; // Posicao da fonte pontual
 	// Objeto da fonte de luz Pontual
 	Pontual pontual (intensePontual, posicaoPontual);
 
 	// Informacoes da Fonte Spot ***********************************************
-	Vetor intenseSpot = { 0.5, 0.5, 0.5 }; 
+	Vetor intenseSpot = { 0.4, 0.4, 0.4 }; 
 	Ponto posicaoSpot = { 0, 0, 0 };
 	Vetor direcaoSpot = { 0, -1, 0 };
 	double anguloSpot = (3 * PI) / 8.0;
@@ -161,7 +186,7 @@ namespace Cena
 	Spot spot (intenseSpot, posicaoSpot, direcaoSpot, anguloSpot);
 
 	// Informacoes da Fonte Direcional *****************************************
-	Vetor intenseDirecional = { 0.5, 0.5, 0.5 };
+	Vetor intenseDirecional = { 1.0, 1.0 , 1.0 };
 	Vetor direcaoDirecional = { -1, -1, -1 };
 	// Objeto da fonte de luz Direcional
 	Direcional direcional (intenseDirecional, direcaoDirecional);
@@ -173,11 +198,11 @@ namespace Cena
 	Info info ("info/info.txt");
 
 	// Informacoes da Janela ***************************************************
-	double xminJanela = info.success ? info.xmin : -72; // Valor da parte de cima da janela em cm
-	double xmaxJanela = info.success ? info.xmax : 72; // Valor da parte de baixo da janela em cm
-	double yminJanela = info.success ? info.ymin : -40.5; // Valor do lado esquerdo da janela em cm
-	double ymaxJanela = info.success ? info.ymax : 40.5; // Valor do lado direito da janela em cm
-	double dJanela = info.success ? info.distance : 150; // Distancia da janela em cm
+	double xminJanela = info.success ? info.xmin : -100; // Valor da parte de cima da janela em cm
+	double xmaxJanela = info.success ? info.xmax : 100; // Valor da parte de baixo da janela em cm
+	double yminJanela = info.success ? info.ymin : -50; // Valor do lado esquerdo da janela em cm
+	double ymaxJanela = info.success ? info.ymax : 50; // Valor do lado direito da janela em cm
+	double dJanela = info.success ? info.distance : 100; // Distancia da janela em cm
 	// Objeto da Janela
 	Janela janela (xminJanela, xmaxJanela, yminJanela, ymaxJanela, dJanela); 
 
@@ -196,18 +221,24 @@ namespace Cena
     void definirObjetos() 
     {
 		// Realizando transformacoes *******************************************
-		// Ajustando objeto da casa
+		// Ajustando objeto da Casa
 		Transformacao::escala(&casa, { 500, 300, 400 });
 		Transformacao::translacao(&casa, { 2500, 0, 2000 });
 
-		// Ajustando objeto da arvore
-		Transformacao::escala(&arvore, { 2, 1, 1 });
+		// Ajustando objeto da Arvore
 		Transformacao::translacao(&arvore, { 2200, 0, 2200 });
+
+		// Ajustando objeto do Pinheiro
 		Transformacao::translacao(&pinheiro, { 3300, 0, 2200 });
 		
-		// Ajustando objeto do poste
+		// Ajustando objeto do Poste
 		Transformacao::rotacaoY(&poste, PI / 2);
 		Transformacao::translacao(&poste, { 2500, 0, 2800 });
+		
+		// Ajustando objeto da Lampada
+		Transformacao::rotacaoX(&lampada, - PI / 2);
+		Transformacao::translacao(&lampada, { 2500 + 250, 300, 2000 });
+		// Transformacao::translacao(&lampada, { 2500, 100, 2400 });
 
 		// Ajustando objeto da textura
 		if (img_door) 
@@ -236,19 +267,20 @@ namespace Cena
 		} 
 		else SDL_Log("Erro ao abrir imagem do ceu da textura! SDL_Error: %s", SDL_GetError());
 
+		// Definindo pontos no eixo do Poste
 		Ponto p1 { 2500, 100, 2800 }, p2 { 2500, 0, 2800 };
-		
-		Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 4);
+		// Rotacionando objetos em torno do Poste
+		// Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 4);
 		Transformacao::rotacaoArbitrario(&arvore, p1, p2, PI / 4);
 		Transformacao::rotacaoArbitrario(&pinheiro, p1, p2, PI / 4);
 		if (img_door) Transformacao::rotacaoArbitrario(&txt_door, p1, p2, PI / 4);
 
-
         // Adicionando os objetos na cena **************************************
-		cenario.add(&arvore);
-		cenario.add(&pinheiro);
-		cenario.add(&poste);
+		// cenario.add(&arvore);
+		// cenario.add(&pinheiro);
 		cenario.add(&casa); 
+		// cenario.add(&lampada);
+		cenario.add(&poste);
         cenario.add(&chao);
         // cenario.add(&fundoesq);
         // cenario.add(&fundodir);
@@ -260,15 +292,26 @@ namespace Cena
     // Definindo a lista de fontes da cena
     void definirFontes() 
     {
-		// Realizando transformacoes 
-		// Ajustando objeto da luz do poste
-		// Posiciona a fonte spot na ponta do poste
-		Vetor aux = { 2500 + alturaHor, alturaVer - (2 * raioHor) - 1, 2800 };
-		Transformacao::translacao(&spot, aux);
+		// Realizando transformacoes *******************************************
+		// Spot 
+		// Posicionando fonte de luz Spot do Poste
+		Vetor translacao = { 2500 + alturaHor, alturaVer - (2 * raioHor) - 1, 2800 };
+		Transformacao::translacao(&spot, translacao);
+
+		// Pontual
+		// Posicionando fonte de luz Pontual da Casa
+		translacao = { 2500 + 250, 300, 2000 - (alturaSuporte + raioLampada) - 1 };
+		Transformacao::translacao(&pontual, translacao);
+		// Transformacao::translacao(&pontual, { 2700, 100, 3000 });
+
+		// Definindo pontos no eixo do Poste
+		Ponto p1 { 2500, 100, 2800 }, p2 { 2500, 0, 2800 };
+		// Rotacionando objetos em torno do Poste
+		// Transformacao::rotacaoArbitrario(&pontual, p1, p2, PI / 4);
 
         // Adicionando as fontes na lista 
         fontes.add(&spot);
-        // fontes.add(&pontual);
+        fontes.add(&pontual);
         fontes.add(&direcional); 
     }
 } // namespace Cena
