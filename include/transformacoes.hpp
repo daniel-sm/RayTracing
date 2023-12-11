@@ -245,7 +245,10 @@ namespace Transformacao
     void rotacaoArbitrario (Fonte *fonte, Ponto p1, Ponto p2, double angulo) 
     {
         Vetor k = unitario(p2 - p1);
-        Vetor i = vetorial({ 0, 1, 0 }, k);
+
+        Vetor v = vetorial({0, 1, 0}, k);
+        Vetor i = (v.x == 0 and v.y == 0 and v.z == 0) ? Vetor{1, 0, 0} : v;
+
         Vetor j = vetorial(k, i);
 
         // Definindo da matriz 4x4 do mundo para coordenadas do ponto

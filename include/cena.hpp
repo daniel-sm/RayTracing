@@ -22,6 +22,7 @@ namespace Cena
 	// Material do plano do chao
 	Material mtChao { kaChao, kdChao, keChao, brilhoChao };
 
+/*
 	// Material do Plano de Fundo **********************************************
 	// Propriedades de reflectividade do plano de fundo
 	Vetor kaFundo { 0.3, 0.3, 0.7 }; // Prop ambiente do material do fundo 
@@ -30,6 +31,7 @@ namespace Cena
 	double brilhoFundo = 1; // Fator de brilho especular
 	// Material do plano de fundo
 	Material mtFundo { kaFundo, kdFundo, keFundo, brilhoFundo };
+*/
 
 	// Material da Casa ********************************************************
 	// Propriedades de reflectividade da Casa
@@ -108,6 +110,7 @@ namespace Cena
 	// Objeto do Plano do Chao
 	Plano chao (pontoChao, normalChao, mtChao);
 
+/*
 	// Informacoes do Plano do Fundo Esquerdo **********************************
 	Ponto pontoFundoEsq { 0, 0, 0 }; // Ponto do plano do Fundo Esquerdo
 	Vetor normalFundoEsq { 1, 0, 0 }; // Vetor normal ao plano do Fundo Esquerdo
@@ -119,6 +122,7 @@ namespace Cena
 	Vetor normalFundoDir { 0, 0, 1 }; // Vetor normal ao plano do fundo Direito
 	// Objeto do Plano do Fundo Direito
 	Plano fundodir (pontoFundoDir, normalFundoDir, mtFundo);
+*/
 
 	// Objeto Complexo da Casa *************************************************
 	// Composto de um cubo e uma piramide
@@ -149,7 +153,7 @@ namespace Cena
 	// Objeto Complexo da Lampada **********************************************
 	double raioLampada = 10;
 	double raioSuporte = 5;
-	double alturaSuporte = 105;
+	double alturaSuporte = 5;
 	// Composto de uma esfera e um cilindro
 	Lampada lampada (raioLampada, raioSuporte, alturaSuporte, mtLampada, mtSuporte);
 
@@ -227,7 +231,6 @@ namespace Cena
 
 		// Ajustando objeto da Arvore
 		Transformacao::translacao(&arvore, { 2200, 0, 2200 });
-
 		// Ajustando objeto do Pinheiro
 		Transformacao::translacao(&pinheiro, { 3300, 0, 2200 });
 		
@@ -270,16 +273,17 @@ namespace Cena
 		// Definindo pontos no eixo do Poste
 		Ponto p1 { 2500, 100, 2800 }, p2 { 2500, 0, 2800 };
 		// Rotacionando objetos em torno do Poste
-		// Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 4);
 		Transformacao::rotacaoArbitrario(&arvore, p1, p2, PI / 4);
 		Transformacao::rotacaoArbitrario(&pinheiro, p1, p2, PI / 4);
+		Transformacao::rotacaoArbitrario(&casa, p1, p2, PI / 4);
+		Transformacao::rotacaoArbitrario(&lampada, p1, p2, PI / 4);
 		if (img_door) Transformacao::rotacaoArbitrario(&txt_door, p1, p2, PI / 4);
 
         // Adicionando os objetos na cena **************************************
-		// cenario.add(&arvore);
-		// cenario.add(&pinheiro);
+		cenario.add(&arvore);
+		cenario.add(&pinheiro);
 		cenario.add(&casa); 
-		// cenario.add(&lampada);
+		cenario.add(&lampada);
 		cenario.add(&poste);
         cenario.add(&chao);
         // cenario.add(&fundoesq);
@@ -300,14 +304,13 @@ namespace Cena
 
 		// Pontual
 		// Posicionando fonte de luz Pontual da Casa
-		translacao = { 2500 + 250, 300, 2000 - (alturaSuporte + raioLampada) - 1 };
+		translacao = { 2500 + 250, 300, 2000 - (alturaSuporte + 2 * raioLampada) - 100 };
 		Transformacao::translacao(&pontual, translacao);
-		// Transformacao::translacao(&pontual, { 2700, 100, 3000 });
 
 		// Definindo pontos no eixo do Poste
 		Ponto p1 { 2500, 100, 2800 }, p2 { 2500, 0, 2800 };
 		// Rotacionando objetos em torno do Poste
-		// Transformacao::rotacaoArbitrario(&pontual, p1, p2, PI / 4);
+		Transformacao::rotacaoArbitrario(&pontual, p1, p2, PI / 4);
 
         // Adicionando as fontes na lista 
         fontes.add(&spot);
