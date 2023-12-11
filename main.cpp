@@ -10,11 +10,11 @@ g++ main.cpp -o main.exe -I "C:\MinGW\include\SDL2" -lmingw32 -lSDL2main -lSDL2
 */
 
 #include <SDL.h>
-// #include <SDL_image.h>
 #include "include/cena.hpp"
 #include "include/objetos.hpp"
 #include "include/intersecoes.hpp"
 #include "include/transformacoes.hpp"
+#include "include/info_transform.hpp"
 #include "include/basics.hpp"
 
 double CastRay (Lista<Objeto> &cenario, Raio raio, Objeto* &atingido)
@@ -169,6 +169,9 @@ int main(int argc, char** argv)
 	Cena::definirObjetos();
 	// Funcao que define a lista de fontes da cena
 	Cena::definirFontes();
+
+	// Lendo e realizando transformacoes do arquivo
+	InfoTransform transform ("info/transform.txt");
 
 	// Informacoes do Canvas ***************************************************
 	int linhas = 495; // 700; // Numero de linhas da grade do canvas

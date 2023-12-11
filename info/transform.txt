@@ -1,38 +1,12 @@
-casa 
-remove
-translacao 0 0 0
-escala 0 0 0
-rotacao X 1
-rotacao Y 1
-rotacao Z 1
-rotacao A 
-    0 0 0
-    0 0 0
-    1
-espelho XY 
-espelho YZ
-espelho XZ
-espelho A
-    0 0 0
-    1 1 1
-cisalhamento XY 1
-cisalhamento YX 1
-cisalhamento XZ 1
-cisalhamento ZX 1
-cisalhamento YZ 1
-cisalhamento ZY 1
+casa
+    cisalhamento YX 0.2
 -
 arvore
--
-pinheiro
--
-poste
+    rotacao Z 0.2
 -
 porta
--
-lampada
--
-chao
--
-fundo
+    rotacao A
+        p1 2500 0 2800
+        p2 2500 100 2800
+        angulo 1.178
 -

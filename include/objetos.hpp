@@ -1,4 +1,4 @@
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         #ifndef OBJETOS_HPP
+#ifndef OBJETOS_HPP
 #define OBJETOS_HPP
 
 #include <iostream>

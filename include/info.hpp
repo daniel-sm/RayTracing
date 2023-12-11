@@ -15,8 +15,8 @@ public:
     int projecao;
     Vetor dir_projecao;
     bool success;
-    
-    Info(std::string path) 
+
+    Info (std::string path) 
     {
         file.open(path);
 
@@ -45,7 +45,7 @@ public:
                         if (aux == "up") linestream >> up.x >> up.y >> up.z; 
                     }
                 }
-                if (line == "janela") // lendo dados da janela
+                else if (line == "janela") // lendo dados da janela
                 {
                     for (int i = 0; i <= 3; ++i)
                     {
@@ -60,7 +60,7 @@ public:
                         if (aux == "d") linestream >> distance;
                     }
                 }
-                if (line == "projecao")
+                else if (line == "projecao")
                 {
                     // lendo as informacoes das proximas linhas
                     getline(file, line);
@@ -96,5 +96,4 @@ public:
         // std::cout << "proj " << projecao << '\n';
         // std::cout << "dir " << dir_projecao.x << " " << dir_projecao.y << " " << dir_projecao.z << '\n';
     }
-    ~Info() {}
 };

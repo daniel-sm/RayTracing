@@ -6,7 +6,6 @@
 #include "complexos.hpp"
 #include "transformacoes.hpp"
 #include "info.hpp"
-// #include <SDL_image.h>
 
 namespace Cena
 {
@@ -176,7 +175,7 @@ namespace Cena
 	// Fontes de luz ###########################################################
 	//
 	// Informacoes da Fonte Pontual ********************************************
-	Vetor intensePontual = { 0.4, 0.4, 0.4 }; // Intensidade da fonte pontual
+	Vetor intensePontual = { 0.6, 0.6, 0.6 }; // Intensidade da fonte pontual
 	Ponto posicaoPontual = { 0, 0, 0 }; // Posicao da fonte pontual
 	// Objeto da fonte de luz Pontual
 	Pontual pontual (intensePontual, posicaoPontual);
