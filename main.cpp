@@ -236,7 +236,12 @@ int main(int argc, char** argv)
 	SDL_Event event;
 	// Controle de loop
 	bool isRunning = true;
+
+	// Ponteiro do objeto que clicou
 	Objeto* clicked = nullptr;
+
+	// Controle de luz
+	bool spot_on = true, pontual_on = true, dir_on = true;
 
 	// Main loop 
 	while (isRunning) {
@@ -258,36 +263,15 @@ int main(int argc, char** argv)
 				{
 					switch (event.key.keysym.sym)
 					{
-					case SDLK_x:
-						std::cout << "Movendo " << clicked << " no eixo X...";
-						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
-						Transformacao::translacao(clicked, { 100, 0, 0 });
-						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
+					case SDLK_DELETE:
+						std::cout << "Removendo objeto: " << clicked << "...";
+						Cena::cenario.remove(clicked);
 						std::cout << " OK!\n";
-						break;
-					case SDLK_y:
-						std::cout << "Movendo " << clicked << " no eixo Y...";
-						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
-						Transformacao::translacao(clicked, { 0, 100, 0 });
-						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
-						std::cout << " OK!\n";
-						break;
-					case SDLK_z:
-						std::cout << "Movendo " << clicked << " no eixo Z...";
-						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
-						Transformacao::translacao(clicked, { 0, 0, 100 });
-						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
-						std::cout << " OK!\n";
-						break;
+						break; 
 					case SDLK_SPACE:
 						std::cout << "Realizando RayCasting...";
 						clicked = nullptr;
 						RayCasting(linhas, colunas, colors, hitted);
-						std::cout << " OK!\n";
-						break;
-					case SDLK_DELETE:
-						std::cout << "Removendo objeto...";
-						Cena::cenario.remove(clicked);
 						std::cout << " OK!\n";
 						break;
 					default:
@@ -298,19 +282,48 @@ int main(int argc, char** argv)
 					switch (event.key.keysym.sym)
 					{
 					case SDLK_s:
-						std::cout << "Removendo Spot...";
-						Cena::fontes.remove(&(Cena::spot));
-						std::cout << " OK!\n";
+						if (spot_on) {
+							std::cout << "Desligando Spot...";
+							Cena::fontes.remove(&(Cena::spot));
+							spot_on = false;
+							std::cout << " OK!\n";
+						}
+						else {
+							std::cout << "Ligando Spot...";
+							Cena::fontes.add(&(Cena::spot));
+							spot_on = true;
+							std::cout << " OK!\n"; 
+						}
 						break;
 					case SDLK_d:
-						std::cout << "Removendo Direcional...";
-						Cena::fontes.remove(&(Cena::direcional)); 
-						std::cout << " OK!\n";
+						if (dir_on) {
+							std::cout << "Desligando Direcional...";
+							Cena::fontes.remove(&(Cena::direcional)); 
+							dir_on = false;
+							std::cout << " OK!\n";
+						}
+						else {
+							std::cout << "Ligando Direcional...";
+							Cena::fontes.add(&(Cena::direcional)); 
+							dir_on = true;
+							std::cout << " OK!\n";
+						}
+						
 						break;
 					case SDLK_p:
-						std::cout << "Removendo Pontual...";
-						Cena::fontes.remove(&(Cena::pontual)); 
-						std::cout << " OK!\n";
+						if (pontual_on) {
+							std::cout << "Desligando Pontual...";
+							Cena::fontes.remove(&(Cena::pontual)); 
+							pontual_on = false;
+							std::cout << " OK!\n";
+						}
+						else {
+							std::cout << "Ligando Pontual...";
+							Cena::fontes.add(&(Cena::pontual)); 
+							pontual_on = true;
+							std::cout << " OK!\n";
+						}
+						
 						break;
 					case SDLK_SPACE:
 						std::cout << "Realizando RayCasting...";

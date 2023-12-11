@@ -1,12 +1,18 @@
 casa
-    cisalhamento YX 0.2
 -
 arvore
-    rotacao Z 0.2
+-
+pinheiro
+-
+poste
 -
 porta
-    rotacao A
-        p1 2500 0 2800
-        p2 2500 100 2800
-        angulo 1.178
+-
+lampada
+-
+chao
+-
+fundo1
+-
+fundo2
 -
