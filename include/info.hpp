@@ -3,7 +3,7 @@
 #include <sstream>
 #include <string>
 #include "basics.hpp"
-// #include "objetos.hpp"
+#include "objetos.hpp"
 
 class Info
 {

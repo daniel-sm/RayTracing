@@ -283,8 +283,8 @@ namespace Cena
 		cenario.add(&arvore);
 		cenario.add(&pinheiro);
 		cenario.add(&casa); 
-		cenario.add(&lampada);
 		cenario.add(&poste);
+		cenario.add(&lampada);
         cenario.add(&chao);
         // cenario.add(&fundoesq);
         // cenario.add(&fundodir);

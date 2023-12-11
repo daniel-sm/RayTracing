@@ -5,6 +5,8 @@
 
 namespace Transformacao
 {
+    // Objetos #################################################################
+
     void translacao (Objeto *obj, Vetor t) 
     {
         Matriz T = identidade(4);
@@ -185,6 +187,8 @@ namespace Transformacao
         ZY(1, 2) = tan(angulo);
         obj->transformar(ZY);
     }
+
+    // Fontes ##################################################################
 
     void translacao (Fonte *fonte, Vetor t) 
     {

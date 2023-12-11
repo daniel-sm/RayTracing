@@ -256,28 +256,36 @@ int main(int argc, char** argv)
 					switch (event.key.keysym.sym)
 					{
 					case SDLK_x:
-						std::cout << "Movendo " << clicked << " no eixo X...\n";
+						std::cout << "Movendo " << clicked << " no eixo X...";
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 100, 0, 0 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
+						std::cout << " OK!\n";
 						break;
 					case SDLK_y:
-						std::cout << "Movendo " << clicked << " no eixo Y...\n";
+						std::cout << "Movendo " << clicked << " no eixo Y...";
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 0, 100, 0 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
+						std::cout << " OK!\n";
 						break;
 					case SDLK_z:
-						std::cout << "Movendo " << clicked << " no eixo Z...\n";
+						std::cout << "Movendo " << clicked << " no eixo Z...";
 						Cena::camera.toWorld(Cena::cenario, Cena::fontes);
 						Transformacao::translacao(clicked, { 0, 0, 100 });
 						Cena::camera.toCamera(Cena::cenario, Cena::fontes);
+						std::cout << " OK!\n";
 						break;
 					case SDLK_SPACE:
-						std::cout << "Realizando RayCasting...\n";
-						std::cout << "Concluido!\n";
+						std::cout << "Realizando RayCasting...";
 						clicked = nullptr;
 						RayCasting(linhas, colunas, colors, hitted);
+						std::cout << " OK!\n";
+						break;
+					case SDLK_DELETE:
+						std::cout << "Removendo objeto...";
+						Cena::cenario.remove(clicked);
+						std::cout << " OK!\n";
 						break;
 					default:
 						break;
@@ -287,20 +295,25 @@ int main(int argc, char** argv)
 					switch (event.key.keysym.sym)
 					{
 					case SDLK_s:
-						std::cout << "Removendo Spot...\n";
+						std::cout << "Removendo Spot...";
 						Cena::fontes.remove(&(Cena::spot));
+						std::cout << " OK!\n";
 						break;
 					case SDLK_d:
-						std::cout << "Removendo Direcional...\n";
+						std::cout << "Removendo Direcional...";
 						Cena::fontes.remove(&(Cena::direcional)); 
+						std::cout << " OK!\n";
 						break;
 					case SDLK_p:
-						std::cout << "Removendo Pontual...\n";
+						std::cout << "Removendo Pontual...";
+						Cena::fontes.remove(&(Cena::pontual)); 
+						std::cout << " OK!\n";
 						break;
 					case SDLK_SPACE:
-						std::cout << "Realizando RayCasting...\n";
+						std::cout << "Realizando RayCasting...";
+						clicked = nullptr;
 						RayCasting(linhas, colunas, colors, hitted);
-						std::cout << "Concluido!\n";
+						std::cout << " OK!\n";
 						break;
 					default:
 						break;
